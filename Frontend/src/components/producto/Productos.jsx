@@ -64,7 +64,9 @@ export const Productos = () => {
 								<div className='card-body'>
 									{val.cantidad > 0 ? (
 										<>
-											<p className='card-text'>{val.precio} CUP</p>
+											<strong>
+												<p className='card-text'>{val.precio} CUP</p>
+											</strong>
 											<hr />
 											<div className='row align-items-center'>
 												<div className='col-6'>
