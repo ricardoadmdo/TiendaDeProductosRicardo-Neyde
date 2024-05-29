@@ -1,13 +1,13 @@
-import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../../auth/authContext';
-import { CartContext } from '../../auth/CartProvider';
+import { CartContext } from '../../../auth/CartProvider.jsx';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../auth/authContext.jsx';
+import { types } from '../../../types/types.jsx';
+import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore } from '@fortawesome/free-solid-svg-icons';
-import logo from '../../../public/logo.png';
-import { types } from '../../types/types';
 
-export const Navbar = () => {
+export const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState('');
@@ -34,7 +34,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow'>
+		<nav className='navbar navbar-expand-lg navbar-dark bg-danger shadow'>
 			<div className='container'>
 				<NavLink className='navbar-brand' to='/'>
 					<img src={logo} alt='Logo de la tienda' style={{ height: '50px' }} />
@@ -56,7 +56,7 @@ export const Navbar = () => {
 							type='search'
 							name='searchInput'
 							className='form-control me-1'
-							placeholder='Buscar productos...'
+							placeholder='Buscar en la cafeteria...'
 							aria-label='Buscar'
 							value={searchTerm}
 							onChange={handleSearchChange}
@@ -87,13 +87,19 @@ export const Navbar = () => {
 						<li className='nav-item'>
 							<NavLink className='nav-link' to='/productos'>
 								<FontAwesomeIcon icon={faHamburger} />
-								Productos
+								Pastas
 							</NavLink>
 						</li>
 						<li className='nav-item me-5'>
 							<NavLink className='nav-link' to='/combos'>
 								<FontAwesomeIcon icon={faUtensils} />
-								Combos
+								Comida cubana
+							</NavLink>
+						</li>
+						<li className='nav-item me-5'>
+							<NavLink className='nav-link' to='/combos'>
+								<FontAwesomeIcon icon={faUtensils} />
+								Carnes
 							</NavLink>
 						</li>
 
@@ -112,17 +118,12 @@ export const Navbar = () => {
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
 										<NavLink className='dropdown-item' to='/gestionar-usuarios'>
-											Gestionar Usuarios
+											Gestionar Inventario
 										</NavLink>
 									</li>
 									<li>
 										<NavLink className='dropdown-item' to='/gestionar-productos'>
-											Gestionar Productos
-										</NavLink>
-									</li>
-									<li>
-										<NavLink className='dropdown-item' to='/gestionar-combos'>
-											Gestionar Combos
+											Gestionar Ventas
 										</NavLink>
 									</li>
 								</ul>
@@ -131,12 +132,6 @@ export const Navbar = () => {
 
 						{user.logged ? (
 							<>
-								<li className='nav-item'>
-									<NavLink className='nav-link' to='/perfil'>
-										<FontAwesomeIcon icon={faUser} />
-										{user.nombre}
-									</NavLink>
-								</li>
 								<li className='nav-item'>
 									<button className='nav-link' onClick={handleLogout}>
 										<FontAwesomeIcon icon={faSignOutAlt} />
