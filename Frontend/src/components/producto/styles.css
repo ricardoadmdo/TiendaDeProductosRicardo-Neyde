@@ -1,0 +1,8 @@
+/* Define una clase de animación simple */
+.btn-animated {
+	transition: transform 0.2s ease-in-out;
+}
+
+.btn-animated:active {
+	transform: scale(1.3);
+}

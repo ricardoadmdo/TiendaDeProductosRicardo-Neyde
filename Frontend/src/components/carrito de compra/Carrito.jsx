@@ -1,0 +1,349 @@
+import { useContext, useState, useEffect } from 'react';
+import { CartContext } from '../../auth/CartProvider';
+import { AuthContext } from '../../auth/authContext';
+import { useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import Axios from 'axios';
+
+export const Carrito = () => {
+	const { cart, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
+	const { user } = useContext(AuthContext); // Utiliza AuthContext para verificar el estado de inicio de sesión
+	const location = useLocation();
+	const [recipient, setRecipient] = useState({
+		name: '',
+		mobile: '',
+		address: '',
+		building: '',
+		province: '',
+		termsAccepted: false,
+	});
+
+	// Calcula el total general de la compra
+	const total = cart.reduce((acc, val) => acc + val.precio * val.cantidadAdd, 0);
+
+	// Función para actualizar la cantidad de un producto en el carrito
+	const changeQuantity = (id, delta) => {
+		updateQuantity(id, delta);
+	};
+
+	const handleInputChange = (e) => {
+		const { name, value, checked, type } = e.target;
+		setRecipient({
+			...recipient,
+			[name]: type === 'checkbox' ? checked : value,
+		});
+	};
+
+	useEffect(() => {
+		const query = new URLSearchParams(location.search);
+		const status = query.get('status');
+
+		if (status === 'success') {
+			Swal.fire({
+				title: 'Compra Satisfactoria',
+				text: 'Gracias por comprar en Ricardo & Neyde',
+				icon: 'success',
+			});
+			//Limpiamos el carrito
+			clearCart();
+		} else if (status === 'cancel') {
+			Swal.fire({
+				title: 'Compra Cancelada',
+				text: 'Su compra ha sido cancelada.',
+				icon: 'error',
+			});
+		}
+	}, [location]);
+
+	const finalizeOrder = () => {
+		if (!user.logged) {
+			Swal.fire({ title: 'Inicia Sesión', text: 'No has iniciado sesión!', icon: 'warning' });
+			return;
+		}
+
+		// Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
+		if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.building || !recipient.province || !recipient.termsAccepted) {
+			Swal.fire({
+				title: 'Formulario Incompleto',
+				text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
+				icon: 'error',
+			});
+			return;
+		}
+
+		//TODO: FALTA LA LÓGICA DE COMPLETAR LA COMPRA POR AHORA UN SWEETALERT
+
+		// Mostrar mensaje de compra satisfactoria
+		Swal.fire({
+			title: 'Compra Satisfactoria',
+			text: 'Gracias por comprar en Ricardo & Neyde',
+			icon: 'success',
+		}).then(() => {
+			// Restablecer los valores del formulario
+			setRecipient({
+				name: '',
+				mobile: '',
+				address: '',
+				building: '',
+				province: '',
+				termsAccepted: false,
+			});
+
+			// Vaciar el carrito de compra
+			clearCart();
+		});
+	};
+
+	const pagoOnline = async () => {
+		// // Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
+		// if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.building || !recipient.province || !recipient.termsAccepted) {
+		// 	Swal.fire({
+		// 		title: 'Formulario Incompleto',
+		// 		text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
+		// 		icon: 'error',
+		// 	});
+		// 	return;
+		// }
+
+		if (cart.length === 0) {
+			Swal.fire({ title: 'El carrito esta vacío', text: 'Añada elementos a su compra', icon: 'warning' });
+			return;
+		}
+
+		if (!user.logged) {
+			Swal.fire({ title: 'Inicia Sesión', text: 'No has iniciado sesión!', icon: 'warning' });
+			return;
+		}
+
+		try {
+			await Axios.post('http://localhost:3001/api/pago/create-checkout-session', { cartItems: cart })
+				.then((response) => {
+					window.location.href = response.data.url;
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		} catch (error) {
+			Swal.fire({
+				title: 'Error',
+				text: 'Ha ocurrido un error con su compra',
+				icon: 'error',
+			});
+			console.error('Error en el pago:', error);
+		}
+	};
+
+	return (
+		<div className='animate__animated animate__fadeIn'>
+			<div className='row'>
+				<div className='col-md-8 offset-md-2'>
+					<div className='my-2 d-flex justify-content-between align-items-center'>
+						<p className='m-0'>
+							<strong>Valor Total de la Compra </strong> 🛒: {total} USD
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div className='container my-5'>
+				<div className='row'>
+					{cart.map((val) => (
+						<div key={val.uid} className='col-sm-6 col-md-4 col-lg-3 mb-3'>
+							<div className='card h-100 shadow'>
+								<img
+									src={val.url}
+									className='card-img-top img-fluid'
+									alt={val.nombre}
+									style={{ height: '200px', objectFit: 'cover' }}
+								/>
+								<h5 className='card-header'>{val.nombre}</h5>
+								<div className='card-body'>
+									<p className='card-text'>
+										<strong>Precio:</strong> {val.precio} USD
+									</p>
+									<p className='card-text'>
+										<strong>Cantidad a comprar:</strong> {val.cantidadAdd}
+									</p>
+									<p className='card-text'>
+										<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} USD
+									</p>
+									<hr />
+									<div className='row align-items-center'>
+										<div className='col-2'>
+											<button
+												className='btn btn-secondary'
+												onClick={() => changeQuantity(val.uid, -1)}
+												disabled={val.cantidadAdd <= 1}
+											>
+												-
+											</button>
+										</div>
+										<div className='col-4'>
+											<button className='btn btn-secondary' onClick={() => changeQuantity(val.uid, 1)}>
+												+
+											</button>
+										</div>
+										<div className='col-4'>
+											<button className='btn btn-danger' onClick={() => removeFromCart(val.uid)}>
+												Quitar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+				<div className='container my-5'>
+					<h3 className='mb-4'>Información de Entrega</h3>
+					<form>
+						<div className='mb-3'>
+							<input
+								type='text'
+								className='form-control'
+								name='name'
+								placeholder='Nombre del receptor'
+								value={recipient.name}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className='mb-3'>
+							<input
+								type='number'
+								className='form-control'
+								name='mobile'
+								placeholder='Teléfono móvil'
+								value={recipient.mobile}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className='mb-3'>
+							<input
+								type='text'
+								className='form-control'
+								name='address'
+								placeholder='Dirección exacta'
+								value={recipient.address}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className='mb-3'>
+							<input
+								type='text'
+								className='form-control'
+								name='building'
+								placeholder='Calle/Edificio'
+								value={recipient.building}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className='mb-3'>
+							<input
+								type='text'
+								className='form-control'
+								name='province'
+								placeholder='Provincia'
+								value={recipient.province}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className='form-check mb-4'>
+							<input
+								type='checkbox'
+								className='form-check-input'
+								name='termsAccepted'
+								checked={recipient.termsAccepted}
+								id='termsAccepted'
+								onChange={handleInputChange}
+								required
+							/>
+							<label className='form-check-label' htmlFor='termsAccepted'>
+								Acepto Términos y Condiciones
+							</label>
+							{/* Botón para abrir el modal con los términos y condiciones */}
+							<button type='button' className='btn btn-link p-0 ml-2' data-toggle='modal' data-target='#termsModal'>
+								Ver Términos
+							</button>
+						</div>
+
+						{/* Modal con los términos y condiciones */}
+						<div className='modal fade' id='termsModal' tabIndex='-1' role='dialog' aria-labelledby='termsModalLabel' aria-hidden='true'>
+							<div className='modal-dialog' role='document'>
+								<div className='modal-content'>
+									<div className='modal-header'>
+										<h5 className='modal-title' id='termsModalLabel'>
+											Términos y Condiciones
+										</h5>
+										<button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+											<span aria-hidden='true'> &times;</span>
+										</button>
+									</div>
+									<div className='modal-body'>
+										<p>
+											<strong>Identificación del vendedor:</strong>
+											<br />
+											Somos Ricardo & Neyde, con domicilio a toda La Habana.
+											<br />
+											<br />
+											<strong>Características y precio de los productos:</strong>
+											<br />
+											Ofrecemos productos de las siguientes categorías: Cafetería y Combos. Cada producto tiene una ficha
+											detallada que incluye su nombre, descripción, imagen, precio, y disponibilidad. El precio de los productos
+											se expresa en USD. El vendedor se reserva el derecho de modificar los precios, los productos y las ofertas
+											en cualquier momento y sin previo aviso.
+											<br />
+											<br />
+											<strong>Métodos de pago:</strong>
+											<br />
+											El usuario podrá realizar el pago de su pedido de forma presencial y en dinero físico, en el momento de la
+											recogida del producto. El usuario deberá presentar el comprobante de su pedido en la página web. El
+											vendedor no acepta ningún otro método de pago, como tarjeta de crédito o transferencia, etc.
+											<br />
+											<br />
+											<strong>Métodos y gastos de envío:</strong>
+											<br />
+											No nos hacemos responsable de los posibles retrasos o incidencias en la entrega causados por motivos
+											ajenos a su voluntad, como huelgas, condiciones meteorológicas, etc.
+											<br />
+											<br />
+											<strong>Política de devoluciones, cambios y garantías:</strong>
+											<br />
+											El usuario no tiene derecho a desistir de su compra ni a solicitar el cambio de un producto por otro, una
+											vez que haya recogido el pedido en el establecimiento del vendedor. El usuario debe revisar detalladamente
+											toda la mercancía que compra y asegurarse de que está conforme con su estado y calidad, antes de realizar
+											el pago y salir del recinto del vendedor. El vendedor no se hace responsable de ningún defecto, daño o
+											deterioro que el producto pueda sufrir después de su salida del recinto del vendedor. El vendedor ofrece
+											una garantía de que el producto es nuevo y no ha sido usado ni manipulado por terceros. Esta garantía se
+											limita al momento de la entrega del producto al usuario, y no cubre los defectos o faltas de conformidad
+											que puedan surgir por el uso indebido, desgaste, rotura o manipulación por parte del usuario. El usuario
+											renuncia expresamente a cualquier reclamación o acción legal contra el vendedor por los defectos o faltas
+											de conformidad que el producto pueda presentar después de su salida del recinto del vendedor.
+										</p>
+									</div>
+
+									<div className='modal-footer'>
+										<button type='button' className='btn btn-secondary' data-dismiss='modal'>
+											Cerrar
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<button type='button' className='btn btn-success me-5' onClick={finalizeOrder}>
+							Finalizar Pedido
+						</button>
+						<button type='button' className='btn btn-success' onClick={pagoOnline}>
+							Pagar con Tarjeta
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	);
+};
