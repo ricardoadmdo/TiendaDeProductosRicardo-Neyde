@@ -33,7 +33,7 @@ export const AppRouter = () => {
 					}
 				/>
 			</Routes>
-			<Footer className='footer-margin' />
+			<Footer />
 		</BrowserRouter>
 	);
 };
