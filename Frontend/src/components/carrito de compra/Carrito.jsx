@@ -6,6 +6,82 @@ import Swal from 'sweetalert2';
 import Axios from 'axios';
 
 export const Carrito = () => {
+	const municipiosRepartos = {
+		'Habana Vieja': ['Prado', 'Santo Ángel', 'Catedral', 'Plaza Vieja', 'Belén', 'Jesús María', 'San Isidro', 'Tallapiedra'],
+		'Centro Habana': ['Cayo Hueso', 'Dragones', 'Colón', 'Pueblo Nuevo', 'Los Sitios', 'Barrio Chino'],
+		'Cerro': ['Casino Deportivo', 'Martí', 'Palatino', 'Santa Catalina', 'Villanueva', 'Ayestarán', 'Pilar', 'Atares'],
+		'10 de Octubre': ['A ambos lados de la calzada de 10 de octubre', 'antigua Jesús del Monte'],
+		'Plaza': ['Vedado', 'Miramar', 'Siboney', 'Alturas de Almendares', 'Kohly'],
+		'Arroyo Naranjo': ['Los Pinos', 'Mantilla', 'Calabazar', 'Wajay', 'Santiago de las Vegas', 'Eléctrico'],
+		'Boyeros': ['Alamar', 'Santiago de las Vegas', 'Eléctrico', 'Calabazar', 'Wajay', 'Las Cañas'],
+		'Cotorro': ['Santa María del Rosario', 'Güira de Melena', 'Jaruco', 'Madruga', 'San José de las Lajas'],
+		'San Miguel del Padrón': [
+			'Camilo Cienfuegos',
+			'Diezmero',
+			'Eléctrico',
+			'Guanabacoa',
+			'La Ceiba',
+			'Luyanó Moderno',
+			'Luyanó',
+			'Mariano',
+			'Párraga',
+			'Pogolotti',
+			'Sevillano',
+			'Víbora Park',
+			'Zamora',
+		],
+		'Playa': ['Miramar', 'Siboney', 'Flores', 'La Sierra', 'Santa Fe', 'Cubanacán', 'Kohly', 'Náutico', 'Nuevo Vedado', 'Almendares'],
+		'Marianao': [
+			'La Lisa',
+			'Pogolotti',
+			'Sevillano',
+			'Luyanó Moderno',
+			'Luyanó',
+			'Mariano',
+			'Párraga',
+			'Víbora Park',
+			'Zamora',
+			'Cubanacán',
+			'Kohly',
+			'Náutico',
+			'Nuevo Vedado',
+			'Almendares',
+		],
+		'La Lisa': [
+			'Punta Brava',
+			'La Palma',
+			'La Ceiba',
+			'La Fortuna',
+			'San Agustín',
+			'San Pedro',
+			'Santa Felicia',
+			'Santa Fe',
+			'Santa Teresa',
+			'San Antonio',
+			'San José',
+			'San Miguel',
+			'San Nicolás',
+			'San Pedro',
+			'San Rafael',
+			'San Ramón',
+			'San Ricardo',
+			'San Roque',
+			'San Vicente',
+			'Santa Ana',
+			'Santa Bárbara',
+			'Santa Clara',
+			'Santa Cruz',
+			'Santa Emilia',
+			'Santa Isabel',
+			'Santa Lucía',
+			'Santa María',
+			'Santa Marta',
+			'Santa Rosa',
+			'Santa Teresa',
+			'Santa Teresita',
+		],
+	};
+
 	const { cart, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
 	const { user } = useContext(AuthContext); // Utiliza AuthContext para verificar el estado de inicio de sesión
 	const location = useLocation();
@@ -13,8 +89,9 @@ export const Carrito = () => {
 		name: '',
 		mobile: '',
 		address: '',
-		building: '',
-		province: '',
+		municipio: '',
+		nota: '',
+		reparto: '',
 		termsAccepted: false,
 	});
 
@@ -32,6 +109,9 @@ export const Carrito = () => {
 			...recipient,
 			[name]: type === 'checkbox' ? checked : value,
 		});
+		if (name === 'municipio') {
+			setRecipient({ ...recipient, municipio: value, reparto: '' });
+		}
 	};
 
 	useEffect(() => {
@@ -62,7 +142,15 @@ export const Carrito = () => {
 		}
 
 		// Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
-		if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.building || !recipient.province || !recipient.termsAccepted) {
+		if (
+			!recipient.name ||
+			!recipient.mobile ||
+			!recipient.address ||
+			!recipient.municipio ||
+			!recipient.reparto ||
+			!recipient.nota ||
+			!recipient.termsAccepted
+		) {
 			Swal.fire({
 				title: 'Formulario Incompleto',
 				text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
@@ -84,8 +172,9 @@ export const Carrito = () => {
 				name: '',
 				mobile: '',
 				address: '',
-				building: '',
-				province: '',
+				municipio: '',
+				nota: '',
+				reparto: '',
 				termsAccepted: false,
 			});
 
@@ -95,8 +184,8 @@ export const Carrito = () => {
 	};
 
 	const pagoOnline = async () => {
-		// // Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
-		// if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.building || !recipient.province || !recipient.termsAccepted) {
+		// Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
+		// if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.municipio || !recipient.nota || !recipient.termsAccepted) {
 		// 	Swal.fire({
 		// 		title: 'Formulario Incompleto',
 		// 		text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
@@ -137,10 +226,13 @@ export const Carrito = () => {
 		<>
 			<div className='row animate__animated animate__fadeIn '>
 				<div className='col-md-8 offset-md-2'>
-					<div className='my-2 d-flex justify-content-between align-items-center'>
+					<div className='my-2 align-items-center'>
 						<p className='m-0'>
 							<strong>Valor Total de la Compra </strong> 🛒: {total} USD
 						</p>
+						<button type='button' className='btn btn-danger ' onClick={clearCart}>
+							Limpiar Carrito
+						</button>
 					</div>
 				</div>
 			</div>
@@ -237,23 +329,40 @@ export const Carrito = () => {
 								/>
 							</div>
 							<div className='mb-3'>
-								<input
-									type='text'
+								<select className='form-control' name='municipio' value={recipient.municipio} onChange={handleInputChange} required>
+									<option value=''>Seleccione un municipio</option>
+									{Object.keys(municipiosRepartos).map((municipio) => (
+										<option key={municipio} value={municipio}>
+											{municipio}
+										</option>
+									))}
+								</select>
+							</div>
+							<div className='mb-3'>
+								<select
 									className='form-control'
-									name='building'
-									placeholder='Calle/Edificio'
-									value={recipient.building}
+									name='reparto'
+									value={recipient.reparto}
 									onChange={handleInputChange}
 									required
-								/>
+									disabled={!recipient.municipio}
+								>
+									<option value=''>Seleccione el barrio</option>
+									{recipient.municipio &&
+										municipiosRepartos[recipient.municipio].map((reparto) => (
+											<option key={reparto} value={reparto}>
+												{reparto}
+											</option>
+										))}
+								</select>
 							</div>
 							<div className='mb-3'>
 								<input
 									type='text'
 									className='form-control'
-									name='province'
-									placeholder='Provincia'
-									value={recipient.province}
+									name='nota'
+									placeholder='Escribe alguna nota para el mensajero..'
+									value={recipient.nota}
 									onChange={handleInputChange}
 									required
 								/>
@@ -268,11 +377,10 @@ export const Carrito = () => {
 									onChange={handleInputChange}
 									required
 								/>
-								<label className='form-check-label' htmlFor='termsAccepted'>
-									Acepto Términos y Condiciones
+								<label className='form-check-label me-3' htmlFor='termsAccepted'>
+									Acepto Términos y Condiciones.
 								</label>
-								{/* Botón para abrir el modal con los términos y condiciones */}
-								<button type='button' className='btn btn-link p-0 ml-2' data-toggle='modal' data-target='#termsModal'>
+								<button type='button' className='btn btn-link p-0' data-toggle='modal' data-target='#termsModal'>
 									Ver Términos
 								</button>
 							</div>
@@ -349,12 +457,15 @@ export const Carrito = () => {
 								</div>
 							</div>
 
-							<button type='button' className='btn btn-success me-5' onClick={finalizeOrder}>
-								Finalizar Pedido
-							</button>
-							<button type='button' className='btn btn-success' onClick={pagoOnline}>
-								Pagar con Tarjeta
-							</button>
+							<div className='d-flex justify-content-between'>
+								{' '}
+								<button type='button' className='btn btn-success' onClick={finalizeOrder}>
+									Finalizar Pedido
+								</button>
+								<button type='button' className='btn btn-success' onClick={pagoOnline}>
+									Pagar con Tarjeta
+								</button>
+							</div>
 						</form>
 					</div>
 				</div>

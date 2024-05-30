@@ -34,7 +34,7 @@ export const NavbarCaf = () => {
 	};
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-dark bg-danger shadow'>
+		<nav className='navbar navbar-expand-lg navbar-dark bg-primary shadow'>
 			<div className='container'>
 				<NavLink className='navbar-brand' to='/'>
 					<img src={logo} alt='Logo de la tienda' style={{ height: '50px' }} />
