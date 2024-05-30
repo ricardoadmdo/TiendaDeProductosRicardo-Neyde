@@ -144,7 +144,7 @@ export const CRUDProducto = () => {
 	const validar = (event) => {
 		event.preventDefault();
 		const { nombre, cantidad, precio, url } = formState;
-		if (nombre.trim() === '' || cantidad === '' || precio === '' || url.trim() === '') {
+		if (nombre.trim() === '' || cantidad === 0 || precio === 0 || url.trim() === '') {
 			Swal.fire({
 				icon: 'error',
 				title: 'Campos Vacíos',

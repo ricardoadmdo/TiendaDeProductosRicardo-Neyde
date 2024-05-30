@@ -50,7 +50,7 @@ export const CRUDCombo = () => {
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Registro exitoso!!!</strong>',
-					html: '<i>El producto <strong>' + formState.nombre + '</strong> fue registrado con éxito</i>',
+					html: '<i>El combo <strong>' + formState.nombre + '</strong> fue registrado con éxito</i>',
 					icon: 'success',
 					timer: 3000,
 				});
@@ -74,7 +74,7 @@ export const CRUDCombo = () => {
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Actualización exitoso!!!</strong>',
-					html: '<i>El producto <strong>' + formState.nombre + '</strong> fue actualizado con éxito</i>',
+					html: '<i>El combo <strong>' + formState.nombre + '</strong> fue actualizado con éxito</i>',
 					icon: 'success',
 					timer: 3000,
 				});
@@ -108,7 +108,7 @@ export const CRUDCombo = () => {
 						limpiarCampos();
 						Swal.fire({
 							icon: 'success',
-							title: 'El producto ' + val.nombre + ' fue eliminado.',
+							title: 'El combo ' + val.nombre + ' fue eliminado.',
 							showConfirmButton: false,
 							timer: 2000,
 						});
@@ -117,7 +117,7 @@ export const CRUDCombo = () => {
 						Swal.fire({
 							icon: 'error',
 							title: 'Oops...',
-							text: 'No se logro eliminar el producto!',
+							text: 'No se logro eliminar el combo!',
 							footer:
 								JSON.parse(JSON.stringify(error)).message === 'Network Error'
 									? 'Intente mas tarde'
@@ -148,7 +148,7 @@ export const CRUDCombo = () => {
 	const validar = (event) => {
 		event.preventDefault();
 		const { nombre, description, precio, url, cantidad } = formState;
-		if (nombre.trim() === '' || description.trim() === '' || precio === '' || url.trim() === '' || cantidad === '') {
+		if (nombre.trim() === '' || description.trim() === '' || precio === 0 || url.trim() === '' || cantidad === 0) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Campos Vacíos',
@@ -168,24 +168,21 @@ export const CRUDCombo = () => {
 		}
 	};
 
-	const openModal = (op, producto) => {
+	const openModal = (op, combo) => {
 		setFormState({
-			nombre: op === 2 ? producto.nombre : '',
-			cantidad: op === 2 ? producto.cantidad : '',
-			description: op === 2 ? producto.description : '',
-			precio: op === 2 ? producto.precio : '',
-			url: op === 2 ? producto.url : '',
-			estado: op === 2 ? producto.estado : false,
+			nombre: op === 2 ? combo.nombre : '',
+			cantidad: op === 2 ? combo.cantidad : '',
+			description: op === 2 ? combo.description : '',
+			precio: op === 2 ? combo.precio : '',
+			url: op === 2 ? combo.url : '',
+			estado: op === 2 ? combo.estado : false,
 		});
+
 		setOperationMode(op);
-		setTitle(op === 1 ? 'Registrar Producto' : 'Editar Producto');
+		setTitle(op === 1 ? 'Registrar Combo' : 'Editar Combo');
 
 		// Si es modo de edición, establece el ID
-		if (op === 2) {
-			setId(producto.uid);
-		} else {
-			setId('');
-		}
+		setId(op === 2 ? combo.uid : '');
 
 		// Enfoca el primer campo del formulario después de un breve retraso
 		window.setTimeout(() => {

@@ -1,6 +1,12 @@
+import { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faSearch, faCamera } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+
+const cloudName = 'dber1pxea';
+const uploadPreset = 'ml_default';
 
 const TablaCRUD = ({
 	searchTerm,
@@ -21,29 +27,61 @@ const TablaCRUD = ({
 	formState,
 	setFormState,
 }) => {
+	const [uploading, setUploading] = useState(false);
+	const [url, setUrl] = useState('');
+	const [imageName, setImageName] = useState('');
+
+	const handleDrop = useCallback(
+		async (acceptedFiles) => {
+			setUploading(true);
+			const file = acceptedFiles[0];
+
+			const formData = new FormData();
+			formData.append('file', file);
+			formData.append('upload_preset', uploadPreset);
+
+			try {
+				const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
+				const url = response.data.secure_url;
+				setUrl(url);
+				setImageName(file.name);
+				setFormState((prevState) => ({ ...prevState, url }));
+			} catch (error) {
+				console.error('Error uploading image:', error);
+			} finally {
+				setUploading(false);
+			}
+		},
+		[setFormState]
+	);
+
+	const { getRootProps, getInputProps, open } = useDropzone({
+		noClick: true,
+		noKeyboard: true,
+		onDrop: handleDrop,
+	});
+
 	// Funciones para manejar eventos generales
 	const handleAdd = () => {
-		// Reinicia el estado del formulario para un nuevo usuario
 		setFormState({
 			nombre: '',
 			password: '',
 			correo: '',
 			rol: '',
+			url: '',
 		});
-		// Abre el modal en modo de creación
 		setOperationMode(1); // Modo 'crear'
 		onAdd();
 	};
 
 	const handleEdit = (item) => {
-		// Actualiza el estado del formulario con los datos del usuario que se va a editar
 		setFormState({
 			nombre: item.nombre,
-			password: '', // La contraseña no se carga por razones de seguridad
+			password: '',
 			correo: item.correo,
 			rol: item.rol,
+			url: item.url,
 		});
-		// Abre el modal en modo de edición
 		setOperationMode(2); // Modo 'editar'
 		onEdit(item);
 	};
@@ -99,7 +137,6 @@ const TablaCRUD = ({
 									<tr key={item.uid}>
 										{columns.map((column) => (
 											<td key={column.accessor}>
-												{' '}
 												{column.accessor === 'estado'
 													? item[column.accessor]
 														? 'Activo'
@@ -129,32 +166,25 @@ const TablaCRUD = ({
 					</div>
 				</div>
 			</div>
-			{/* Modal para añadir/editar elementos */}
+
 			<div className='modal fade animate__animated animate__fadeIn' id='modal' aria-hidden='true' aria-labelledby='exampleModalToggleLabel'>
 				<div className='modal-dialog modal-dialog-centered'>
 					<div className='modal-content'>
 						<div className='modal-header'>
 							<label className='modal-title h5'>{title}</label>
-							<button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'>
-								{' '}
-							</button>
+							<button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
 						</div>
 						<div className='modal-body'>
 							<input type='hidden' id='id'></input>
 							<form id='Form' onSubmit={(event) => validate(event, formState)}>
 								{formFields.map((field) => {
-									// Si el campo es 'password' y estamos en modo 'editar', no se renderiza
 									if (field.name === 'password' && operationMode === 2) {
 										return null;
 									}
-									// Si el campo es 'estado' y estamos en modo 'crear', no se renderiza
 									if (field.name === 'estado' && operationMode === 1) {
 										return null;
 									}
-
-									// Si el campo es de tipo 'select', renderiza un elemento select
 									if (field.type === 'select') {
-										// Ajustar el valor por defecto y las opciones para el campo de estado cuando operationMode es 2 (editar)
 										if (field.name === 'estado' && operationMode === 2) {
 											return (
 												<div className='input-group mb-3' key={field.name}>
@@ -171,7 +201,6 @@ const TablaCRUD = ({
 											);
 										}
 
-										// Renderiza un select normal para otros campos
 										return (
 											<div className='input-group mb-3' key={field.name}>
 												<span className='input-group-text'>{field.label}:</span>
@@ -189,8 +218,44 @@ const TablaCRUD = ({
 											</div>
 										);
 									}
+									if (field.name === 'url') {
+										return (
+											<div key={field.name} className='input-control mb-3 dropzone-area bg-light' {...getRootProps()}>
+												<input {...getInputProps()} className='form-control' />
+												<div className='input-group-append'>
+													<div className='dropzone-content border w-100 d-flex justify-content-between align-items-center p-2'>
+														{url ? (
+															<>
+																<img
+																	src={url}
+																	alt={imageName}
+																	className='img-thumbnail'
+																	style={{ maxHeight: '200px' }}
+																/>
+																<p className='mb-0'>{imageName}</p>
+															</>
+														) : (
+															<div className='w-100 text-center'>
+																<FontAwesomeIcon icon={faCamera} size='lg' />
+																<p className='mb-0'>Arrastra una imagen aquí</p>
+																<button
+																	type='button'
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		open();
+																	}}
+																	className='btn btn-dark w-100 mt-2'
+																>
+																	Buscar imagen
+																</button>
+															</div>
+														)}
+													</div>
+												</div>
+											</div>
+										);
+									}
 
-									// Para otros tipos de campos, renderiza un input
 									return (
 										<div className='input-group mb-3' key={field.name}>
 											<span className='input-group-text'>{field.label}:</span>
@@ -205,14 +270,13 @@ const TablaCRUD = ({
 										</div>
 									);
 								})}
-
+								{uploading && <p>Subiendo imagen...</p>}
 								<div className='d-grid col-6 mx-auto'>
 									<button type='submit' className='btn btn-success'>
 										<i className='fa fa-floppy-disk'></i> Guardar
 									</button>
 								</div>
 							</form>
-
 							<div className='modal-footer'>
 								<button id='btnCerrar' type='button' className='btn btn-secondary' data-bs-dismiss='modal'>
 									<i className='fa fa-times'></i> Cerrar
@@ -255,9 +319,10 @@ TablaCRUD.propTypes = {
 	}),
 	setFormState: PropTypes.func.isRequired,
 	busqueda: PropTypes.bool.isRequired,
-	searchTerm: PropTypes.string.isRequired,
+	searchTerm: PropTypes.string,
 	handleSearchChange: PropTypes.func,
 	handleSearchSubmit: PropTypes.func,
+	url: PropTypes.func,
 };
 
 export default TablaCRUD;

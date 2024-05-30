@@ -34,7 +34,7 @@ export const AppRouter = () => {
 					<Route path='busqueda' element={<Busqueda />} />
 					<Route path='perfil' element={<Perfil />} />
 					<Route
-						path='dashboard/*'
+						path='/*'
 						element={
 							<PrivateRoute>
 								<DashboardRoutes />

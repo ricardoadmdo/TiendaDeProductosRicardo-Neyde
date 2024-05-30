@@ -86,8 +86,8 @@ const comboDelete = async (req, res) => {
 	if (!combo) {
 		return res.status(404).json({ msg: 'Combo no encontrado o ya fue eliminado' });
 	}
-	const productoEliminado = await Producto.findByIdAndUpdate(id, { estado: false });
-	res.json({ msg: 'Producto eliminado: ', combo: productoEliminado });
+	const comboEliminado = await Combo.findByIdAndUpdate(id, { estado: false });
+	res.json({ msg: 'Combo eliminado: ', combo: comboEliminado });
 };
 
 module.exports = {
