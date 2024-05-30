@@ -67,7 +67,12 @@ export const Navbar = () => {
 					</form>
 
 					<ul className='navbar-nav'>
-						<li className='nav-item position-relative'>
+						<NavLink className='nav-link' to='/'>
+							<FontAwesomeIcon icon={faStore} />
+							Tienda
+						</NavLink>
+
+						<li className='nav-item position-relative me-5'>
 							<NavLink className='nav-link' to='/cafeteria'>
 								<FontAwesomeIcon icon={faStore} />
 								Cafeteria

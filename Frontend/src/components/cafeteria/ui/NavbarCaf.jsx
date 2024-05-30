@@ -67,14 +67,19 @@ export const NavbarCaf = () => {
 					</form>
 
 					<ul className='navbar-nav'>
-						<li className='nav-item position-relative'>
+						<NavLink className='nav-link' to='/'>
+							<FontAwesomeIcon icon={faStore} />
+							Tienda
+						</NavLink>
+
+						<li className='nav-item position-relative me-5'>
 							<NavLink className='nav-link' to='/cafeteria'>
 								<FontAwesomeIcon icon={faStore} />
-								Cafeteria
+								Cafetería
 							</NavLink>
 						</li>
 						<li className='nav-item position-relative'>
-							<NavLink className='nav-link' to='/carrito'>
+							<NavLink className='nav-link' to='/cafeteria/carrito'>
 								<FontAwesomeIcon icon={faShoppingCart} />
 								{cartItemCount > 0 && (
 									<span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
@@ -85,19 +90,19 @@ export const NavbarCaf = () => {
 							</NavLink>
 						</li>
 						<li className='nav-item'>
-							<NavLink className='nav-link' to='/productos'>
+							<NavLink className='nav-link' to='/pastas'>
 								<FontAwesomeIcon icon={faHamburger} />
 								Pastas
 							</NavLink>
 						</li>
-						<li className='nav-item me-5'>
-							<NavLink className='nav-link' to='/combos'>
+						<li className='nav-item'>
+							<NavLink className='nav-link' to='/cubana'>
 								<FontAwesomeIcon icon={faUtensils} />
 								Comida cubana
 							</NavLink>
 						</li>
 						<li className='nav-item me-5'>
-							<NavLink className='nav-link' to='/combos'>
+							<NavLink className='nav-link' to='/carnes'>
 								<FontAwesomeIcon icon={faUtensils} />
 								Carnes
 							</NavLink>
