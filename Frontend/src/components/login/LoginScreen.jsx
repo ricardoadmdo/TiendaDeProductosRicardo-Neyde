@@ -38,6 +38,11 @@ export const LoginScreen = () => {
 				return;
 			}
 
+			if (response.data.cambiarPassword) {
+				setNewUser(true);
+				return;
+			}
+
 			const action = {
 				type: types.login,
 				payload: {
@@ -49,6 +54,7 @@ export const LoginScreen = () => {
 					google: true,
 				},
 			};
+
 			dispatch(action);
 			navigate('/');
 		} catch (error) {
@@ -174,7 +180,7 @@ export const LoginScreen = () => {
 			<div className='card p-4 shadow text-center' style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.819)', zIndex: '2' }}>
 				{newUser ? (
 					<>
-						<h3 className='mb-3'>Cree una contraseña para su cuenta: </h3>
+						<h3 className='mb-3'>Necesita una contraseña para su cuenta: </h3>
 						<form className='d-grid gap-3' onSubmit={handleNewUserSubmit}>
 							<div className='form-group'>
 								<label>Contraseña:</label>
@@ -244,16 +250,16 @@ export const LoginScreen = () => {
 							<button className='btn btn-success' type='submit'>
 								Iniciar Sesión
 							</button>
-							<div className='mt-3'>
-								<button className='btn btn-outline-dark d-flex align-items-center' onClick={login}>
-									<img src='https://img.icons8.com/color/16/000000/google-logo.png' alt='Google icon' className='me-2' />
-									Iniciar sesión con Google
-								</button>
-							</div>
-							<Link to='/register' className='text-primary mt-3'>
-								¿No tienes una cuenta? Regístrate aquí
-							</Link>
 						</form>
+						<div className='mt-3'>
+							<button className='btn btn-outline-dark d-flex align-items-center' onClick={login}>
+								<img src='https://img.icons8.com/color/16/000000/google-logo.png' alt='Google icon' className='me-2' />
+								Iniciar sesión con Google
+							</button>
+						</div>
+						<Link to='/register' className='text-primary mt-3'>
+							¿No tienes una cuenta? Regístrate aquí
+						</Link>
 					</>
 				)}
 			</div>

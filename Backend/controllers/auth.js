@@ -22,6 +22,13 @@ const googleLogin = async (req, res) => {
 		// Verificar si el usuario ya existe en la base de datos
 		let usuario = await Usuario.findOne({ correo: profile.email });
 
+		if (usuario.password === 'TEMPORAL') {
+			return res.json({
+				msg: 'Necesita crear una contraseña',
+				cambiarPassword: true,
+			});
+		}
+
 		if (!usuario) {
 			// Crear un nuevo usuario si no existe
 			usuario = new Usuario({
@@ -29,7 +36,7 @@ const googleLogin = async (req, res) => {
 				correo: profile.email,
 				rol: 'USER_ROLE',
 				estado: true,
-				password: profile.email, // Contraseña temporal
+				password: 'TEMPORAL',
 				google: true,
 			});
 			await usuario.save();
@@ -90,7 +97,7 @@ const createPassword = async (req, res) => {
 		});
 
 		res.json({
-			msg: 'Password created successfully',
+			msg: 'Contraseña creada correctamente',
 			usuario,
 			token,
 		});
@@ -107,6 +114,12 @@ const login = async (req, res = response) => {
 	const { correo, password } = req.body;
 
 	try {
+		if (password === 'TEMPORAL') {
+			return res.status(400).json({
+				msg: 'Necesita crear una contraseña',
+			});
+		}
+
 		// Si el usuario existe por CORREO en la base de datos
 		const usuario = await Usuario.findOne({ correo });
 		if (!usuario) {
