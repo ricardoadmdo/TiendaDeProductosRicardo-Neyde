@@ -12,6 +12,7 @@ import MainLayout from './MainLayout';
 import CafeteriaLayout from './CafeteriaLayout';
 import { Cafeteria } from '../components/cafeteria/Cafeteria';
 import { Perfil } from '../components/ui/Perfil';
+import { VerificationScreen } from '../components/login/VerificationScreen';
 
 export const AppRouter = () => {
 	return (
@@ -34,6 +35,7 @@ export const AppRouter = () => {
 					<Route path='combos' element={<Combos />} />
 					<Route path='busqueda' element={<Busqueda />} />
 					<Route path='perfil' element={<Perfil />} />
+					<Route path='verify-code' element={<VerificationScreen />} />
 					<Route
 						path='/*'
 						element={

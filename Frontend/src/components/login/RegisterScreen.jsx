@@ -14,13 +14,6 @@ export const RegisterScreen = () => {
 	const [email, setEmail] = useState('');
 	const navigate = useNavigate();
 
-	const showConfirm = () => {
-		Swal.fire({
-			title: 'Usuario Registrado con éxito',
-			text: 'Por favor Inicie Sesión',
-			icon: 'success',
-		});
-	};
 	const handleRegister = (e) => {
 		e.preventDefault();
 		if (password === confirmPassword) {
@@ -31,11 +24,14 @@ export const RegisterScreen = () => {
 				rol: 'USER_ROLE',
 			})
 				.then(() => {
-					setNombre('');
-					setPassword('');
-					setEmail('');
-					showConfirm();
-					navigate('/login');
+					Axios.post(`http://localhost:3001/api/auth/login/${email}/code`).then(() => {
+						Swal.fire({
+							title: 'Código enviado',
+							text: 'Por favor revisa tu correo electrónico',
+							icon: 'success',
+						});
+						navigate('/verify-code');
+					});
 				})
 				.catch((error) => {
 					if (error.response && error.response.data && error.response.data.msg) {
@@ -47,7 +43,7 @@ export const RegisterScreen = () => {
 					} else {
 						Swal.fire({
 							icon: 'warning',
-							title: 'Contraseña no valida',
+							title: 'Contraseña no válida',
 							text: 'La contraseña debe tener al menos 8 caracteres.',
 						});
 					}

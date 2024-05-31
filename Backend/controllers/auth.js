@@ -187,7 +187,7 @@ const register = async (req, res = response) => {
 const emailVerification = async (req, res = response) => {
 	const { email } = req.params;
 
-	const usuario = await Usuario.findOne({ correo });
+	const usuario = await Usuario.findOne({ correo: email });
 
 	if (!usuario) {
 		return res.status(400).json({
@@ -198,21 +198,19 @@ const emailVerification = async (req, res = response) => {
 
 	let code = '';
 
-	for (let index = 0; index <= 5; index++) {
+	for (let index = 0; index < 6; index++) {
 		code += Math.floor(Math.random() * 10);
 	}
-	console.log(code);
 
 	usuario.login_code = code;
-	await Usuario.save();
+	await usuario.save();
 
 	const result = await transporter.sendMail({
 		from: `Tienda Ricardo & Neyde ${process.env.EMAIL}`,
 		to: email,
 		subject: 'Código de inicio de sesión: ' + code,
-		body: 'Este es tu código para iniciar tu sesión',
+		text: 'Este es tu código para iniciar tu sesión',
 	});
-	console.log(result);
 	res.status(200).json({ ok: true, msg: 'Código enviado con éxito' });
 };
 
@@ -220,7 +218,7 @@ const codeVerification = async (req, res = response) => {
 	const { email } = req.params;
 	const { code } = req.body;
 
-	const usuario = await Usuario.findOne({ email, login_code: code });
+	const usuario = await Usuario.findOne({ correo: email, login_code: code });
 
 	if (!usuario) {
 		return res.status(400).json({
@@ -229,6 +227,7 @@ const codeVerification = async (req, res = response) => {
 		});
 	}
 
+	// Aquí puedes añadir lógica adicional para iniciar sesión, generar tokens, etc.
 	res.status(200).json({ ok: true, msg: 'Inicio de sesión exitoso.' });
 };
 
