@@ -5,8 +5,9 @@ const { generarJWT } = require('../helpers/generar-jwt');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const transporter = require('../helpers/mailer.js');
+const { v4: uuidv4 } = require('uuid');
 
-const googleLogin = async (req, res) => {
+const googleLogin = async (req = request, res = response) => {
 	const { access_token } = req.body;
 
 	try {
@@ -158,77 +159,111 @@ const login = async (req, res = response) => {
 		});
 	}
 };
-
 const register = async (req, res = response) => {
 	const { nombre, correo, password, rol } = req.body;
 
-	// Crear un nuevo usuario con el código de verificación
-	const usuario = new Usuario({ nombre, correo, password, rol });
-
 	try {
+		let usuario = await Usuario.findOne({ correo });
+
+		if (usuario) {
+			return res.status(400).json({
+				ok: false,
+				msg: 'El correo ya está registrado',
+			});
+		}
+
+		usuario = new Usuario({ nombre, correo, password, rol });
+
+		// Encriptar contraseña
 		const salt = bcryptjs.genSaltSync();
 		usuario.password = bcryptjs.hashSync(password, salt);
 
-		// Guardar el usuario en la base de datos
 		await usuario.save();
 
-		res.json({
-			usuario,
-			msg: 'Registrado correctamente.',
+		res.status(201).json({
+			ok: true,
+			msg: 'Usuario registrado correctamente',
 		});
 	} catch (error) {
-		console.error('Error en registro:', error);
-		return res.status(500).json({
-			msg: 'Hable con el administrador',
+		console.log(error);
+		res.status(500).json({
+			ok: false,
+			msg: 'Error inesperado... revisar logs',
 		});
 	}
 };
 
-const emailVerification = async (req, res = response) => {
+const emailVerification = async (req, res) => {
 	const { email } = req.params;
 
-	const usuario = await Usuario.findOne({ correo: email });
+	try {
+		const usuario = await Usuario.findOne({ correo: email });
 
-	if (!usuario) {
-		return res.status(400).json({
+		if (!usuario) {
+			return res.status(400).json({
+				ok: false,
+				msg: 'No existe un usuario con ese correo',
+			});
+		}
+
+		let code = '';
+		for (let index = 0; index < 6; index++) {
+			code += Math.floor(Math.random() * 10);
+		}
+
+		const verificationToken = uuidv4(); // Generar un token único
+
+		usuario.login_code = code;
+		usuario.verification_token = verificationToken;
+		usuario.estado = false; // Asegúrate de actualizar el estado aquí
+		await usuario.save();
+
+		await transporter.sendMail({
+			from: `Tienda Ricardo & Neyde ${process.env.EMAIL}`,
+			to: email,
+			subject: 'Código de inicio de sesión: ',
+			text: 'Este es tu código para iniciar tu sesión:' + code,
+		});
+
+		res.status(200).json({ ok: true, token: verificationToken, msg: 'Código enviado con éxito' });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
 			ok: false,
-			msg: 'No existe un usuario con ese correo',
+			msg: 'Error inesperado... revisar logs',
+			error,
 		});
 	}
-
-	let code = '';
-
-	for (let index = 0; index < 6; index++) {
-		code += Math.floor(Math.random() * 10);
-	}
-
-	usuario.login_code = code;
-	await usuario.save();
-
-	const result = await transporter.sendMail({
-		from: `Tienda Ricardo & Neyde ${process.env.EMAIL}`,
-		to: email,
-		subject: 'Código de inicio de sesión: ' + code,
-		text: 'Este es tu código para iniciar tu sesión',
-	});
-	res.status(200).json({ ok: true, msg: 'Código enviado con éxito' });
 };
 
-const codeVerification = async (req, res = response) => {
-	const { email } = req.params;
-	const { code } = req.body;
+const codeVerification = async (req, res) => {
+	const { token, code } = req.body;
 
-	const usuario = await Usuario.findOne({ correo: email, login_code: code });
+	try {
+		const usuario = await Usuario.findOne({ verification_token: token, login_code: code });
 
-	if (!usuario) {
-		return res.status(400).json({
+		if (!usuario) {
+			return res.status(400).json({
+				ok: false,
+				msg: 'Credenciales inválidas',
+			});
+		}
+
+		// Actualizar el estado del usuario a true
+		usuario.estado = true;
+		usuario.verification_token = null; // Opcional: limpiar el token una vez verificado
+		await usuario.save();
+
+		// Aquí puedes añadir lógica adicional para iniciar sesión, generar tokens, etc.
+		res.status(200).json({ ok: true, msg: 'Inicio de sesión exitoso.' });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
 			ok: false,
-			msg: 'Credenciales inválidas',
+			msg: 'Error inesperado... revisar logs',
+			error,
 		});
 	}
-
-	// Aquí puedes añadir lógica adicional para iniciar sesión, generar tokens, etc.
-	res.status(200).json({ ok: true, msg: 'Inicio de sesión exitoso.' });
 };
 
 module.exports = {

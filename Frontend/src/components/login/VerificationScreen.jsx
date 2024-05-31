@@ -1,23 +1,33 @@
-// Frontend: VerificationScreen.js
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
+import './styles.css';
 
 export const VerificationScreen = () => {
 	const [code, setCode] = useState('');
-	const [email, setEmail] = useState('');
 	const navigate = useNavigate();
+	const location = useLocation();
+	const [token, setToken] = useState('');
+
+	useEffect(() => {
+		const query = new URLSearchParams(location.search);
+		const tokenFromURL = query.get('token');
+		if (tokenFromURL) {
+			setToken(tokenFromURL);
+		}
+	}, [location.search]);
 
 	const handleVerifyCode = (e) => {
 		e.preventDefault();
-		Axios.post(`http://localhost:3001/api/auth/login/${email}`, { code })
+		Axios.post('http://localhost:3001/api/auth/verify', { token, code })
 			.then(() => {
 				Swal.fire({
-					title: 'Código verificado correctamente, por favor inicie sesión',
+					title: 'Código verificado',
+					text: 'Bienvenido a Ricardo & Neyde',
 					icon: 'success',
 				});
-				navigate('/login');
+				navigate('/');
 			})
 			.catch((error) => {
 				Swal.fire({
@@ -29,21 +39,27 @@ export const VerificationScreen = () => {
 	};
 
 	return (
-		<div className='container'>
-			<h2>Verificar Código</h2>
-			<form onSubmit={handleVerifyCode}>
-				<div className='form-group'>
-					<label>Correo electrónico:</label>
-					<input type='email' className='form-control' value={email} onChange={(e) => setEmail(e.target.value)} required />
-				</div>
-				<div className='form-group'>
-					<label>Código:</label>
-					<input type='text' className='form-control' value={code} onChange={(e) => setCode(e.target.value)} required />
-				</div>
-				<button type='submit' className='btn btn-primary'>
-					Verificar
-				</button>
-			</form>
+		<div className='container-fluid d-flex justify-content-center align-items-center vh-100 verification-container'>
+			<div className='card p-4 shadow text-center animate__animated animate__fadeIn verification-card'>
+				<h2 className='mb-4'>Verificación de Código</h2>
+				<form onSubmit={handleVerifyCode}>
+					<div className='form-group mb-3'>
+						<label htmlFor='code'>Código:</label>
+						<input
+							type='text'
+							placeholder='Código aquí...'
+							className='form-control'
+							id='code'
+							value={code}
+							onChange={(e) => setCode(e.target.value)}
+							required
+						/>
+					</div>
+					<button type='submit' className='btn btn-success w-100'>
+						Verificar
+					</button>
+				</form>
+			</div>
 		</div>
 	);
 };

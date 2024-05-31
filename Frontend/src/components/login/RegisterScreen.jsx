@@ -14,40 +14,42 @@ export const RegisterScreen = () => {
 	const [email, setEmail] = useState('');
 	const navigate = useNavigate();
 
-	const handleRegister = (e) => {
+	const handleRegister = async (e) => {
 		e.preventDefault();
 		if (password === confirmPassword) {
-			Axios.post('http://localhost:3001/api/auth/register', {
-				nombre: nombre,
-				password: password,
-				correo: email,
-				rol: 'USER_ROLE',
-			})
-				.then(() => {
-					Axios.post(`http://localhost:3001/api/auth/login/${email}/code`).then(() => {
-						Swal.fire({
-							title: 'Código enviado',
-							text: 'Por favor revisa tu correo electrónico',
-							icon: 'success',
-						});
-						navigate('/verify-code');
-					});
-				})
-				.catch((error) => {
-					if (error.response && error.response.data && error.response.data.msg) {
-						Swal.fire({
-							icon: 'error',
-							title: 'Oops...',
-							text: error.response.data.msg,
-						});
-					} else {
-						Swal.fire({
-							icon: 'warning',
-							title: 'Contraseña no válida',
-							text: 'La contraseña debe tener al menos 8 caracteres.',
-						});
-					}
+			try {
+				await Axios.post('http://localhost:3001/api/auth/register', {
+					nombre,
+					password,
+					correo: email,
+					rol: 'USER_ROLE',
 				});
+
+				const response = await Axios.post(`http://localhost:3001/api/auth/verify/${email}`);
+				const token = response.data.token;
+
+				Swal.fire({
+					title: 'Código enviado',
+					text: 'Por favor revisa tu correo electrónico',
+					icon: 'info',
+				});
+
+				navigate(`/verify-code?token=${token}`);
+			} catch (error) {
+				if (error.response && error.response.data && error.response.data.msg) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: error.response.data.msg,
+					});
+				} else {
+					Swal.fire({
+						icon: 'warning',
+						title: 'Error',
+						text: 'Ocurrió un error inesperado. Por favor, intente nuevamente.',
+					});
+				}
+			}
 		} else {
 			Swal.fire({
 				icon: 'error',
@@ -60,6 +62,7 @@ export const RegisterScreen = () => {
 	const togglePasswordVisibility = () => {
 		setShowPassword(!showPassword);
 	};
+
 	const togglePasswordVisibility1 = () => {
 		setShowPassword1(!showPassword1);
 	};
@@ -80,7 +83,7 @@ export const RegisterScreen = () => {
 			>
 				<h3 className='mb-3'>Necesitas una cuenta para continuar!</h3>
 				<h2 className='mb-4'>Registrarse</h2>
-				<form className='d-grid gap-3' onSubmit={(e) => handleRegister(e)}>
+				<form className='d-grid gap-3' onSubmit={handleRegister}>
 					<div className='form-group'>
 						<label>Su nombre:</label>
 						<input

@@ -30,6 +30,9 @@ const UsuarioSchema = Schema({
 	login_code: {
 		type: String,
 	},
+	verification_token: {
+		type: String,
+	},
 });
 
 UsuarioSchema.methods.toJSON = function () {

@@ -18,7 +18,10 @@ router.post(
 
 router.post('/google', googleLogin);
 router.post('/create-password', createPassword);
-router.post('/login/:email/code', emailVerification);
-router.post('/login/:email', codeVerification);
+// Ruta para enviar el código de verificación
+router.post('/verify/:email', emailVerification);
+
+// Ruta para verificar el código de verificación
+router.post('/verify', codeVerification);
 
 module.exports = router;
