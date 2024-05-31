@@ -156,7 +156,7 @@ export const LoginScreen = () => {
 						Iniciar Sesión
 					</button>
 					<div className='mt-3'>
-						<button className='btn btn-primary d-flex align-items-center' onClick={login}>
+						<button className='btn btn-outline-dark d-flex align-items-center' onClick={login}>
 							<img src='https://img.icons8.com/color/16/000000/google-logo.png' alt='Google icon' className='me-2' />
 							Iniciar sesión con Google
 						</button>
