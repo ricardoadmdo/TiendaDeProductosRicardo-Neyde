@@ -222,7 +222,13 @@ const emailVerification = async (req, res) => {
 			from: `Tienda Ricardo & Neyde ${process.env.EMAIL}`,
 			to: email,
 			subject: 'Código de inicio de sesión: ',
-			text: 'Este es tu código para iniciar tu sesión:' + code,
+			html: `
+        <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+            <h2 style="color: #333;">Código de inicio de sesión</h2>
+            <p style="color: #555;">Este es tu código para iniciar tu sesión:</p>
+            <p style="background-color: #f1f1f1; padding: 10px; font-size: 18px;">${code}</p>
+        </div>
+    `,
 		});
 
 		res.status(200).json({ ok: true, token: verificationToken, msg: 'Código enviado con éxito' });
