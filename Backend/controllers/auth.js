@@ -5,7 +5,7 @@ const { generarJWT } = require('../helpers/generar-jwt');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
-const googleLogin = async (req = request, res = response) => {
+const googleLogin = async (req, res) => {
 	const { access_token } = req.body;
 
 	try {
@@ -29,11 +29,24 @@ const googleLogin = async (req = request, res = response) => {
 				correo: profile.email,
 				rol: 'USER_ROLE',
 				estado: true,
-				password: profile.email,
+				password: profile.email, // Contraseña temporal
 				google: true,
 			});
 			await usuario.save();
+
+			// Indicar que el usuario es nuevo
+			const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
+				expiresIn: '1h',
+			});
+
+			return res.json({
+				msg: 'New user, password creation required',
+				newUser: true,
+				usuario,
+				token,
+			});
 		}
+
 		// Generar un token JWT
 		const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
 			expiresIn: '1h',
@@ -41,6 +54,7 @@ const googleLogin = async (req = request, res = response) => {
 
 		res.json({
 			msg: 'Login successful',
+			newUser: false,
 			usuario,
 			token,
 		});
@@ -48,6 +62,42 @@ const googleLogin = async (req = request, res = response) => {
 		console.error('Error during Google login:', error);
 		res.status(500).json({
 			msg: 'Error during Google login',
+			error: error.message,
+		});
+	}
+};
+
+const createPassword = async (req, res) => {
+	const { correo, password } = req.body;
+
+	try {
+		let usuario = await Usuario.findOne({ correo });
+
+		if (!usuario) {
+			return res.status(404).json({
+				msg: 'User not found',
+			});
+		}
+
+		// Hash de la contraseña
+		const salt = bcryptjs.genSaltSync();
+		usuario.password = bcryptjs.hashSync(password, salt);
+		await usuario.save();
+
+		// Generar un nuevo token JWT
+		const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
+			expiresIn: '1h',
+		});
+
+		res.json({
+			msg: 'Password created successfully',
+			usuario,
+			token,
+		});
+	} catch (error) {
+		console.error('Error during password creation:', error);
+		res.status(500).json({
+			msg: 'Error during password creation',
 			error: error.message,
 		});
 	}
@@ -124,4 +174,5 @@ module.exports = {
 	login,
 	register,
 	googleLogin,
+	createPassword,
 };

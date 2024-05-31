@@ -15,6 +15,11 @@ export const LoginScreen = () => {
 	const navigate = useNavigate();
 	const { dispatch } = useContext(AuthContext);
 
+	//Nuevo usuario google
+	const [newUser, setNewUser] = useState(false);
+	const [newPassword, setNewPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+
 	const login = useGoogleLogin({
 		onSuccess: (codeResponse) => handleGoogleLogin(codeResponse),
 		onError: (error) => console.log('Login Failed:', error),
@@ -25,6 +30,49 @@ export const LoginScreen = () => {
 			const response = await Axios.post('http://localhost:3001/api/auth/google', {
 				access_token: codeResponse.access_token,
 			});
+			const userData = response.data.usuario;
+
+			if (response.data.newUser) {
+				setNewUser(true);
+				setEmail(userData.correo);
+				return;
+			}
+
+			const action = {
+				type: types.login,
+				payload: {
+					nombre: userData.nombre,
+					correo: userData.correo,
+					token: response.data.token,
+					rol: userData.rol,
+					uid: userData.uid,
+					google: true,
+				},
+			};
+			dispatch(action);
+			navigate('/');
+		} catch (error) {
+			console.error('Error durante la autenticación con Google:', error);
+		}
+	};
+
+	const handleNewUserSubmit = async (e) => {
+		e.preventDefault();
+		if (newPassword !== confirmPassword) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Las contraseñas no coinciden',
+			});
+			return;
+		}
+
+		try {
+			const response = await Axios.post('http://localhost:3001/api/auth/create-password', {
+				correo: email,
+				password: newPassword,
+			});
+
 			const userData = response.data.usuario;
 			const action = {
 				type: types.login,
@@ -40,7 +88,7 @@ export const LoginScreen = () => {
 			dispatch(action);
 			navigate('/');
 		} catch (error) {
-			console.error('Error during Google login:', error);
+			console.error('Error during password creation:', error);
 		}
 	};
 
@@ -102,6 +150,10 @@ export const LoginScreen = () => {
 			setEmail(value);
 		} else if (name === 'password') {
 			setPassword(value);
+		} else if (name === 'newPassword') {
+			setNewPassword(value);
+		} else if (name === 'confirmPassword') {
+			setConfirmPassword(value);
 		}
 	};
 
@@ -120,51 +172,90 @@ export const LoginScreen = () => {
 			}}
 		>
 			<div className='card p-4 shadow text-center' style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.819)', zIndex: '2' }}>
-				<h3 className='mb-3'>Bienvenido Amigo!</h3>
-				<h2 className='mb-4'>Inicia Sesión</h2>
-				<form className='d-grid gap-3' onSubmit={handleLogin}>
-					<div className='form-group'>
-						<label>Su dirección de correo electrónico:</label>
-						<input
-							className='form-control'
-							onChange={handleChange}
-							value={email}
-							type='email'
-							name='email'
-							placeholder='correo@.com'
-							required
-						/>
-					</div>
-					<div className='form-group position-relative'>
-						<label>Contraseña:</label>
-						<input
-							className='form-control'
-							onChange={handleChange}
-							value={password}
-							type={showPassword ? 'text' : 'password'}
-							name='password'
-							placeholder='Contraseña'
-							required
-						/>
-						<FontAwesomeIcon
-							className='position-absolute top-50 end-0 translate-middle-y me-3'
-							icon={showPassword ? faEyeSlash : faEye}
-							onClick={togglePasswordVisibility}
-						/>
-					</div>
-					<button className='btn btn-success' type='submit'>
-						Iniciar Sesión
-					</button>
-					<div className='mt-3'>
-						<button className='btn btn-outline-dark d-flex align-items-center' onClick={login}>
-							<img src='https://img.icons8.com/color/16/000000/google-logo.png' alt='Google icon' className='me-2' />
-							Iniciar sesión con Google
-						</button>
-					</div>
-					<Link to='/register' className='text-primary mt-3'>
-						¿No tienes una cuenta? Regístrate aquí
-					</Link>
-				</form>
+				{newUser ? (
+					<>
+						<h3 className='mb-3'>Cree una contraseña para su cuenta: </h3>
+						<form className='d-grid gap-3' onSubmit={handleNewUserSubmit}>
+							<div className='form-group'>
+								<label>Contraseña:</label>
+								<input
+									className='form-control'
+									onChange={handleChange}
+									value={newPassword}
+									type='password'
+									name='newPassword'
+									placeholder='Contraseña'
+									required
+								/>
+							</div>
+							<div className='form-group'>
+								<label>Confirmar Contraseña:</label>
+								<input
+									className='form-control'
+									onChange={handleChange}
+									value={confirmPassword}
+									type='password'
+									name='confirmPassword'
+									placeholder='Confirmar Contraseña'
+									required
+								/>
+							</div>
+							<button className='btn btn-success' type='submit'>
+								Crear Contraseña
+							</button>
+						</form>
+					</>
+				) : (
+					<>
+						<h3 className='mb-3'>Bienvenido Amigo!</h3>
+						<h2 className='mb-4'>Inicia Sesión</h2>
+						<form className='d-grid gap-3' onSubmit={handleLogin}>
+							<div className='form-group'>
+								<label>Su dirección de correo electrónico:</label>
+								<input
+									className='form-control'
+									onChange={handleChange}
+									value={email}
+									type='email'
+									name='email'
+									placeholder='correo@.com'
+									required
+									autoComplete='off'
+								/>
+							</div>
+							<div className='form-group position-relative'>
+								<label>Contraseña:</label>
+								<input
+									className='form-control'
+									onChange={handleChange}
+									value={password}
+									type={showPassword ? 'text' : 'password'}
+									name='password'
+									placeholder='Contraseña'
+									autoComplete='off'
+									required
+								/>
+								<FontAwesomeIcon
+									className='position-absolute top-50 end-0 translate-middle-y me-3'
+									icon={showPassword ? faEyeSlash : faEye}
+									onClick={togglePasswordVisibility}
+								/>
+							</div>
+							<button className='btn btn-success' type='submit'>
+								Iniciar Sesión
+							</button>
+							<div className='mt-3'>
+								<button className='btn btn-outline-dark d-flex align-items-center' onClick={login}>
+									<img src='https://img.icons8.com/color/16/000000/google-logo.png' alt='Google icon' className='me-2' />
+									Iniciar sesión con Google
+								</button>
+							</div>
+							<Link to='/register' className='text-primary mt-3'>
+								¿No tienes una cuenta? Regístrate aquí
+							</Link>
+						</form>
+					</>
+				)}
 			</div>
 		</div>
 	);
