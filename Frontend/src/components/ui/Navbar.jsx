@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../../public/logo.png';
 import { types } from '../../types/types';
+import { googleLogout } from '@react-oauth/google';
 
 export const Navbar = () => {
 	const { user, dispatch } = useContext(AuthContext);
@@ -20,7 +21,14 @@ export const Navbar = () => {
 	}, [cart]);
 
 	const handleLogout = () => {
-		dispatch({ type: types.logout });
+		if (user.google) {
+			// Verifica si el usuario inició sesión con Google
+			googleLogout(); // Si inició sesión con Google, utiliza la función de logout de Google
+		} else {
+			// Si no inició sesión con Google, limpia los datos de sesión
+			dispatch({ type: types.logout });
+		}
+		// Redirige al usuario a la página de inicio
 		navigate('/', { replace: true });
 	};
 

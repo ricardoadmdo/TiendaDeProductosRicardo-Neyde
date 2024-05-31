@@ -1,7 +1,57 @@
-const { response } = require('express');
+const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
 const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/generar-jwt');
+const axios = require('axios');
+const jwt = require('jsonwebtoken');
+
+const googleLogin = async (req = request, res = response) => {
+	const { access_token } = req.body;
+
+	try {
+		// Obtener información del usuario desde Google
+		const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`, {
+			headers: {
+				Authorization: `Bearer ${access_token}`,
+				Accept: 'application/json',
+			},
+		});
+
+		const profile = response.data;
+
+		// Verificar si el usuario ya existe en la base de datos
+		let usuario = await Usuario.findOne({ correo: profile.email });
+
+		if (!usuario) {
+			// Crear un nuevo usuario si no existe
+			usuario = new Usuario({
+				nombre: profile.name,
+				correo: profile.email,
+				rol: 'USER_ROLE',
+				estado: true,
+				password: profile.email,
+				google: true,
+			});
+			await usuario.save();
+		}
+		// Generar un token JWT
+		const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
+			expiresIn: '1h',
+		});
+
+		res.json({
+			msg: 'Login successful',
+			usuario,
+			token,
+		});
+	} catch (error) {
+		console.error('Error during Google login:', error);
+		res.status(500).json({
+			msg: 'Error during Google login',
+			error: error.message,
+		});
+	}
+};
 
 const login = async (req, res = response) => {
 	const { correo, password } = req.body;
@@ -73,4 +123,5 @@ const register = async (req, res = response) => {
 module.exports = {
 	login,
 	register,
+	googleLogin,
 };

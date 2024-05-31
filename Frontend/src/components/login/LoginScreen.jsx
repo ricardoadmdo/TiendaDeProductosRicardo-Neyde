@@ -1,12 +1,12 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../../auth/authContext';
 import { types } from '../../types/types';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
+import { useGoogleLogin } from '@react-oauth/google';
 
 export const LoginScreen = () => {
 	const [email, setEmail] = useState('');
@@ -14,6 +14,35 @@ export const LoginScreen = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 	const { dispatch } = useContext(AuthContext);
+
+	const login = useGoogleLogin({
+		onSuccess: (codeResponse) => handleGoogleLogin(codeResponse),
+		onError: (error) => console.log('Login Failed:', error),
+	});
+
+	const handleGoogleLogin = async (codeResponse) => {
+		try {
+			const response = await Axios.post('http://localhost:3001/api/auth/google', {
+				access_token: codeResponse.access_token,
+			});
+			const userData = response.data.usuario;
+			const action = {
+				type: types.login,
+				payload: {
+					nombre: userData.nombre,
+					correo: userData.correo,
+					token: response.data.token,
+					rol: userData.rol,
+					uid: userData.uid,
+					google: true,
+				},
+			};
+			dispatch(action);
+			navigate('/');
+		} catch (error) {
+			console.error('Error during Google login:', error);
+		}
+	};
 
 	const showErrorAlert = () => {
 		Swal.fire({
@@ -31,7 +60,7 @@ export const LoginScreen = () => {
 		});
 	};
 
-	const handleLogin = async (e, email, password) => {
+	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
 			const response = await Axios.post('http://localhost:3001/api/auth/login', {
@@ -93,7 +122,7 @@ export const LoginScreen = () => {
 			<div className='card p-4 shadow text-center' style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.819)', zIndex: '2' }}>
 				<h3 className='mb-3'>Bienvenido Amigo!</h3>
 				<h2 className='mb-4'>Inicia Sesión</h2>
-				<form className='d-grid gap-3' onSubmit={(e) => handleLogin(e, email, password)}>
+				<form className='d-grid gap-3' onSubmit={handleLogin}>
 					<div className='form-group'>
 						<label>Su dirección de correo electrónico:</label>
 						<input
@@ -126,7 +155,13 @@ export const LoginScreen = () => {
 					<button className='btn btn-success' type='submit'>
 						Iniciar Sesión
 					</button>
-					<Link to='/register' className='text-primary'>
+					<div className='mt-3'>
+						<button className='btn btn-primary d-flex align-items-center' onClick={login}>
+							<img src='https://img.icons8.com/color/16/000000/google-logo.png' alt='Google icon' className='me-2' />
+							Iniciar sesión con Google
+						</button>
+					</div>
+					<Link to='/register' className='text-primary mt-3'>
 						¿No tienes una cuenta? Regístrate aquí
 					</Link>
 				</form>
