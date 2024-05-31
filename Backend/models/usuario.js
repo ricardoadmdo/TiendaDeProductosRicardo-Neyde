@@ -27,6 +27,9 @@ const UsuarioSchema = Schema({
 		type: Boolean,
 		default: false,
 	},
+	login_code: {
+		type: String,
+	},
 });
 
 UsuarioSchema.methods.toJSON = function () {

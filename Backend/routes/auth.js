@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { login, register, googleLogin, createPassword } = require('../controllers/auth');
+const { login, register, googleLogin, createPassword, emailVerification, codeVerification } = require('../controllers/auth');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router();
@@ -18,4 +18,7 @@ router.post(
 
 router.post('/google', googleLogin);
 router.post('/create-password', createPassword);
+router.post('/login/:email/code', emailVerification);
+router.post('/login/:email', codeVerification);
+
 module.exports = router;

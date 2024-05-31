@@ -4,6 +4,7 @@ const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/generar-jwt');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const transporter = require('../helpers/mailer.js');
 
 const googleLogin = async (req, res) => {
 	const { access_token } = req.body;
@@ -183,9 +184,59 @@ const register = async (req, res = response) => {
 	}
 };
 
+const emailVerification = async (req, res = response) => {
+	const { email } = req.params;
+
+	const usuario = await Usuario.findOne({ correo });
+
+	if (!usuario) {
+		return res.status(400).json({
+			ok: false,
+			msg: 'No existe un usuario con ese correo',
+		});
+	}
+
+	let code = '';
+
+	for (let index = 0; index <= 5; index++) {
+		code += Math.floor(Math.random() * 10);
+	}
+	console.log(code);
+
+	usuario.login_code = code;
+	await Usuario.save();
+
+	const result = await transporter.sendMail({
+		from: `Tienda Ricardo & Neyde ${process.env.EMAIL}`,
+		to: email,
+		subject: 'Código de inicio de sesión: ' + code,
+		body: 'Este es tu código para iniciar tu sesión',
+	});
+	console.log(result);
+	res.status(200).json({ ok: true, msg: 'Código enviado con éxito' });
+};
+
+const codeVerification = async (req, res = response) => {
+	const { email } = req.params;
+	const { code } = req.body;
+
+	const usuario = await Usuario.findOne({ email, login_code: code });
+
+	if (!usuario) {
+		return res.status(400).json({
+			ok: false,
+			msg: 'Credenciales inválidas',
+		});
+	}
+
+	res.status(200).json({ ok: true, msg: 'Inicio de sesión exitoso.' });
+};
+
 module.exports = {
 	login,
 	register,
 	googleLogin,
 	createPassword,
+	emailVerification,
+	codeVerification,
 };
