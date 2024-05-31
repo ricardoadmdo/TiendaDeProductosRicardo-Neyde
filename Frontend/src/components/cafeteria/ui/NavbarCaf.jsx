@@ -34,7 +34,7 @@ export const NavbarCaf = () => {
 	};
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-dark bg-primary shadow'>
+		<nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow'>
 			<div className='container'>
 				<NavLink className='navbar-brand' to='/'>
 					<img src={logo} alt='Logo de la tienda' style={{ height: '50px' }} />
@@ -89,23 +89,38 @@ export const NavbarCaf = () => {
 								Compra
 							</NavLink>
 						</li>
-						<li className='nav-item'>
-							<NavLink className='nav-link' to='/pastas'>
-								<FontAwesomeIcon icon={faHamburger} />
-								Pastas
-							</NavLink>
-						</li>
-						<li className='nav-item'>
-							<NavLink className='nav-link' to='/cubana'>
-								<FontAwesomeIcon icon={faUtensils} />
-								Comida cubana
-							</NavLink>
-						</li>
-						<li className='nav-item me-5'>
-							<NavLink className='nav-link' to='/carnes'>
-								<FontAwesomeIcon icon={faUtensils} />
-								Carnes
-							</NavLink>
+						<li className='nav-item dropdown me-2'>
+							<a
+								className='nav-link dropdown-toggle'
+								href='#'
+								id='navbarDropdownMenuLink'
+								role='button'
+								data-bs-toggle='dropdown'
+								aria-expanded='false'
+							>
+								Menú
+							</a>
+							<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+								<li>
+									<NavLink className='dropdown-item' to='/pastas'>
+										<FontAwesomeIcon icon={faHamburger} />
+										Pastas
+									</NavLink>
+								</li>
+
+								<li>
+									<NavLink className='dropdown-item' to='/cubana'>
+										<FontAwesomeIcon icon={faUtensils} />
+										Comida cubana
+									</NavLink>
+								</li>
+								<li>
+									<NavLink className='dropdown-item' to='/carnes'>
+										<FontAwesomeIcon icon={faUtensils} />
+										Carnes
+									</NavLink>
+								</li>
+							</ul>
 						</li>
 
 						{user.rol === 'ADMIN_ROLE' && (
@@ -122,12 +137,12 @@ export const NavbarCaf = () => {
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-usuarios'>
+										<NavLink className='dropdown-item' to='/gestionar-ventas'>
 											Gestionar Inventario
 										</NavLink>
 									</li>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-productos'>
+										<NavLink className='dropdown-item' to='/gestionar-inventario'>
 											Gestionar Ventas
 										</NavLink>
 									</li>
