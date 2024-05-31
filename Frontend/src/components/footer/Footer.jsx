@@ -3,7 +3,7 @@ import { FaWhatsapp, FaFacebook, FaInstagram } from 'react-icons/fa';
 const Footer = () => {
 	const year = new Date().getFullYear();
 	return (
-		<footer className=' footer-margin bg-dark text-center text-white py-4 ' style={{ marginTop: '6em' }}>
+		<footer className=' footer-margin bg-dark text-center text-white py-4'>
 			<div className='container'>
 				<h2>Contacto</h2>
 				<p>Conéctate con nosotros:</p>
