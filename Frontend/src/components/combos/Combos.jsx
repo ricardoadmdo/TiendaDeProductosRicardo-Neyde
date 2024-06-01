@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Axios from 'axios';
 import placeholder from '../../images/placeholder.png';
+import Pagination from '../reutilizable-tablaCrud/Pagination';
 
 export const Combos = () => {
 	const [cantidad, setCantidad] = useState(1);
@@ -99,18 +100,7 @@ export const Combos = () => {
 					</div>
 				))}
 			</div>
-			{/* Controles de paginación */}
-			<div className='d-flex justify-content-center mt-4'>
-				<button className='btn btn-outline-primary mr-2 me-2' onClick={handlePreviousPage} disabled={currentPage === 1}>
-					Anterior
-				</button>
-				<span className='align-self-center me-2'>
-					{currentPage} de {totalPages}
-				</span>
-				<button className='btn btn-outline-primary ml-2' onClick={handleNextPage} disabled={currentPage === totalPages}>
-					Siguiente
-				</button>
-			</div>
+			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
 		</div>
 	);
 };
