@@ -6,6 +6,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const transporter = require('../helpers/mailer.js');
 const { v4: uuidv4 } = require('uuid');
+
 const googleLogin = async (req = request, res = response) => {
 	const { access_token } = req.body;
 
@@ -28,6 +29,7 @@ const googleLogin = async (req = request, res = response) => {
 				return res.json({
 					msg: 'Necesita crear una contraseña',
 					cambiarPassword: true,
+					correo: usuario.correo, // Devolver el correo del usuario
 				});
 			}
 		} else {
@@ -36,7 +38,7 @@ const googleLogin = async (req = request, res = response) => {
 				nombre: profile.name,
 				correo: profile.email,
 				rol: 'USER_ROLE',
-				estado: true,
+				estado: false,
 				password: 'TEMPORAL',
 				google: true,
 			});
@@ -87,25 +89,35 @@ const createPassword = async (req, res) => {
 			});
 		}
 
-		// Hash de la contraseña
-		const salt = bcryptjs.genSaltSync();
-		usuario.password = bcryptjs.hashSync(password, salt);
-		await usuario.save();
+		// Verificar si la contraseña actual es 'TEMPORAL'
+		if (usuario.password === 'TEMPORAL') {
+			// Si la contraseña es 'TEMPORAL', actualizamos la contraseña y el estado
+			const salt = bcryptjs.genSaltSync();
+			usuario.password = bcryptjs.hashSync(password, salt);
+			usuario.estado = true; // Actualizamos el estado
+			await usuario.save();
 
-		// Generar un nuevo token JWT
-		const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
-			expiresIn: '1h',
-		});
+			// Generar un nuevo token JWT
+			const token = jwt.sign({ uid: usuario.uid }, 'your_jwt_secret', {
+				expiresIn: '4h',
+			});
 
-		res.json({
-			msg: 'Contraseña creada correctamente',
-			usuario,
-			token,
-		});
+			return res.json({
+				msg: 'Contraseña creada correctamente',
+				usuario,
+				token,
+			});
+		} else {
+			// Si la contraseña ya ha sido actualizada, retornamos un mensaje indicando que la contraseña ya existe
+			return res.json({
+				msg: 'La contraseña ya ha sido creada anteriormente',
+				usuario,
+			});
+		}
 	} catch (error) {
-		console.error('Error during password creation:', error);
+		console.error('Error durante la creación de la contraseña:', error);
 		res.status(500).json({
-			msg: 'Error during password creation',
+			msg: 'Error durante la creación de la contraseña',
 			error: error.message,
 		});
 	}

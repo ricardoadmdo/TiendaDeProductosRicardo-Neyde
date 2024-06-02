@@ -14,7 +14,6 @@ export const LoginScreen = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 	const { dispatch } = useContext(AuthContext);
-
 	//Nuevo usuario google
 	const [newUser, setNewUser] = useState(false);
 	const [newPassword, setNewPassword] = useState('');
@@ -32,31 +31,28 @@ export const LoginScreen = () => {
 			});
 			const userData = response.data.usuario;
 
-			if (response.data.newUser) {
+			if (response.data.newUser || response.data.cambiarPassword) {
 				setNewUser(true);
-				setEmail(userData.correo);
-				return;
+				if (response.data.correo) {
+					setEmail(response.data.correo);
+				} else {
+					setEmail(userData.correo);
+				}
+			} else {
+				const action = {
+					type: types.login,
+					payload: {
+						nombre: userData.nombre,
+						correo: userData.correo,
+						token: response.data.token,
+						rol: userData.rol,
+						uid: userData.uid,
+						google: true,
+					},
+				};
+				dispatch(action);
+				navigate('/');
 			}
-
-			if (response.data.cambiarPassword) {
-				setNewUser(true);
-				return;
-			}
-
-			const action = {
-				type: types.login,
-				payload: {
-					nombre: userData.nombre,
-					correo: userData.correo,
-					token: response.data.token,
-					rol: userData.rol,
-					uid: userData.uid,
-					google: true,
-				},
-			};
-
-			dispatch(action);
-			navigate('/');
 		} catch (error) {
 			console.error('Error durante la autenticación con Google:', error);
 		}
