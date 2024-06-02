@@ -1,8 +1,26 @@
+import { useEffect } from 'react';
+import { useExchangeRates } from '../../auth/ExchangeRatesContext';
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import placeholder from '../../images/placeholder.png';
+import apiToke from '../../helpers/apiToke';
 
 export const Bienvenida = () => {
+	const { usdRate, cupRate } = useExchangeRates();
+
+	// useEffect(() => {
+	// 	const obtenerTasas = async () => {
+	// 		try {
+	// 			const { usd, cup } = await apiToke(); // Llama a la función para obtener las tasas de cambio
+	// 			// Actualiza las tasas de cambio localmente
+	// 			console.log('Tasas de cambio:', { usd, cup });
+	// 		} catch (error) {
+	// 			console.error('Error al obtener las tasas de cambio:', error);
+	// 		}
+	// 	};
+	// 	obtenerTasas();
+	// }, []);
+
 	return (
 		<div className='bienvenida container mt-5 animate__animated animate__fadeIn'>
 			<h1 className='text-center mb-4'>Bienvenidos a Ricardo & Neyde</h1>

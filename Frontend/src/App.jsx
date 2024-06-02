@@ -1,3 +1,4 @@
+import { ExchangeRatesProvider } from './auth/ExchangeRatesContext';
 import { AuthProvider } from './auth/authContext.jsx';
 import { CartProvider } from './auth/CartProvider';
 import { AppRouter } from './routes/AppRouter.jsx';
@@ -8,11 +9,13 @@ import './styles.css';
 
 function App() {
 	return (
-		<AuthProvider>
-			<CartProvider>
-				<AppRouter />
-			</CartProvider>
-		</AuthProvider>
+		<ExchangeRatesProvider>
+			<AuthProvider>
+				<CartProvider>
+					<AppRouter />
+				</CartProvider>
+			</AuthProvider>
+		</ExchangeRatesProvider>
 	);
 }
 

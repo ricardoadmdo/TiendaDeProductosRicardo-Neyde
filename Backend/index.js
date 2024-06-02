@@ -21,6 +21,8 @@ app.use('/api/product', require('./routes/productos.js'));
 app.use('/api/combo', require('./routes/combos.js'));
 app.use('/api/auth', require('./routes/auth.js'));
 app.use('/api/pago', require('./routes/pago.js'));
+app.use('/api/pago', require('./routes/pago.js'));
+app.use('/api/location', require('./routes/location.js'));
 
 //Escuchar peticiones
 app.listen(process.env.PORT, () => {

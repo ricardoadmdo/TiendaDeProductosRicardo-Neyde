@@ -13,6 +13,8 @@ export const Productos = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
 	const [productosList, setProductos] = useState([]);
+	// const [currency, setCurrency] = useState('USD');
+	// const [exchangeRate, setExchangeRate] = useState(25); // Ejemplo de tasa de cambio
 	const { addToCart } = useContext(CartContext);
 
 	const handlePreviousPage = () => {
@@ -29,6 +31,7 @@ export const Productos = () => {
 
 	useEffect(() => {
 		getProductos();
+		// getUserLocation();
 	}, []);
 
 	const getProductos = (page = 1, limit = 8) => {
@@ -43,13 +46,47 @@ export const Productos = () => {
 				console.error('Error al obtener productos:', error);
 			});
 	};
+
+	// const getUserLocation = () => {
+	// 	navigator.geolocation.getCurrentPosition(success, error);
+
+	// 	function success(position) {
+	// 		const { latitude, longitude } = position.coords;
+	// 		getCountry(latitude, longitude);
+	// 	}
+
+	// 	function error() {
+	// 		console.log('No se pudo obtener la ubicación');
+	// 	}
+
+	// 	const getCountry = async (latitude, longitude) => {
+	// 		try {
+	// 			const response = await Axios.get('http://localhost:3001/api/location/get-country', {
+	// 				params: { latitude, longitude },
+	// 			});
+	// 			console.log(response);
+	// 			const country = response.data.country;
+	// 			setCurrency(country === 'CU' ? 'CUP' : 'USD');
+	// 		} catch (error) {
+	// 			console.error('Error obteniendo el país:', error);
+	// 		}
+	// 	};
+	// };
+
+	// const formatPrice = (price) => {
+	// 	if (currency === 'CUP') {
+	// 		return `${(price * exchangeRate).toFixed(2)} CUP`;
+	// 	}
+	// 	return `${price} USD`;
+	// };
+
 	return (
 		<div className='container animate__animated animate__fadeIn my-5'>
 			<div className='row'>
 				<h2 className='text-center mb-4'>Productos</h2>
 				{productosList.length > 0 ? (
 					productosList.map((val) => (
-						<div key={val._id} className='col-sm-6 col-md-4 col-lg-3 mb-3'>
+						<div key={val.uid} className='col-sm-6 col-md-4 col-lg-3 mb-3'>
 							<div className='card h-100 shadow'>
 								<LazyLoadImage
 									threshold={10}
@@ -65,7 +102,7 @@ export const Productos = () => {
 									{val.cantidad > 0 ? (
 										<>
 											<strong>
-												<p className='card-text'>{val.precio} CUP</p>
+												<p className='card-text'>{val.precio}</p>
 											</strong>
 											<hr />
 											<div className='row align-items-center'>
