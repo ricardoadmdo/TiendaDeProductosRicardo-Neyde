@@ -1,0 +1,18 @@
+/* Para todo el documento */
+html {
+	overflow: -moz-scrollbars-none; /* Firefox */
+	-ms-overflow-style: none; /* Internet Explorer and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+body {
+	overflow: -moz-scrollbars-none; /* Firefox */
+	-ms-overflow-style: none; /* Internet Explorer and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+/* Para WebKit browsers (Chrome, Safari, etc.) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none;
+}
