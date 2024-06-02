@@ -4,6 +4,8 @@ import { AuthContext } from '../../auth/authContext';
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export const Carrito = () => {
 	const municipiosRepartos = {
@@ -280,7 +282,7 @@ export const Carrito = () => {
 												</div>
 												<div className='col-4'>
 													<button className='btn btn-danger' onClick={() => removeFromCart(val.uid)}>
-														Quitar
+														<FontAwesomeIcon icon={faTrashAlt} />
 													</button>
 												</div>
 											</div>

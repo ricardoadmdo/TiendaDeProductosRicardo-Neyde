@@ -6,7 +6,6 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const transporter = require('../helpers/mailer.js');
 const { v4: uuidv4 } = require('uuid');
-
 const googleLogin = async (req = request, res = response) => {
 	const { access_token } = req.body;
 
@@ -24,14 +23,14 @@ const googleLogin = async (req = request, res = response) => {
 		// Verificar si el usuario ya existe en la base de datos
 		let usuario = await Usuario.findOne({ correo: profile.email });
 
-		if (usuario.password === 'TEMPORAL') {
-			return res.json({
-				msg: 'Necesita crear una contraseña',
-				cambiarPassword: true,
-			});
-		}
-
-		if (!usuario) {
+		if (usuario) {
+			if (usuario.password === 'TEMPORAL') {
+				return res.json({
+					msg: 'Necesita crear una contraseña',
+					cambiarPassword: true,
+				});
+			}
+		} else {
 			// Crear un nuevo usuario si no existe
 			usuario = new Usuario({
 				nombre: profile.name,

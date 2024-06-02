@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faSearch, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faSearch, faCamera } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
@@ -156,7 +156,7 @@ const TablaCRUD = ({
 											</button>
 											<span style={{ marginRight: '0px' }}></span>
 											<button type='button' onClick={() => handleDelete(item)} className='btn btn-danger'>
-												<FontAwesomeIcon icon={faTrash} /> Eliminar
+												<FontAwesomeIcon icon={faTrashAlt} /> Eliminar
 											</button>
 										</td>
 									</tr>

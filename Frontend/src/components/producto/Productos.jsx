@@ -82,7 +82,7 @@ export const Productos = () => {
 												<div className='col-6'>
 													<button
 														aria-label='añadir al carrito'
-														className='btn btn-outline-success w-100 btn-animated'
+														className='btn btn-outline-dark w-100 btn-animated'
 														onClick={() => addToCart(val, cantidad)}
 													>
 														<FontAwesomeIcon icon={faShoppingCart} />
