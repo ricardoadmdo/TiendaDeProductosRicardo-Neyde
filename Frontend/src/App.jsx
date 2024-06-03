@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { ExchangeRatesProvider } from './auth/ExchangeRatesContext';
 import { AuthProvider } from './auth/authContext.jsx';
 import { CartProvider } from './auth/CartProvider';
@@ -8,6 +9,10 @@ import 'animate.css/animate.min.css';
 import './styles.css';
 
 function App() {
+	useEffect(() => {
+		// Coloca aquí cualquier código que necesites ejecutar al cargar la aplicación
+	}, []);
+
 	return (
 		<ExchangeRatesProvider>
 			<AuthProvider>

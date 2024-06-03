@@ -9,6 +9,7 @@ import './styles.css';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import useExchangeRates from '../../auth/useExchangeRates';
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -17,6 +18,7 @@ const fetchProductos = async ({ queryKey }) => {
 };
 
 export const Productos = () => {
+	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
 	const { addToCart } = useContext(CartContext);
@@ -36,6 +38,7 @@ export const Productos = () => {
 	};
 
 	if (isLoading) {
+		// Muestra un mensaje de carga mientras se obtienen los datos
 		return <LoadingSpinner />;
 	}
 
@@ -100,7 +103,10 @@ export const Productos = () => {
 									{val.cantidad > 0 ? (
 										<>
 											<strong>
-												<p className='card-text'>{val.precio}</p>
+												<p className='card-text'>{val.precio}$ CUP</p>
+											</strong>
+											<strong>
+												<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
 											</strong>
 											<hr />
 											<div className='row align-items-center'>

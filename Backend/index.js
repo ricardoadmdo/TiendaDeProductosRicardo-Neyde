@@ -10,7 +10,11 @@ const app = express();
 dbConnection();
 
 //CORS
-app.use(cors());
+app.use(
+	cors({
+		origin: 'http://localhost:5173', // Permitir solicitudes desde este origen
+	})
+);
 
 //Lectura y parseo del body
 app.use(express.json());

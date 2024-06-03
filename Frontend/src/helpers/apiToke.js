@@ -1,10 +1,10 @@
 import Axios from 'axios';
 
-const apiToke = async () => {
-	const apiKey = 'TU_CLAVE_DE_API';
-	const apiUrl = 'https://api.eltoque.com/v1/trmi';
-	const fromDate = '2022-10-27 00:00:01'; // Fecha inicial del intervalo de tiempo
-	const toDate = '2022-10-27 23:59:01'; // Fecha final del intervalo de tiempo
+const apiToke = async (currentDate) => {
+	const apiKey = import.meta.env.VITE_API_TOKE;
+	const apiUrl = '/api/v1/trmi';
+	const fromDate = `${currentDate} 00:00:01`; // Fecha inicial del intervalo de tiempo
+	const toDate = `${currentDate} 23:59:01`; // Fecha final del intervalo de tiempo
 
 	try {
 		const response = await Axios.get(apiUrl, {
@@ -16,12 +16,12 @@ const apiToke = async () => {
 				Authorization: `Bearer ${apiKey}`,
 			},
 		});
-
 		// Procesar la respuesta y extraer las tasas de cambio u otra información relevante
-		const exchangeRates = response.data;
-		console.log('Tasas de cambio:', exchangeRates);
+		const { USD } = response.data.tasas; // Ajusta esto según los datos que necesites
+		return { USD }; // Retorna los datos necesarios
 	} catch (error) {
 		console.error('Error al obtener las tasas de cambio:', error);
+		throw error; // Lanza el error para que el componente lo maneje
 	}
 };
 

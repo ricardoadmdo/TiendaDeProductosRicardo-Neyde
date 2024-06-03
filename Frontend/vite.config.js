@@ -2,9 +2,22 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import compression from 'vite-plugin-compression';
 
+// export default defineConfig({
+// 	plugins: [
+// 		react(),
+// 		compression(), // Agrega este plugin para habilitar la compresión de archivos
+// 	],
+// });
+
 export default defineConfig({
-	plugins: [
-		react(),
-		compression(), // Agrega este plugin para habilitar la compresión de archivos
-	],
+	plugins: [react()],
+	server: {
+		proxy: {
+			'/api': {
+				target: 'https://tasas.eltoque.com',
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ''),
+			},
+		},
+	},
 });
