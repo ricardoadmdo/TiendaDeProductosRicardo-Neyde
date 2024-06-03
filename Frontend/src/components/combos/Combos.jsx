@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { CartContext } from '../../auth/CartProvider';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,42 +6,44 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Axios from 'axios';
 import placeholder from '../../images/placeholder.png';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
+import useFetch from '../../hooks/useFetch';
+import LoadingSpinner from '../ui/LoadingSpinner';
+
+const fetchCombos = async ({ queryKey }) => {
+	const [, page, limit] = queryKey;
+	const response = await Axios.get(`http://localhost:3001/api/combo?page=${page}&limit=${limit}`);
+	return response.data;
+};
 
 export const Combos = () => {
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(1);
-	const [combosList, setCombos] = useState([]);
 	const { addToCart } = useContext(CartContext);
+
+	const { data: combosData, isLoading, isError, error } = useFetch(['combos', currentPage, 8], fetchCombos, { keepPreviousData: true });
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
-			getCombos(currentPage - 1);
+			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
 
 	const handleNextPage = () => {
-		if (currentPage < totalPages) {
-			getCombos(currentPage + 1);
+		if (currentPage < (combosData?.totalPages || 0)) {
+			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	};
 
-	useEffect(() => {
-		getCombos();
-	});
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
 
-	const getCombos = (page = 1, limit = 8) => {
-		Axios.get(`http://localhost:3001/api/combo?page=${page}&limit=${limit}`)
-			.then((response) => {
-				const { combos, totalPages, page } = response.data;
-				setCombos(combos);
-				setTotalPages(totalPages);
-				setCurrentPage(page);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	const combosList = combosData?.combos || [];
+	const totalPages = combosData?.totalPages || 0;
 
 	return (
 		<div className='container animate__animated animate__fadeIn my-5'>

@@ -93,8 +93,8 @@ const TablaCRUD = ({
 	};
 
 	return (
-		<div className='container-fluid'>
-			<div className='row mt-3'>
+		<div className='container-fluid vh-100'>
+			<div className='row mt-5'>
 				<div className='col-md-4 offset-md-4'>
 					<div className='d-grid mx-auto'>
 						<button onClick={handleAdd} className='btn btn-dark' data-bs-toggle='modal' data-bs-target='#modal'>

@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
 import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
+import useFetch from '../../hooks/useFetch';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { useQueryClient } from '@tanstack/react-query';
+
+const fetchCombos = async ({ queryKey }) => {
+	const [, page, limit] = queryKey;
+	const response = await Axios.get(`http://localhost:3001/api/combo?page=${page}&limit=${limit}`);
+	return response.data;
+};
 
 export const CRUDCombo = () => {
 	const [id, setId] = useState('');
@@ -15,22 +24,38 @@ export const CRUDCombo = () => {
 		estado: true, //Predeterminado como activo
 	});
 	const [operationMode, setOperationMode] = useState(1);
-	const [combosList, setCombos] = useState([]);
 	const [title, setTitle] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+
+	const queryClient = useQueryClient();
+	const refetchCombos = () => {
+		queryClient.invalidateQueries(['combos']);
+	};
+
+	const { data: combosData, isLoading, isError, error } = useFetch(['combos', currentPage, 8], fetchCombos, { keepPreviousData: true });
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
-			getCombos(currentPage - 1);
+			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
 
 	const handleNextPage = () => {
-		if (currentPage < totalPages) {
-			getCombos(currentPage + 1);
+		if (currentPage < (combosData?.totalPages || 0)) {
+			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	};
+
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
+
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	const combosList = combosData?.combos || [];
+	const totalPages = combosData?.totalPages || 0;
 
 	const limpiarCampos = () => {
 		setFormState({
@@ -46,7 +71,7 @@ export const CRUDCombo = () => {
 	const addCombos = () => {
 		Axios.post('http://localhost:3001/api/combo', formState)
 			.then(() => {
-				getCombos();
+				refetchCombos();
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Registro exitoso!!!</strong>',
@@ -70,7 +95,7 @@ export const CRUDCombo = () => {
 	const updateCombos = () => {
 		Axios.put(`http://localhost:3001/api/combo/${id}`, formState)
 			.then(() => {
-				getCombos();
+				refetchCombos();
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Actualización exitoso!!!</strong>',
@@ -104,7 +129,7 @@ export const CRUDCombo = () => {
 			if (result.isConfirmed) {
 				Axios.delete(`http://localhost:3001/api/combo/${val.uid}`)
 					.then(() => {
-						getCombos();
+						refetchCombos();
 						limpiarCampos();
 						Swal.fire({
 							icon: 'success',
@@ -128,23 +153,6 @@ export const CRUDCombo = () => {
 		});
 	};
 
-	useEffect(() => {
-		getCombos();
-	}, []);
-
-	const getCombos = () => {
-		Axios.get('http://localhost:3001/api/combo')
-			.then((response) => {
-				const { combos, totalPages, page } = response.data;
-				setCombos(combos);
-				setTotalPages(totalPages); // Actualizar el total de páginas
-				setCurrentPage(page);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-
 	const validar = (event) => {
 		event.preventDefault();
 		const { nombre, description, precio, url, cantidad } = formState;
@@ -164,7 +172,7 @@ export const CRUDCombo = () => {
 			}
 
 			document.getElementById('btnCerrar').click();
-			getCombos();
+			refetchCombos();
 		}
 	};
 
@@ -217,7 +225,6 @@ export const CRUDCombo = () => {
 					{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
 					{ name: 'description', label: 'Descripción', placeholder: 'Ingrese una descripción', type: 'text' },
 					{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
-					{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
 					{
 						name: 'estado',
 						label: 'Estado en Base de Datos',
@@ -227,6 +234,7 @@ export const CRUDCombo = () => {
 							{ value: false, label: 'Inactivo' },
 						],
 					},
+					{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
 				]}
 				formState={formState}
 				setFormState={setFormState}

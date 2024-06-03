@@ -5,11 +5,9 @@ import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
 import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import { sleep } from '../../helpers/sleep';
+import { useQueryClient } from '@tanstack/react-query';
 
 const fetchProductos = async ({ queryKey }) => {
-	await sleep(4);
-
 	const [, page, limit] = queryKey;
 	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`);
 	return response.data;
@@ -26,6 +24,11 @@ export const CRUDProducto = () => {
 	const [operationMode, setOperationMode] = useState(1);
 	const [title, setTitle] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const queryClient = useQueryClient();
+	const refetchProductos = () => {
+		queryClient.invalidateQueries(['combos']);
+	};
 
 	const { data: productosData, isLoading, isError, error } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
 
@@ -64,7 +67,7 @@ export const CRUDProducto = () => {
 	const addProductos = () => {
 		Axios.post('http://localhost:3001/api/product', formState)
 			.then(() => {
-				fetchProductos();
+				refetchProductos();
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Registro exitoso!!!</strong>',
@@ -88,7 +91,7 @@ export const CRUDProducto = () => {
 	const updateProductos = () => {
 		Axios.put(`http://localhost:3001/api/product/${id}`, formState)
 			.then(() => {
-				fetchProductos();
+				refetchProductos();
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Actualización exitoso!!!</strong>',
@@ -122,7 +125,7 @@ export const CRUDProducto = () => {
 			if (result.isConfirmed) {
 				Axios.delete(`http://localhost:3001/api/product/${val.uid}`)
 					.then(() => {
-						fetchProductos();
+						refetchProductos();
 						limpiarCampos();
 						Swal.fire({
 							icon: 'success',
@@ -165,7 +168,7 @@ export const CRUDProducto = () => {
 			}
 
 			document.getElementById('btnCerrar').click();
-			fetchProductos();
+			refetchProductos();
 		}
 	};
 
