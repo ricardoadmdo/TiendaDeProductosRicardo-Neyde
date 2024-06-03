@@ -234,19 +234,31 @@ export const Carrito = () => {
 				<LoadingSpinner />
 			) : (
 				<>
-					{' '}
-					<div className='row animate__animated animate__fadeIn '>
+					<div className='row animate__animated animate__fadeIn'>
 						<div className='col-md-8 offset-md-2'>
-							<div className='my-2 align-items-center'>
-								<p className='m-0'>
-									<strong>Valor Total de la Compra </strong> 🛒: {total} USD
-								</p>
-								<button type='button' className='btn btn-danger ' onClick={clearCart}>
-									Limpiar Carrito
-								</button>
+							<div className='my-2'>
+								<div className='card p-3'>
+									<div className='text-center mb-3'>
+										<h5>Valor Total de la Compra</h5>
+									</div>
+									<div className='d-flex justify-content-between align-items-center'>
+										<div>
+											<h5 className='m-0'>💲{total} CUP</h5>
+										</div>
+										<div>
+											<h5 className='m-0'>💲{(total / usdRate).toFixed(2)} USD</h5>
+										</div>
+									</div>
+									<hr />
+									<p className='text-muted mb-0'>¡Aprovecha ya la oportunidad de comprar y pagar en USD!</p>
+									<button type='button' className='btn btn-dark mt-3' onClick={clearCart}>
+										Limpiar Carrito
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
+
 					<div className='container my-5'>
 						<div className='row '>
 							{/* Sección de productos a la izquierda */}
@@ -268,7 +280,9 @@ export const Carrito = () => {
 															<p className='card-text'>{val.precio}$ CUP</p>
 														</strong>
 														<strong>
-															<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
+															<p className='card-text'>
+																{usdRate ? Math.round((val.precio / usdRate) * 10) / 10 : 'N/A'}$ USD
+															</p>
 														</strong>
 													</p>
 													<p className='card-text'>
@@ -278,7 +292,8 @@ export const Carrito = () => {
 														<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
 													</p>
 													<p className='card-text'>
-														<strong>Subtotal:</strong> {(val.precio / usdRate).toFixed(2) * val.cantidadAdd} USD
+														<strong>Subtotal:</strong> {(Math.round((val.precio / usdRate) * 10) / 10) * val.cantidadAdd}{' '}
+														USD
 													</p>
 													<hr />
 													<div className='row align-items-center'>
@@ -483,12 +498,11 @@ export const Carrito = () => {
 										</div>
 									</div>
 
-									<div className='d-flex justify-content-between'>
-										{' '}
+									<div className='d-grid gap-2'>
 										<button type='button' className='btn btn-success' onClick={finalizeOrder}>
 											Finalizar Pedido
 										</button>
-										<button type='button' className='btn btn-success' onClick={pagoOnline}>
+										<button type='button' className='btn btn-success mt-2' onClick={pagoOnline}>
 											Pagar con Tarjeta
 										</button>
 									</div>
