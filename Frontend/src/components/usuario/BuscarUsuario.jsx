@@ -286,7 +286,7 @@ export const BuscarUsuario = () => {
 					/>
 				</>
 			) : (
-				<div className='text-center'>
+				<div className='container-fluid d-flex justify-content-center vh-100'>
 					<h2>No se encontró ningún usuario</h2>
 				</div>
 			)}
