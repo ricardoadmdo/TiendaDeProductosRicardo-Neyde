@@ -7,8 +7,10 @@ import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import useExchangeRates from '../../auth/useExchangeRates';
 
 export const Carrito = () => {
+	const { usdRate } = useExchangeRates();
 	const municipiosRepartos = {
 		'Habana Vieja': ['Prado', 'Santo Ángel', 'Catedral', 'Plaza Vieja', 'Belén', 'Jesús María', 'San Isidro', 'Tallapiedra'],
 		'Centro Habana': ['Cayo Hueso', 'Dragones', 'Colón', 'Pueblo Nuevo', 'Los Sitios', 'Barrio Chino'],
@@ -262,13 +264,21 @@ export const Carrito = () => {
 												<h5 className='card-header'>{val.nombre}</h5>
 												<div className='card-body'>
 													<p className='card-text'>
-														<strong>Precio:</strong> {val.precio} USD
+														<strong>
+															<p className='card-text'>{val.precio}$ CUP</p>
+														</strong>
+														<strong>
+															<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
+														</strong>
 													</p>
 													<p className='card-text'>
 														<strong>Cantidad a comprar:</strong> {val.cantidadAdd}
 													</p>
 													<p className='card-text'>
-														<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} USD
+														<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
+													</p>
+													<p className='card-text'>
+														<strong>Subtotal:</strong> {(val.precio / usdRate).toFixed(2) * val.cantidadAdd} USD
 													</p>
 													<hr />
 													<div className='row align-items-center'>

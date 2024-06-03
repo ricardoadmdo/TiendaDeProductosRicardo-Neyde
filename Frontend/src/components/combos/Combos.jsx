@@ -8,6 +8,7 @@ import placeholder from '../../images/placeholder.png';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import useExchangeRates from '../../auth/useExchangeRates';
 
 const fetchCombos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -16,6 +17,7 @@ const fetchCombos = async ({ queryKey }) => {
 };
 
 export const Combos = () => {
+	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
 	const { addToCart } = useContext(CartContext);
@@ -65,7 +67,12 @@ export const Combos = () => {
 							<div className='card-body'>
 								{val.cantidad > 0 ? (
 									<>
-										<p className='card-text'>{val.precio} CUP</p>
+										<strong>
+											<p className='card-text'>{val.precio}$ CUP</p>
+										</strong>
+										<strong>
+											<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
+										</strong>
 										<p className='card-text'>{val.description}</p>
 										<hr />
 										<div className='row align-items-center'>
