@@ -25,6 +25,7 @@ export const Productos = () => {
 	const { addToCart } = useContext(CartContext);
 
 	const { data: productosData, isLoading, isError, error } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
+
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
 			setCurrentPage((prevPage) => prevPage - 1);

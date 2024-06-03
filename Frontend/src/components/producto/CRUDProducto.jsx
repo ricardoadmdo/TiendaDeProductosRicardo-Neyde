@@ -1,8 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
 import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
+import useFetch from '../../hooks/useFetch';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { sleep } from '../../helpers/sleep';
+
+const fetchProductos = async ({ queryKey }) => {
+	await sleep(4);
+
+	const [, page, limit] = queryKey;
+	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`);
+	return response.data;
+};
 
 export const CRUDProducto = () => {
 	const [id, setId] = useState('');
@@ -13,22 +24,33 @@ export const CRUDProducto = () => {
 		url: '',
 	});
 	const [operationMode, setOperationMode] = useState(1);
-	const [productosList, setProductos] = useState([]);
 	const [title, setTitle] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+
+	const { data: productosData, isLoading, isError, error } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
-			getProductos(currentPage - 1);
+			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
 
 	const handleNextPage = () => {
-		if (currentPage < totalPages) {
-			getProductos(currentPage + 1);
+		if (currentPage < (productosData?.totalPages || 0)) {
+			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	};
+
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
+
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	const productosList = productosData?.productos || [];
+	const totalPages = productosData?.totalPages || 0;
 
 	const limpiarCampos = () => {
 		setFormState({
@@ -42,7 +64,7 @@ export const CRUDProducto = () => {
 	const addProductos = () => {
 		Axios.post('http://localhost:3001/api/product', formState)
 			.then(() => {
-				getProductos();
+				fetchProductos();
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Registro exitoso!!!</strong>',
@@ -66,7 +88,7 @@ export const CRUDProducto = () => {
 	const updateProductos = () => {
 		Axios.put(`http://localhost:3001/api/product/${id}`, formState)
 			.then(() => {
-				getProductos();
+				fetchProductos();
 				limpiarCampos();
 				Swal.fire({
 					title: '<strong>Actualización exitoso!!!</strong>',
@@ -100,7 +122,7 @@ export const CRUDProducto = () => {
 			if (result.isConfirmed) {
 				Axios.delete(`http://localhost:3001/api/product/${val.uid}`)
 					.then(() => {
-						getProductos();
+						fetchProductos();
 						limpiarCampos();
 						Swal.fire({
 							icon: 'success',
@@ -124,23 +146,6 @@ export const CRUDProducto = () => {
 		});
 	};
 
-	useEffect(() => {
-		getProductos();
-	}, []);
-
-	const getProductos = (page = 1, limit = 8) => {
-		Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`)
-			.then((response) => {
-				const { productos, totalPages, page } = response.data;
-				setProductos(productos);
-				setTotalPages(totalPages); // Actualizar el total de páginas
-				setCurrentPage(page); // Actualizar la página actual
-			})
-			.catch((error) => {
-				console.error('Error al obtener productos:', error);
-			});
-	};
-
 	const validar = (event) => {
 		event.preventDefault();
 		const { nombre, cantidad, precio, url } = formState;
@@ -160,7 +165,7 @@ export const CRUDProducto = () => {
 			}
 
 			document.getElementById('btnCerrar').click();
-			getProductos();
+			fetchProductos();
 		}
 	};
 
