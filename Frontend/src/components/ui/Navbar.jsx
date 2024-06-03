@@ -90,7 +90,7 @@ export const Navbar = () => {
 							<NavLink className='nav-link' to='/carrito'>
 								<FontAwesomeIcon icon={faShoppingCart} />
 								{cartItemCount > 0 && (
-									<span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
+									<span className='position-absolute top-1 start-50 translate-middle badge rounded-pill bg-success'>
 										{cartItemCount}
 									</span>
 								)}
