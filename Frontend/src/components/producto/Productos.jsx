@@ -9,8 +9,11 @@ import './styles.css';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { sleep } from '../../helpers/sleep';
 
 const fetchProductos = async ({ queryKey }) => {
+	await sleep(4);
+
 	const [, page, limit] = queryKey;
 	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`);
 	return response.data;
