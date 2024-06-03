@@ -6,7 +6,7 @@ import { AuthContext } from '../../auth/authContext.jsx';
 import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import LoadingSpinner from '../ui/LoadingSpinner';
+import LoadingSpinner from '../ui/LoadingSpinner.jsx';
 
 const fetchUsuarios = async ({ page, searchTerm }) => {
 	const response = await Axios.get(`http://localhost:3001/api/users?page=${page}&search=${searchTerm}`);
@@ -28,7 +28,11 @@ export const CRUDUsuario = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [title, setTitle] = useState('');
+
 	const queryClient = useQueryClient();
+	const refetchUsuarios = () => {
+		queryClient.invalidateQueries(['usuarios']);
+	};
 
 	const { data, isLoading, isError, error } = useQuery({
 		queryKey: ['usuarios', { page: currentPage, searchTerm }],
@@ -39,7 +43,7 @@ export const CRUDUsuario = () => {
 	const mutation = useMutation({
 		mutationFn: (newUser) => Axios.post('http://localhost:3001/api/users', newUser),
 		onSuccess: () => {
-			queryClient.invalidateQueries(['usuarios']);
+			refetchUsuarios();
 			limpiarCampos();
 			Swal.fire({
 				title: '<strong>Registro exitoso!!!</strong>',
@@ -60,7 +64,7 @@ export const CRUDUsuario = () => {
 	const updateMutation = useMutation({
 		mutationFn: ({ id, data }) => Axios.put(`http://localhost:3001/api/users/${id}`, data),
 		onSuccess: () => {
-			queryClient.invalidateQueries(['usuarios']);
+			refetchUsuarios();
 			limpiarCampos();
 			Swal.fire({
 				title: '<strong>Actualización exitosa!!!</strong>',
@@ -84,7 +88,7 @@ export const CRUDUsuario = () => {
 				headers: { 'x-token': user.token },
 			}),
 		onSuccess: () => {
-			queryClient.invalidateQueries(['usuarios']);
+			refetchUsuarios();
 			limpiarCampos();
 			Swal.fire({
 				icon: 'success',
@@ -114,6 +118,14 @@ export const CRUDUsuario = () => {
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
 	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE', estado: false });
+
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
+
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
 
 	const validar = (event) => {
 		event.preventDefault();
@@ -148,7 +160,6 @@ export const CRUDUsuario = () => {
 		window.setTimeout(() => document.getElementById('nombre').focus(), 500);
 	};
 
-	if (isLoading) return <LoadingSpinner />;
 	if (isError) return <div>Error: {error.message}</div>;
 
 	return (
