@@ -15,12 +15,12 @@ const client = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-	<GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-		<React.StrictMode>
+	<React.StrictMode>
+		<GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
 			<QueryClientProvider client={client}>
-				<ReactQueryDevtools />
+				<ReactQueryDevtools initialIsOpen={false} />
 				<App />
 			</QueryClientProvider>
-		</React.StrictMode>
-	</GoogleOAuthProvider>
+		</GoogleOAuthProvider>
+	</React.StrictMode>
 );
