@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { CartContext } from '../../auth/CartProvider';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,45 +7,43 @@ import Axios from 'axios';
 import placeholder from '../../images/placeholder.png';
 import './styles.css';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
+import useFetch from '../../hooks/useFetch';
+import LoadingSpinner from '../ui/LoadingSpinner';
+
+const fetchProductos = async ({ queryKey }) => {
+	const [, page, limit] = queryKey;
+	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`);
+	return response.data;
+};
 
 export const Productos = () => {
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
-	const [productosList, setProductos] = useState([]);
-	// const [currency, setCurrency] = useState('USD');
-	// const [exchangeRate, setExchangeRate] = useState(25); // Ejemplo de tasa de cambio
 	const { addToCart } = useContext(CartContext);
 
+	const { data: productosData, isLoading, isError, error } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
-			getProductos(currentPage - 1);
+			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
 
 	const handleNextPage = () => {
-		if (currentPage < totalPages) {
-			getProductos(currentPage + 1);
+		if (currentPage < (productosData?.totalPages || 0)) {
+			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	};
 
-	useEffect(() => {
-		getProductos();
-		// getUserLocation();
-	}, []);
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
 
-	const getProductos = (page = 1, limit = 8) => {
-		Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`)
-			.then((response) => {
-				const { productos, totalPages, page } = response.data;
-				setProductos(productos);
-				setTotalPages(totalPages); // Actualizar el total de páginas
-				setCurrentPage(page); // Actualizar la página actual
-			})
-			.catch((error) => {
-				console.error('Error al obtener productos:', error);
-			});
-	};
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	const productosList = productosData?.productos || [];
+	const totalPages = productosData?.totalPages || 0;
 
 	// const getUserLocation = () => {
 	// 	navigator.geolocation.getCurrentPosition(success, error);
@@ -79,7 +77,6 @@ export const Productos = () => {
 	// 	}
 	// 	return `${price} USD`;
 	// };
-
 	return (
 		<div className='container animate__animated animate__fadeIn my-5'>
 			<div className='row'>
@@ -144,7 +141,6 @@ export const Productos = () => {
 					</div>
 				)}
 			</div>
-			{/* Controles de paginación */}
 			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
 		</div>
 	);
