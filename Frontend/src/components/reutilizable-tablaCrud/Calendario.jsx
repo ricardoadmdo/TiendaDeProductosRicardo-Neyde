@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, isSameMonth, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
-import bg from '../../../images/bg.jpg';
+import bg from '../../images/bg.jpg';
 
-const Calendario = () => {
+const Calendario = ({ onSeleccionarDias }) => {
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [selectedDates, setSelectedDates] = useState([]);
 
@@ -24,16 +25,22 @@ const Calendario = () => {
 
 	const handleDateClick = (day) => {
 		setSelectedDates((prevSelectedDates) => {
-			if (prevSelectedDates.find((selectedDay) => isSameDay(selectedDay, day))) {
-				return prevSelectedDates.filter((selectedDay) => !isSameDay(selectedDay, day));
+			const updatedSelectedDates = [...prevSelectedDates];
+			const index = updatedSelectedDates.findIndex((selectedDay) => isSameDay(selectedDay, day));
+			if (index !== -1) {
+				updatedSelectedDates.splice(index, 1);
 			} else {
-				return [...prevSelectedDates, day];
+				updatedSelectedDates.push(day);
 			}
+			// Llama a la función de manejo proporcionada por el componente padre con las fechas formateadas
+			const fechasFormateadas = updatedSelectedDates.map((dia) => format(dia, 'd MMMM yyyy', { locale: es }));
+			onSeleccionarDias(fechasFormateadas);
+			return updatedSelectedDates;
 		});
 	};
 
 	return (
-		<div className='container my-4 vh-100'>
+		<div className='container my-4 '>
 			<div className='calendar d-flex'>
 				<div
 					className='calendar-left'
@@ -92,16 +99,12 @@ const Calendario = () => {
 					</div>
 				</div>
 			</div>
-			<div className='selected-dates mt-3'>
-				<h3>Fechas seleccionadas:</h3>
-				<ul>
-					{selectedDates.map((date, index) => (
-						<li key={index}>{format(date, 'd MMMM yyyy', { locale: es })}</li>
-					))}
-				</ul>
-			</div>
 		</div>
 	);
+};
+
+Calendario.propTypes = {
+	onSeleccionarDias: PropTypes.func.isRequired,
 };
 
 export default Calendario;
