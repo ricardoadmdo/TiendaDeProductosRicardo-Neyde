@@ -52,7 +52,7 @@ export const DashboardRoutes = () => {
 					}
 				/>
 				<Route
-					path='gestionar-inventario'
+					path='gestionar-ventas'
 					element={
 						<AdminRoute>
 							<Calendario />

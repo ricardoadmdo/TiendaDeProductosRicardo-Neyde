@@ -219,8 +219,8 @@ export const Carrito = () => {
 														<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
 													</p>
 													<p className='card-text'>
-														<strong>Subtotal:</strong>{' '}
-														{(Math.round((total / usdRate).toFixed(2) * 10) / 10) * val.cantidadAdd} USD
+														<strong>Subtotal :</strong>{' '}
+														{usdRate ? ((val.precio * val.cantidadAdd) / usdRate).toFixed(2) : 'N/A'} USD
 													</p>
 													<hr />
 													<div className='row align-items-center'>

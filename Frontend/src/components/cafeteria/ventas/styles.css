@@ -1,0 +1,27 @@
+/* Calendar.css */
+.calendar {
+	background: #ffffff;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.calendar .table thead th {
+	background-color: #f7f7f7;
+	border: none;
+}
+
+.calendar .table tbody td {
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+	font-weight: bold;
+}
+
+.calendar .table tbody td:hover {
+	background-color: #e9ecef;
+	cursor: pointer;
+}
+
+.calendar .table tbody .bg-primary {
+	border-radius: 100%;
+}

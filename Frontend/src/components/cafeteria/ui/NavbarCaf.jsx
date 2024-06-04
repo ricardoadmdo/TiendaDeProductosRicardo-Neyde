@@ -137,12 +137,12 @@ export const NavbarCaf = () => {
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-ventas'>
+										<NavLink className='dropdown-item' to='/gestionar-inventario'>
 											Gestionar Inventario
 										</NavLink>
 									</li>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-inventario'>
+										<NavLink className='dropdown-item' to='/gestionar-ventas'>
 											Gestionar Ventas
 										</NavLink>
 									</li>
