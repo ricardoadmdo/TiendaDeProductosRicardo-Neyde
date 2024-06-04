@@ -1,13 +1,73 @@
-/* Calendar.css */
 .calendar {
-	background: #ffffff;
+	display: flex;
+	background: #fff;
 	border-radius: 10px;
 	overflow: hidden;
+	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.calendar-left {
+	background-image: url('images/bg.jpg');
+	background-size: cover;
+	background-position: center center;
+	padding: 20px;
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 40%;
+	text-align: center;
+}
+
+.calendar-left h3,
+.calendar-left p {
+	margin: 0;
+}
+
+.calendar-right {
+	width: 60%;
+}
+
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+	background-color: #f7f7f7;
+}
+
+.calendar-header h3 {
+	margin: 0;
+}
+
+.calendar-header button {
+	background: rgba(0, 123, 255, 0.1);
+	border: none;
+	color: #007bff;
+	padding: 10px;
+	border-radius: 50%;
+	font-size: 16px;
+}
+
+.calendar-header button:hover {
+	background: rgba(0, 123, 255, 0.2);
+}
+
+.table-responsive {
+	padding: 20px;
 }
 
 .calendar .table thead th {
 	background-color: #f7f7f7;
 	border: none;
+	padding: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
 }
 
 .calendar .table tbody td {
@@ -15,13 +75,46 @@
 	height: 40px;
 	vertical-align: middle;
 	font-weight: bold;
+	cursor: pointer;
+	text-align: center;
 }
 
 .calendar .table tbody td:hover {
 	background-color: #e9ecef;
-	cursor: pointer;
 }
 
-.calendar .table tbody .bg-primary {
-	border-radius: 100%;
+.calendar .table tbody .selected {
+	border-radius: 50%;
+	background-color: #007bff;
+	color: white;
+}
+
+.calendar .table tbody .today {
+	border-radius: 50%;
+	background-color: #cd22d3;
+	color: white;
+}
+
+.selected-dates {
+	margin-top: 20px;
+}
+
+.selected-dates h3 {
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+.selected-dates ul {
+	list-style: none;
+	padding: 0;
+}
+
+.selected-dates ul li {
+	background: #f7f7f7;
+	padding: 10px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
