@@ -385,10 +385,10 @@ export const Carrito = () => {
 
 									<div className='d-grid gap-2'>
 										<button type='button' className='btn btn-success' onClick={finalizeOrder}>
-											Finalizar Pedido
+											Finalizar Pedido 🚴‍♀️
 										</button>
 										<button type='button' className='btn btn-success mt-2' onClick={pagoOnline}>
-											Pagar con Tarjeta
+											Pagar con Tarjeta 💳
 										</button>
 									</div>
 								</form>

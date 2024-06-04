@@ -120,7 +120,7 @@ export const Navbar = () => {
 									data-bs-toggle='dropdown'
 									aria-expanded='false'
 								>
-									Gestionar
+									Gestionar⚙
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
