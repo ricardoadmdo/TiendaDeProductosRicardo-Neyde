@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../auth/authContext';
 import { types } from '../../types/types';
@@ -12,19 +12,19 @@ export const LoginScreen = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 	const { dispatch } = useContext(AuthContext);
-	//Nuevo usuario google
 	const [newUser, setNewUser] = useState(false);
 	const [newPassword, setNewPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
 	const login = useGoogleLogin({
-		onSuccess: (codeResponse) => handleGoogleLogin(codeResponse),
+		onSuccess: handleGoogleLogin,
 		onError: (error) => console.log('Login Failed:', error),
 	});
 
-	const handleGoogleLogin = async (codeResponse) => {
+	async function handleGoogleLogin(codeResponse) {
 		try {
 			const response = await Axios.post('http://localhost:3001/api/auth/google', {
 				access_token: codeResponse.access_token,
@@ -33,32 +33,16 @@ export const LoginScreen = () => {
 
 			if (response.data.newUser || response.data.cambiarPassword) {
 				setNewUser(true);
-				if (response.data.correo) {
-					setEmail(response.data.correo);
-				} else {
-					setEmail(userData.correo);
-				}
+				setEmail(response.data.correo || userData.correo);
 			} else {
-				const action = {
-					type: types.login,
-					payload: {
-						nombre: userData.nombre,
-						correo: userData.correo,
-						token: response.data.token,
-						rol: userData.rol,
-						uid: userData.uid,
-						google: true,
-					},
-				};
-				dispatch(action);
-				navigate('/');
+				handleLoginSuccess(userData, response.data.token);
 			}
 		} catch (error) {
 			console.error('Error durante la autenticación con Google:', error);
 		}
-	};
+	}
 
-	const handleNewUserSubmit = async (e) => {
+	async function handleNewUserSubmit(e) {
 		e.preventDefault();
 		if (newPassword !== confirmPassword) {
 			Swal.fire({
@@ -74,44 +58,16 @@ export const LoginScreen = () => {
 				correo: email,
 				password: newPassword,
 			});
-
 			const userData = response.data.usuario;
-			const action = {
-				type: types.login,
-				payload: {
-					nombre: userData.nombre,
-					correo: userData.correo,
-					token: response.data.token,
-					rol: userData.rol,
-					uid: userData.uid,
-					google: true,
-				},
-			};
-			dispatch(action);
-			navigate('/');
+			handleLoginSuccess(userData, response.data.token);
 		} catch (error) {
-			console.error('Error during password creation:', error);
+			console.error('Error durante la creación de contraseña:', error);
 		}
-	};
+	}
 
-	const showErrorAlert = () => {
-		Swal.fire({
-			icon: 'error',
-			title: 'Oops...',
-			text: 'Usuario o contraseña incorrectos',
-		});
-	};
-
-	const showConfirm = () => {
-		Swal.fire({
-			title: 'Bienvenido a la web de ventas de Ricardo & Neyde',
-			text: 'Sesión iniciada correctamente',
-			icon: 'success',
-		});
-	};
-
-	const handleLogin = async (e) => {
+	async function handleLogin(e) {
 		e.preventDefault();
+		setIsLoading(true);
 		try {
 			const response = await Axios.post('http://localhost:3001/api/auth/login', {
 				correo: email,
@@ -120,22 +76,7 @@ export const LoginScreen = () => {
 
 			const data = response.data;
 			if (data) {
-				const action = {
-					type: types.login,
-					payload: {
-						nombre: data.usuario.nombre,
-						rol: data.usuario.rol,
-						correo: data.usuario.correo,
-						uid: data.usuario.uid,
-						token: data.token,
-					},
-				};
-				dispatch(action);
-
-				const lastPath = localStorage.getItem('lastPath') || '/';
-				navigate(lastPath, {
-					replace: true,
-				});
+				handleLoginSuccess(data.usuario, data.token);
 				showConfirm();
 			} else {
 				showErrorAlert();
@@ -143,37 +84,81 @@ export const LoginScreen = () => {
 		} catch (error) {
 			console.error('Error al iniciar sesión:', error);
 			showErrorAlert();
+		} finally {
+			setIsLoading(false);
 		}
-	};
+	}
 
-	const handleChange = (e) => {
+	function handleLoginSuccess(userData, token) {
+		const action = {
+			type: types.login,
+			payload: {
+				nombre: userData.nombre,
+				correo: userData.correo,
+				token: token,
+				rol: userData.rol,
+				uid: userData.uid,
+				google: true,
+			},
+		};
+		dispatch(action);
+		const lastPath = localStorage.getItem('lastPath') || '/';
+		navigate(lastPath, { replace: true });
+	}
+
+	function handleChange(e) {
 		const { name, value } = e.target;
-		if (name === 'email') {
-			setEmail(value);
-		} else if (name === 'password') {
-			setPassword(value);
-		} else if (name === 'newPassword') {
-			setNewPassword(value);
-		} else if (name === 'confirmPassword') {
-			setConfirmPassword(value);
+		switch (name) {
+			case 'email':
+				setEmail(value);
+				break;
+			case 'password':
+				setPassword(value);
+				break;
+			case 'newPassword':
+				setNewPassword(value);
+				break;
+			case 'confirmPassword':
+				setConfirmPassword(value);
+				break;
+			default:
+				break;
 		}
-	};
+	}
 
-	const togglePasswordVisibility = () => {
+	function togglePasswordVisibility() {
 		setShowPassword(!showPassword);
-	};
+	}
+
+	function showErrorAlert() {
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: 'Usuario o contraseña incorrectos',
+		});
+	}
+
+	function showConfirm() {
+		Swal.fire({
+			title: 'Bienvenido a la web de ventas de Ricardo & Neyde',
+			text: 'Sesión iniciada correctamente',
+			icon: 'success',
+		});
+	}
 
 	return (
 		<div
-			className='container-fluid d-flex justify-content-center align-items-center vh-100'
+			className=' container-fluid d-flex justify-content-center align-items-center vh-100 '
 			style={{
 				backgroundImage: `url(https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg)`,
 				backgroundSize: 'cover',
 				backgroundPosition: 'center center',
-				zIndex: '-1',
 			}}
 		>
-			<div className='card p-4 shadow text-center' style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.819)', zIndex: '2' }}>
+			<div
+				className='card p-4 shadow text-center animate__animated animate__fadeIn'
+				style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.9)' }}
+			>
 				{newUser ? (
 					<>
 						<h3 className='mb-3'>Necesita una contraseña para su cuenta: </h3>
@@ -241,10 +226,11 @@ export const LoginScreen = () => {
 									className='position-absolute top-50 end-0 translate-middle-y me-3'
 									icon={showPassword ? faEyeSlash : faEye}
 									onClick={togglePasswordVisibility}
+									style={{ cursor: 'pointer' }}
 								/>
 							</div>
-							<button className='btn btn-success' type='submit'>
-								Iniciar Sesión
+							<button className='btn btn-success' type='submit' disabled={isLoading}>
+								{isLoading ? 'Cargando...' : 'Iniciar Sesión'}
 							</button>
 						</form>
 						<div className='mt-3'>
@@ -253,9 +239,9 @@ export const LoginScreen = () => {
 								Iniciar sesión con Google
 							</button>
 						</div>
-						<Link to='/register' className='text-primary mt-3'>
+						<NavLink to='/register' className='text-primary mt-3'>
 							¿No tienes una cuenta? Regístrate aquí
-						</Link>
+						</NavLink>
 					</>
 				)}
 			</div>

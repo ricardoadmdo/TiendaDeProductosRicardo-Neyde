@@ -1,5 +1,5 @@
-import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
@@ -9,53 +9,53 @@ export const RegisterScreen = () => {
 	const [nombre, setNombre] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
-	const [showPassword1, setShowPassword1] = useState(false);
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [email, setEmail] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
 	const handleRegister = async (e) => {
 		e.preventDefault();
-		if (password === confirmPassword) {
-			try {
-				await Axios.post('http://localhost:3001/api/auth/register', {
-					nombre,
-					password,
-					correo: email,
-					rol: 'USER_ROLE',
-				});
+		setIsLoading(true);
 
-				const response = await Axios.post(`http://localhost:3001/api/auth/verify/${email}`);
-				const token = response.data.token;
-
-				Swal.fire({
-					title: 'Código enviado',
-					text: 'Por favor revisa tu correo electrónico',
-					icon: 'info',
-				});
-
-				navigate(`/verify-code?token=${token}`);
-			} catch (error) {
-				if (error.response && error.response.data && error.response.data.msg) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: error.response.data.msg,
-					});
-				} else {
-					Swal.fire({
-						icon: 'warning',
-						title: 'Error',
-						text: 'Ocurrió un error inesperado. Por favor, intente nuevamente.',
-					});
-				}
+		try {
+			if (password !== confirmPassword) {
+				throw new Error('Las contraseñas no coinciden');
 			}
-		} else {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Las contraseñas no coinciden',
+
+			await Axios.post('http://localhost:3001/api/auth/register', {
+				nombre,
+				password,
+				correo: email,
+				rol: 'USER_ROLE',
 			});
+
+			const response = await Axios.post(`http://localhost:3001/api/auth/verify/${email}`);
+			const token = response.data.token;
+
+			Swal.fire({
+				title: 'Código enviado',
+				text: 'Por favor revisa tu correo electrónico',
+				icon: 'info',
+			});
+
+			navigate(`/verify-code?token=${token}`);
+		} catch (error) {
+			if (error.response && error.response.data && error.response.data.msg) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: error.response.data.msg,
+				});
+			} else {
+				Swal.fire({
+					icon: 'warning',
+					title: 'Error',
+					text: error.message || 'Ocurrió un error inesperado. Por favor, intente nuevamente.',
+				});
+			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -63,13 +63,9 @@ export const RegisterScreen = () => {
 		setShowPassword(!showPassword);
 	};
 
-	const togglePasswordVisibility1 = () => {
-		setShowPassword1(!showPassword1);
-	};
-
 	return (
 		<div
-			className='container-fluid d-flex justify-content-center align-items-center vh-100'
+			className='container-fluid d-flex justify-content-center align-items-center vh-100 '
 			style={{
 				backgroundImage: `url(https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg)`,
 				backgroundSize: 'cover',
@@ -81,7 +77,7 @@ export const RegisterScreen = () => {
 				className='card p-4 shadow text-center animate__animated animate__fadeIn'
 				style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.819)', zIndex: '2' }}
 			>
-				<h3 className='mb-3'>Necesitas una cuenta para continuar!</h3>
+				<h3 className='mb-3'>¡Crea una cuenta para continuar!</h3>
 				<h2 className='mb-4'>Registrarse</h2>
 				<form className='d-grid gap-3' onSubmit={handleRegister}>
 					<div className='form-group'>
@@ -126,27 +122,28 @@ export const RegisterScreen = () => {
 						/>
 					</div>
 					<div className='form-group position-relative'>
+						<label>Confirmar Contraseña:</label>
 						<input
 							className='form-control'
 							onChange={(event) => setConfirmPassword(event.target.value)}
 							value={confirmPassword}
-							type={showPassword1 ? 'text' : 'password'}
+							type={showPassword ? 'text' : 'password'}
 							name='confirmPassword'
 							placeholder='Introduzca su contraseña otra vez'
 							required
 						/>
 						<FontAwesomeIcon
 							className='position-absolute top-50 end-0 translate-middle-y me-3'
-							icon={showPassword1 ? faEyeSlash : faEye}
-							onClick={togglePasswordVisibility1}
+							icon={showPassword ? faEyeSlash : faEye}
+							onClick={togglePasswordVisibility}
 						/>
 					</div>
-					<button className='btn btn-success' type='submit'>
-						Registrarse
+					<button className='btn btn-success' type='submit' disabled={isLoading}>
+						{isLoading ? 'Registrando...' : 'Registrarse'}
 					</button>
-					<Link to='/login' className='text-primary'>
+					<NavLink to='/login' className='text-primary'>
 						¿Ya tienes una cuenta? Inicia Sesión aquí
-					</Link>
+					</NavLink>
 				</form>
 			</div>
 		</div>
