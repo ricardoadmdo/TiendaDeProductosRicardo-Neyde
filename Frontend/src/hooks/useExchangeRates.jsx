@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import ExchangeRatesContext from './ExchangeRatesContext';
+import ExchangeRatesContext from '../auth/ExchangeRatesContext';
 
 const useExchangeRates = () => {
 	return useContext(ExchangeRatesContext);
