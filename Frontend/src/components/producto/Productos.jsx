@@ -9,7 +9,7 @@ import './styles.css';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import useExchangeRates from '../../auth/useExchangeRates';
+import useExchangeRates from '../../hooks/useExchangeRates';
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;

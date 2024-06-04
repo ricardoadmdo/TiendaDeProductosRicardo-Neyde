@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
-import useExchangeRates from '../../auth/useExchangeRates';
+import useExchangeRates from '../../hooks/useExchangeRates';
 
 export const Carrito = () => {
 	const { usdRate } = useExchangeRates();
