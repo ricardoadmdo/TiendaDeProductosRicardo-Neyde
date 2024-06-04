@@ -18,20 +18,22 @@ const Footer = () => {
 						<FaWhatsapp size={30} style={{ color: '#00FF00' }} /> Whatsapp
 					</a>
 					<a
-						className='text-decoration-none text-primary mx-3'
+						style={{ color: '#00BFFF' }}
+						className='text-decoration-none mx-3'
 						href='https://www.facebook.com/ricardo.descoubet.1'
 						target='_blank'
 						rel='noopener noreferrer'
 					>
-						<FaFacebook size={30} /> Facebook
+						<FaFacebook size={30} style={{ color: '#00BFFF' }} /> Facebook
 					</a>
 					<a
-						className='text-decoration-none text-danger mx-3'
+						style={{ color: '#FF6347' }}
+						className='text-decoration-none mx-3'
 						href='https://www.instagram.com/ricardoluisdescoubetbravo'
 						target='_blank'
 						rel='noopener noreferrer'
 					>
-						<FaInstagram size={30} /> Instagram
+						<FaInstagram size={30} style={{ color: '#FF6347' }} /> Instagram
 					</a>
 				</div>
 				<div className='mt-3'>
