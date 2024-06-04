@@ -9,7 +9,7 @@ const Ventas = () => {
 	};
 
 	return (
-		<div className='vh-100'>
+		<div className='container animate__animated animate__fadeIn vh-100'>
 			<h2>Registro de Ventas</h2>
 			<Calendario onSeleccionarDias={handleSeleccionarDias} />
 			<div>

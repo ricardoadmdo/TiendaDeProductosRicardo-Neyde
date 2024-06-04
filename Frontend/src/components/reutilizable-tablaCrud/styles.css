@@ -1,13 +1,10 @@
 .calendar {
 	display: flex;
-	background: #fff;
+	background: rgba(255, 255, 255, 0.8); /* Fondo ligeramente opaco */
 	border-radius: 10px;
 	overflow: hidden;
 	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-.uppercase {
-	text-transform: uppercase;
+	z-index: 1; /* Z-index hacia atrás */
 }
 
 .calendar-left {
@@ -31,6 +28,10 @@
 
 .calendar-right {
 	width: 60%;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .calendar-header {
@@ -38,7 +39,6 @@
 	justify-content: space-between;
 	align-items: center;
 	padding: 20px;
-	background-color: #f7f7f7;
 }
 
 .calendar-header h3 {
@@ -48,7 +48,7 @@
 .calendar-header button {
 	background: rgba(0, 123, 255, 0.1);
 	border: none;
-	color: #007bff;
+	color: #000000;
 	padding: 10px;
 	border-radius: 50%;
 	font-size: 16px;
@@ -63,36 +63,41 @@
 }
 
 .calendar .table thead th {
-	background-color: #f7f7f7;
 	border: none;
 	padding: 10px;
 	font-weight: 700;
-	text-transform: uppercase;
 }
 
 .calendar .table tbody td {
 	width: 40px;
 	height: 40px;
-	vertical-align: middle;
 	font-weight: bold;
 	cursor: pointer;
 	text-align: center;
-}
-
-.calendar .table tbody td:hover {
-	background-color: #e9ecef;
+	border: none; /* Eliminar bordes */
 }
 
 .calendar .table tbody .selected {
-	border-radius: 50%;
-	background-color: #007bff;
+	border-radius: 50%; /* Hacer la selección redonda */
+	background-color: #552af0;
 	color: white;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Añadir sombra para resaltar */
 }
 
 .calendar .table tbody .today {
-	border-radius: 50%;
+	border-radius: 50%; /* Hacer la selección redonda */
 	background-color: #cd22d3;
 	color: white;
+	box-shadow: 0 0 5px rgba(205, 34, 211, 0.5); /* Añadir sombra para resaltar */
+}
+
+.calendar .table tbody .selected:hover,
+.calendar .table tbody .today:hover {
+	background-color: #0056b3; /* Cambiar el color al hacer hover */
+}
+
+.calendar .table tbody td:not(.selected):not(.today):hover {
+	background-color: #e9ecef; /* Cambiar el color de fondo al hacer hover */
 }
 
 .selected-dates {
@@ -117,4 +122,20 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+.calendar-left h3 {
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 10px;
+	padding: 10px;
+	margin: 0;
+}
+
+.calendar-left p {
+	font-size: 15px;
+}
+
+.calendar .table tbody td {
+	border-radius: 50%; /* Hace que los días del calendario sean circulares */
+	border: none; /* Eliminar bordes */
 }
