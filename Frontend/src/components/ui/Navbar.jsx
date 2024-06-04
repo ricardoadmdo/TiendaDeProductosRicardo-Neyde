@@ -69,7 +69,7 @@ export const Navbar = () => {
 							value={searchTerm}
 							onChange={handleSearchChange}
 						/>
-						<button className='btn btn-outline-light' type='submit'>
+						<button className='btn btn-outline-light' type='submit' aria-label='Buscar'>
 							<FontAwesomeIcon icon={faSearch} />
 						</button>
 					</form>
