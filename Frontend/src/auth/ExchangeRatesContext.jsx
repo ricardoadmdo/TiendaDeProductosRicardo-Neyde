@@ -5,19 +5,33 @@ import PropTypes from 'prop-types';
 const ExchangeRatesContext = createContext();
 
 export const ExchangeRatesProvider = ({ children }) => {
-	const [usdRate, setUsdRate] = useState(null);
+	const [usdRate, setUsdRate] = useState(() => {
+		// Intenta recuperar la tasa de cambio del sessionStorage al inicializar
+		const savedRate = sessionStorage.getItem('usdRate');
+		return savedRate ? Number(savedRate) : null;
+	});
 
 	useEffect(() => {
 		const obtenerTasas = async () => {
-			try {
-				const currentDate = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
-				const { USD } = await apiToke(currentDate); // Llama a la función para obtener las tasas de cambio
-				const usdRateNumber = Number(USD);
-				if (!isNaN(usdRateNumber)) {
-					setUsdRate(usdRateNumber);
+			if (usdRate === null) {
+				try {
+					const currentDate = new Date(); // Obtiene la fecha y hora actual en la zona horaria local
+					const year = currentDate.getFullYear(); // Obtiene el año actual
+					const month = currentDate.getMonth() + 1; // Obtiene el mes actual (los meses son indexados desde 0)
+					const day = currentDate.getDate(); // Obtiene el día del mes actual
+
+					// Formatea la fecha en formato YYYY-MM-DD
+					const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+					const { USD } = await apiToke(formattedDate); // Llama a la función para obtener las tasas de cambio
+					const usdRateNumber = Number(USD);
+
+					if (!isNaN(usdRateNumber)) {
+						setUsdRate(usdRateNumber);
+						sessionStorage.setItem('usdRate', usdRateNumber); // Guarda la tasa en sessionStorage
+					}
+				} catch (error) {
+					console.error('Error al obtener las tasas de cambio:', error);
 				}
-			} catch (error) {
-				console.error('Error al obtener las tasas de cambio:', error);
 			}
 		};
 

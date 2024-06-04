@@ -1,3 +1,4 @@
+// apiToke.js
 import Axios from 'axios';
 
 const apiToke = async (currentDate) => {
@@ -16,8 +17,7 @@ const apiToke = async (currentDate) => {
 				Authorization: `Bearer ${apiKey}`,
 			},
 		});
-		// Procesar la respuesta y extraer las tasas de cambio u otra información relevante
-		const { USD } = response.data.tasas; // Ajusta esto según los datos que necesites
+		const { USD } = response.data.tasas;
 		return { USD }; // Retorna los datos necesarios
 	} catch (error) {
 		console.error('Error al obtener las tasas de cambio:', error);

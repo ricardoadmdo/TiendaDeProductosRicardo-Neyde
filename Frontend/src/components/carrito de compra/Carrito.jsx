@@ -7,8 +7,8 @@ import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import useExchangeRates from '../../auth/useExchangeRates';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
+import useExchangeRates from '../../auth/useExchangeRates';
 
 export const Carrito = () => {
 	const { usdRate } = useExchangeRates();
@@ -201,7 +201,7 @@ export const Carrito = () => {
 												/>
 												<h5 className='card-header'>{val.nombre}</h5>
 												<div className='card-body'>
-													<p className='card-text'>
+													<div className='card-text'>
 														<strong>
 															<p className='card-text'>{val.precio}$ CUP</p>
 														</strong>
@@ -210,7 +210,7 @@ export const Carrito = () => {
 																{usdRate ? Math.round((val.precio / usdRate) * 10) / 10 : 'N/A'}$ USD
 															</p>
 														</strong>
-													</p>
+													</div>
 													<p className='card-text'>
 														<strong>Cantidad a comprar:</strong> {val.cantidadAdd}
 													</p>
@@ -218,8 +218,8 @@ export const Carrito = () => {
 														<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
 													</p>
 													<p className='card-text'>
-														<strong>Subtotal:</strong> {(Math.round((val.precio / usdRate) * 10) / 10) * val.cantidadAdd}{' '}
-														USD
+														<strong>Subtotal:</strong>{' '}
+														{(Math.round((total / usdRate).toFixed(2) * 10) / 10) * val.cantidadAdd} USD
 													</p>
 													<hr />
 													<div className='row align-items-center'>
