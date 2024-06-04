@@ -51,13 +51,13 @@ const Calendario = ({ onSeleccionarDias }) => {
 					</p>
 				</div>
 				<div className='calendar-right'>
-					<div className='calendar-header d-flex justify-content-between align-items-center p-3 bg-light'>
-						<button className='btn btn-dark rounded-circle' onClick={handlePrevMonth}>
-							&lt;
+					<div className='d-flex align-items-center p-3'>
+						<button className='btn me-5' onClick={handlePrevMonth}>
+							<i className='fa fa-chevron-left'></i>
 						</button>
-						<h3 className='text-uppercase'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
-						<button className='btn btn-dark rounded-circle' onClick={handleNextMonth}>
-							&gt;
+						<h3 className='text-uppercase me-5'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
+						<button className='btn' onClick={handleNextMonth}>
+							<i className='fa fa-chevron-right'></i>
 						</button>
 					</div>
 					<div className='table-responsive'>
