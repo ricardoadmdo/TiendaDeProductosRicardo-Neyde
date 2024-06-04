@@ -5,7 +5,7 @@ import { CRUDProducto } from '../components/producto/CRUDProducto.jsx';
 import { CRUDCombo } from '../components/combos/CRUDCombo.jsx';
 import { Perfil } from '../components/ui/Perfil.jsx';
 import { BuscarUsuario } from '../components/usuario/BuscarUsuario.jsx';
-import Calendario from '../components/cafeteria/ventas/Calendario.jsx';
+import Ventas from '../components/cafeteria/ventas/Ventas.jsx';
 
 export const DashboardRoutes = () => {
 	return (
@@ -55,7 +55,7 @@ export const DashboardRoutes = () => {
 					path='gestionar-ventas'
 					element={
 						<AdminRoute>
-							<Calendario />
+							<Ventas />
 						</AdminRoute>
 					}
 				/>
