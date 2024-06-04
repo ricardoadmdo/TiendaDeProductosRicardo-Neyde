@@ -7,7 +7,7 @@ const Footer = () => {
 			<div className='container'>
 				<h2>Contacto</h2>
 				<p>Conéctate con nosotros:</p>
-				<div className='d-flex justify-content-center'>
+				<div className='d-flex justify-content-center mb-4'>
 					<a
 						style={{ color: '#00FF00' }}
 						className='text-decoration-none mx-3'
@@ -36,11 +36,22 @@ const Footer = () => {
 						<FaInstagram size={30} style={{ color: '#FF6347' }} /> Instagram
 					</a>
 				</div>
+
+				{/* Horarios de Apertura */}
+				<div className='mb-4'>
+					<h3>Horarios de Apertura</h3>
+					<p>Lunes a Viernes: 9:00 AM - 8:00 PM</p>
+					<p>Sábado: 10:00 AM - 6:00 PM</p>
+					<p>Domingo: Cerrado</p>
+				</div>
+
+				{/* Avisos Legales */}
 				<div className='mt-3'>
-					<span> {year}</span>
+					<span>&copy; {year} Ricardo & Neyde. Todos los derechos reservados.</span>
 				</div>
 			</div>
 		</footer>
 	);
 };
+
 export default Footer;
