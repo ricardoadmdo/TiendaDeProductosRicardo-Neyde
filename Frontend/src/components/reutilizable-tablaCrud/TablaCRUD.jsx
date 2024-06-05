@@ -5,8 +5,8 @@ import { faEdit, faTrashAlt, faSearch, faCamera } from '@fortawesome/free-solid-
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-const cloudName = 'dber1pxea';
-const uploadPreset = 'ml_default';
+const cloudName = import.meta.env.VITE_CLOUDNAME;
+const uploadPreset = import.meta.env.VITE_UPLOADPRESET;
 
 const TablaCRUD = ({
 	searchTerm,

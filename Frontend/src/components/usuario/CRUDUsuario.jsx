@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
@@ -27,6 +27,7 @@ export const CRUDUsuario = () => {
 	const { user } = useContext(AuthContext);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState('');
+	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 	const [title, setTitle] = useState('');
 
 	const queryClient = useQueryClient();
@@ -35,8 +36,8 @@ export const CRUDUsuario = () => {
 	};
 
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ['usuarios', { page: currentPage, searchTerm }],
-		queryFn: () => fetchUsuarios({ page: currentPage, searchTerm }),
+		queryKey: ['usuarios', { page: currentPage, searchTerm: debouncedSearchTerm }],
+		queryFn: () => fetchUsuarios({ page: currentPage, searchTerm: debouncedSearchTerm }),
 		keepPreviousData: true,
 	});
 
@@ -110,7 +111,7 @@ export const CRUDUsuario = () => {
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
-		navigate(`/buscarusuarios?query=${searchTerm}`);
+		navigate(`/dashboard/buscarusuarios?query=${searchTerm}`);
 	};
 
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
@@ -118,6 +119,16 @@ export const CRUDUsuario = () => {
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
 	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE', estado: false });
+
+	// Debounce logic
+	useEffect(() => {
+		const timerId = setTimeout(() => {
+			setDebouncedSearchTerm(searchTerm);
+		}, 4000); // 4 segundos de retraso
+		return () => {
+			clearTimeout(timerId); // Limpiar el temporizador en cada cambio de término de búsqueda
+		};
+	}, [searchTerm]);
 
 	if (isLoading) {
 		return <LoadingSpinner />;
@@ -159,8 +170,6 @@ export const CRUDUsuario = () => {
 		if (op === 2) setId(usuario.uid);
 		window.setTimeout(() => document.getElementById('nombre').focus(), 500);
 	};
-
-	if (isError) return <div>Error: {error.message}</div>;
 
 	return (
 		<>

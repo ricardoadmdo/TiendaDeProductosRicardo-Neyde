@@ -9,7 +9,7 @@ export const PrivateRoute = ({ children }) => {
 
 	localStorage.setItem('lastPath', pathname + search);
 
-	return user.logged ? children : <Navigate to='/' />;
+	return user.logged ? children : <Navigate to='/not-found' />;
 };
 
 PrivateRoute.propTypes = {

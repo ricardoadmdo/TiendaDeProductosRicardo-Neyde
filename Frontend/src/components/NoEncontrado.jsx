@@ -16,3 +16,5 @@ export const NoEncontrado = () => {
 		</>
 	);
 };
+
+export default NoEncontrado;

@@ -102,20 +102,20 @@ export const NavbarCaf = () => {
 							</a>
 							<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 								<li>
-									<NavLink className='dropdown-item' to='/pastas'>
+									<NavLink className='dropdown-item' to='/cafeteria/pastas'>
 										<FontAwesomeIcon icon={faHamburger} />
 										Pastas
 									</NavLink>
 								</li>
 
 								<li>
-									<NavLink className='dropdown-item' to='/cubana'>
+									<NavLink className='dropdown-item' to='/cafeteria/cubana'>
 										<FontAwesomeIcon icon={faUtensils} />
 										Comida cubana
 									</NavLink>
 								</li>
 								<li>
-									<NavLink className='dropdown-item' to='/carnes'>
+									<NavLink className='dropdown-item' to='/cafeteria/carnes'>
 										<FontAwesomeIcon icon={faUtensils} />
 										Carnes
 									</NavLink>
@@ -137,12 +137,12 @@ export const NavbarCaf = () => {
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-inventario'>
+										<NavLink className='dropdown-item' to='/cafeteria/gestionar-inventario'>
 											Gestionar Inventario
 										</NavLink>
 									</li>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-ventas'>
+										<NavLink className='dropdown-item' to='/cafeteria/gestionar-ventas'>
 											Gestionar Ventas
 										</NavLink>
 									</li>

@@ -10,21 +10,40 @@ import { DashboardRoutes } from './DashboardRoutes';
 import { PrivateRoute } from './PrivateRoute';
 import MainLayout from './MainLayout';
 import CafeteriaLayout from './CafeteriaLayout';
-import { Cafeteria } from '../components/cafeteria/Cafeteria';
 import { Perfil } from '../components/ui/Perfil';
 import { VerificationScreen } from '../components/login/VerificationScreen';
 import { AdminRoute } from './AdminRoute';
 import Ventas from '../components/cafeteria/ventas/Ventas.jsx';
-import { NoEncontrado } from '../components/NoEncontrado.jsx';
+import NoEncontrado from '../components/NoEncontrado.jsx';
 
 export const AppRouter = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
-				{/*  //! Rutas de la Cafeteria */}
+				{/* Rutas de la Tienda */}
+				<Route path='/' element={<MainLayout />}>
+					<Route index element={<Bienvenida />} />
+					<Route path='register' element={<RegisterScreen />} />
+					<Route path='login' element={<LoginScreen />} />
+					<Route path='productos' element={<Productos />} />
+					<Route path='carrito' element={<Carrito />} />
+					<Route path='combos' element={<Combos />} />
+					<Route path='busqueda' element={<Busqueda />} />
+					<Route path='perfil' element={<Perfil />} />
+					<Route path='verify-code' element={<VerificationScreen />} />
+					<Route
+						path='dashboard/*'
+						element={
+							<PrivateRoute>
+								<DashboardRoutes />
+							</PrivateRoute>
+						}
+					/>
+				</Route>
+
+				{/* Rutas de la Cafeteria */}
 				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
-					<Route index element={<Cafeteria />} />
-					{/* //? Rutas dentro de la ruta /cafeteria */}
+					<Route index element={<Bienvenida />} />
 					<Route path='carrito' element={<Carrito />} />
 					<Route
 						path='gestionar-ventas'
@@ -38,29 +57,7 @@ export const AppRouter = () => {
 					/>
 				</Route>
 
-				{/*  //! Rutas de la Tienda */}
-				<Route path='/' element={<MainLayout />}>
-					<Route index element={<Bienvenida />} />
-					<Route path='register' element={<RegisterScreen />} />
-					<Route path='login' element={<LoginScreen />} />
-					<Route path='productos' element={<Productos />} />
-					<Route path='carrito' element={<Carrito />} />
-					<Route path='combos' element={<Combos />} />
-					<Route path='busqueda' element={<Busqueda />} />
-					<Route path='perfil' element={<Perfil />} />
-					<Route path='verify-code' element={<VerificationScreen />} />
-					<Route
-						path='/*'
-						element={
-							<PrivateRoute>
-								<DashboardRoutes />
-							</PrivateRoute>
-						}
-					/>
-				</Route>
-			</Routes>
-			{/* Ruta 404 */}
-			<Routes>
+				{/* Ruta 404 */}
 				<Route path='*' element={<NoEncontrado />} />
 			</Routes>
 		</BrowserRouter>

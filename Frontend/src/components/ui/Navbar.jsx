@@ -124,17 +124,17 @@ export const Navbar = () => {
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-usuarios'>
+										<NavLink className='dropdown-item' to='/dashboard/gestionar-usuarios'>
 											Gestionar Usuarios
 										</NavLink>
 									</li>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-productos'>
+										<NavLink className='dropdown-item' to='/dashboard/gestionar-productos'>
 											Gestionar Productos
 										</NavLink>
 									</li>
 									<li>
-										<NavLink className='dropdown-item' to='/gestionar-combos'>
+										<NavLink className='dropdown-item' to='/dashboard/gestionar-combos'>
 											Gestionar Combos
 										</NavLink>
 									</li>
@@ -145,7 +145,7 @@ export const Navbar = () => {
 						{user.logged ? (
 							<>
 								<li className='nav-item'>
-									<NavLink className='nav-link' to='/perfil'>
+									<NavLink className='nav-link' to='/dashboard/perfil'>
 										<FontAwesomeIcon icon={faUser} />
 										{user.nombre}
 									</NavLink>

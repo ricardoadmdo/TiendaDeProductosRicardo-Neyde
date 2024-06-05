@@ -17,10 +17,10 @@ export const Pagination = ({ currentPage, totalPages, handlePreviousPage, handle
 };
 
 Pagination.propTypes = {
-	currentPage: PropTypes.number.isRequired,
-	totalPages: PropTypes.number.isRequired,
-	handlePreviousPage: PropTypes.func.isRequired,
-	handleNextPage: PropTypes.func.isRequired,
+	currentPage: PropTypes.number,
+	totalPages: PropTypes.number,
+	handlePreviousPage: PropTypes.func,
+	handleNextPage: PropTypes.func,
 };
 
 export default Pagination;
