@@ -34,7 +34,7 @@ export const NavbarCaf = () => {
 	};
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow'>
+		<nav className='navbar navbar-expand-lg navbar-dark shadow'>
 			<div className='container'>
 				<NavLink className='navbar-brand' to='/'>
 					<img src={logo} alt='Logo de la tienda' style={{ height: '50px' }} />
@@ -82,7 +82,7 @@ export const NavbarCaf = () => {
 							<NavLink className='nav-link' to='/cafeteria/carrito'>
 								<FontAwesomeIcon icon={faShoppingCart} />
 								{cartItemCount > 0 && (
-									<span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
+									<span className='position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success'>
 										{cartItemCount}
 									</span>
 								)}

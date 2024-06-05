@@ -161,31 +161,6 @@ export const Carrito = () => {
 				<LoadingSpinner />
 			) : (
 				<>
-					<div className='row animate__animated animate__fadeIn'>
-						<div className='col-md-8 offset-md-2'>
-							<div className='my-2'>
-								<div className='card p-3'>
-									<div className='text-center mb-3'>
-										<h5>Valor Total de la Compra</h5>
-									</div>
-									<div className='d-flex justify-content-between align-items-center'>
-										<div>
-											<h5 className='m-0'>💲{total} CUP</h5>
-										</div>
-										<div>
-											<h5 className='m-0'>💲{(total / usdRate).toFixed(2)} USD</h5>
-										</div>
-									</div>
-									<hr />
-									<p className='text-muted mb-0'>¡Aprovecha ya la oportunidad de comprar y pagar en USD!</p>
-									<button type='button' className='btn btn-dark mt-3' onClick={clearCart}>
-										Limpiar Carrito
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
 					<div className='container my-5'>
 						<div className='row '>
 							{/* Sección de productos a la izquierda */}
@@ -253,6 +228,20 @@ export const Carrito = () => {
 
 							{/* Sección del formulario de pedido a la derecha */}
 							<div className='col-lg-4'>
+								<div className='card p-3 mb-2'>
+									<div className='text-center mb-3'>
+										<h5>Valor Total de la Compra</h5>
+									</div>
+									<div className='d-flex justify-content-between align-items-center'>
+										<div>
+											<h5 className='m-0'>💲{total} CUP</h5>
+										</div>
+										<div>
+											<h5 className='m-0'>💲{(total / usdRate).toFixed(2)} USD</h5>
+										</div>
+									</div>
+								</div>
+								<hr />
 								<h3 className='mb-4'>Información de Entrega</h3>
 								<form>
 									<div className='mb-3'>
@@ -384,10 +373,14 @@ export const Carrito = () => {
 									</div>
 									<div className='d-grid gap-2'>
 										<button type='button' className='btn btn-outline-dark btn-lg custom-button' onClick={finalizeOrder}>
-											<FontAwesomeIcon icon={faMapMarkerAlt} /> Finalizar Pedido
+											<FontAwesomeIcon icon={faMapMarkerAlt} /> Pago Presencial
 										</button>
 										<button type='button' className='btn btn-outline-dark btn-lg custom-button mt-2' onClick={pagoOnline}>
-											<FontAwesomeIcon icon={faCreditCard} /> Pagar con Tarjeta
+											<FontAwesomeIcon icon={faCreditCard} /> Pago con Tarjeta
+										</button>
+										<hr />
+										<button type='button' className='btn btn-dark mt-3' onClick={clearCart}>
+											<FontAwesomeIcon icon={faTrashAlt} /> Limpiar Carrito
 										</button>
 									</div>
 								</form>
