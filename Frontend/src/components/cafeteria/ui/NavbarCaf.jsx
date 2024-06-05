@@ -102,7 +102,7 @@ export const NavbarCaf = () => {
 							</a>
 							<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 								<li>
-									<NavLink className='dropdown-item' to='/cafeteria/pastas'>
+									<NavLink className='dropdown-item' to='/cafeteria//pastas'>
 										<FontAwesomeIcon icon={faHamburger} />
 										Pastas
 									</NavLink>

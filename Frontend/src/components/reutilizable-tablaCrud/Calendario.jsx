@@ -40,7 +40,7 @@ const Calendario = ({ onSeleccionarDias }) => {
 	};
 
 	return (
-		<div className='container my-4'>
+		<div className='container  animate__animated animate__fadeIn my-4'>
 			<div className='calendar d-flex'>
 				<div className='calendar-left text-uppercase' style={{ backgroundImage: `url(${bg})` }}>
 					<h3 className='text-white'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>

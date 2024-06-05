@@ -39,6 +39,8 @@ export const AppRouter = () => {
 							</PrivateRoute>
 						}
 					/>
+					{/* Ruta 404 */}
+					<Route path='*' element={<NoEncontrado />} />
 				</Route>
 
 				{/* Rutas de la Cafeteria */}
@@ -55,10 +57,9 @@ export const AppRouter = () => {
 							</PrivateRoute>
 						}
 					/>
+					{/* Ruta 404 */}
+					<Route path='*' element={<NoEncontrado />} />
 				</Route>
-
-				{/* Ruta 404 */}
-				<Route path='*' element={<NoEncontrado />} />
 			</Routes>
 		</BrowserRouter>
 	);
