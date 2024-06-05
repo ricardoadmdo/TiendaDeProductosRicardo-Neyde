@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faMapMarkerAlt, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
@@ -138,7 +138,7 @@ export const Carrito = () => {
 		}
 
 		try {
-			await Axios.post('http://localhost:3001/api/pago/create-checkout-session', { cartItems: cart })
+			await Axios.post('http://localhost:3001/api/pago/create-checkout-session', { cartItems: cart, usdRate })
 				.then((response) => {
 					window.location.href = response.data.url;
 				})
@@ -382,13 +382,12 @@ export const Carrito = () => {
 											</div>
 										</div>
 									</div>
-
 									<div className='d-grid gap-2'>
-										<button type='button' className='btn btn-success' onClick={finalizeOrder}>
-											Finalizar Pedido 🚴‍♀️
+										<button type='button' className='btn btn-outline-dark btn-lg custom-button' onClick={finalizeOrder}>
+											<FontAwesomeIcon icon={faMapMarkerAlt} /> Finalizar Pedido
 										</button>
-										<button type='button' className='btn btn-success mt-2' onClick={pagoOnline}>
-											Pagar con Tarjeta 💳
+										<button type='button' className='btn btn-outline-dark btn-lg custom-button mt-2' onClick={pagoOnline}>
+											<FontAwesomeIcon icon={faCreditCard} /> Pagar con Tarjeta
 										</button>
 									</div>
 								</form>

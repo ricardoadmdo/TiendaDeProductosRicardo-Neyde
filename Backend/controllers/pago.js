@@ -3,7 +3,8 @@ const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 const createSession = async (req, res) => {
 	try {
-		const { cartItems } = req.body;
+		const { cartItems, usdRate } = req.body;
+		console.log(usdRate);
 		if (!cartItems || cartItems.length === 0) {
 			return res.status(400).json({ error: 'No cart items provided' });
 		}
@@ -15,7 +16,7 @@ const createSession = async (req, res) => {
 					name: item.nombre,
 					description: item.description ? item.description : 'Sin descripción', // Verifica si la descripción está vacía
 				},
-				unit_amount: item.precio * 100, // Stripe expects the amount in cents
+				unit_amount: Math.round((item.precio / usdRate) * 100), // Stripe expects the amount in cents
 			},
 			quantity: item.cantidadAdd,
 		}));
