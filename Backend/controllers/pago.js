@@ -4,7 +4,6 @@ const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 const createSession = async (req, res) => {
 	try {
 		const { cartItems, usdRate } = req.body;
-		console.log(usdRate);
 		if (!cartItems || cartItems.length === 0) {
 			return res.status(400).json({ error: 'No cart items provided' });
 		}
