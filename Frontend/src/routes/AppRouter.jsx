@@ -13,6 +13,9 @@ import CafeteriaLayout from './CafeteriaLayout';
 import { Cafeteria } from '../components/cafeteria/Cafeteria';
 import { Perfil } from '../components/ui/Perfil';
 import { VerificationScreen } from '../components/login/VerificationScreen';
+import { AdminRoute } from './AdminRoute';
+import Ventas from '../components/cafeteria/ventas/Ventas.jsx';
+import { NoEncontrado } from '../components/NoEncontrado.jsx';
 
 export const AppRouter = () => {
 	return (
@@ -21,8 +24,18 @@ export const AppRouter = () => {
 				{/*  //! Rutas de la Cafeteria */}
 				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
 					<Route index element={<Cafeteria />} />
-					<Route path='carrito' element={<Carrito />} />
 					{/* //? Rutas dentro de la ruta /cafeteria */}
+					<Route path='carrito' element={<Carrito />} />
+					<Route
+						path='gestionar-ventas'
+						element={
+							<PrivateRoute>
+								<AdminRoute>
+									<Ventas />
+								</AdminRoute>
+							</PrivateRoute>
+						}
+					/>
 				</Route>
 
 				{/*  //! Rutas de la Tienda */}
@@ -45,6 +58,10 @@ export const AppRouter = () => {
 						}
 					/>
 				</Route>
+			</Routes>
+			{/* Ruta 404 */}
+			<Routes>
+				<Route path='*' element={<NoEncontrado />} />
 			</Routes>
 		</BrowserRouter>
 	);

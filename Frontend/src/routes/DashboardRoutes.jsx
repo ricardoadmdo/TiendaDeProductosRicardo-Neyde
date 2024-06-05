@@ -5,7 +5,6 @@ import { CRUDProducto } from '../components/producto/CRUDProducto.jsx';
 import { CRUDCombo } from '../components/combos/CRUDCombo.jsx';
 import { Perfil } from '../components/ui/Perfil.jsx';
 import { BuscarUsuario } from '../components/usuario/BuscarUsuario.jsx';
-import Ventas from '../components/cafeteria/ventas/Ventas.jsx';
 
 export const DashboardRoutes = () => {
 	return (
@@ -48,14 +47,6 @@ export const DashboardRoutes = () => {
 					element={
 						<AdminRoute>
 							<BuscarUsuario />
-						</AdminRoute>
-					}
-				/>
-				<Route
-					path='gestionar-ventas'
-					element={
-						<AdminRoute>
-							<Ventas />
 						</AdminRoute>
 					}
 				/>

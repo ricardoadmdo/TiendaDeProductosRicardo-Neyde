@@ -5,7 +5,7 @@ import Footer from '../components/footer/Footer';
 const CafeteriaLayout = () => (
 	<>
 		<NavbarCaf />
-		<div className='cafeteria-content'>
+		<div className='content'>
 			<Outlet />
 		</div>
 		<Footer />
