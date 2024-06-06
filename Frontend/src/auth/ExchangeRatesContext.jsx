@@ -36,7 +36,7 @@ export const ExchangeRatesProvider = ({ children }) => {
 		};
 
 		obtenerTasas();
-	}, []);
+	}, [usdRate]);
 
 	return <ExchangeRatesContext.Provider value={{ usdRate }}>{children}</ExchangeRatesContext.Provider>;
 };
