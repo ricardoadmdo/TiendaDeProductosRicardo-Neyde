@@ -5,7 +5,7 @@ import { AuthContext } from '../../../auth/authContext.jsx';
 import { types } from '../../../types/types.jsx';
 import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore, faCog } from '@fortawesome/free-solid-svg-icons';
 
 export const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
@@ -133,6 +133,7 @@ export const NavbarCaf = () => {
 									data-bs-toggle='dropdown'
 									aria-expanded='false'
 								>
+									<FontAwesomeIcon icon={faCog} />
 									Gestionar
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>

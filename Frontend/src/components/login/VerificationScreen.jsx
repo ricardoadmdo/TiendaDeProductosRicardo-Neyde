@@ -27,7 +27,7 @@ export const VerificationScreen = () => {
 					text: 'Bienvenido a Ricardo & Neyde',
 					icon: 'success',
 				});
-				navigate('/');
+				navigate('/login');
 			})
 			.catch((error) => {
 				Swal.fire({

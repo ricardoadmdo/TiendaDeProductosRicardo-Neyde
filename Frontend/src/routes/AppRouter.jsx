@@ -15,6 +15,7 @@ import { VerificationScreen } from '../components/login/VerificationScreen';
 import { AdminRoute } from './AdminRoute';
 import Ventas from '../components/cafeteria/ventas/Ventas.jsx';
 import NoEncontrado from '../components/NoEncontrado.jsx';
+import { Cafeteria } from '../components/cafeteria/Cafeteria.jsx';
 
 export const AppRouter = () => {
 	return (
@@ -45,7 +46,7 @@ export const AppRouter = () => {
 
 				{/* Rutas de la Cafeteria */}
 				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
-					<Route index element={<Bienvenida />} />
+					<Route index element={<Cafeteria />} />
 					<Route path='carrito' element={<Carrito />} />
 					<Route
 						path='gestionar-ventas'

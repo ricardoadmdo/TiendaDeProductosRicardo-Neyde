@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../auth/authContext';
 import { CartContext } from '../../auth/CartProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore, faAdjust, faCog } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../../public/logo.png';
 import { types } from '../../types/types';
 import { googleLogout } from '@react-oauth/google';
@@ -120,7 +120,8 @@ export const Navbar = () => {
 									data-bs-toggle='dropdown'
 									aria-expanded='false'
 								>
-									Gestionar⚙
+									<FontAwesomeIcon icon={faCog} />
+									Gestionar
 								</a>
 								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
