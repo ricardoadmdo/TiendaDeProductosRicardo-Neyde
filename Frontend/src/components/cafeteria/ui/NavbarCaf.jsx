@@ -34,7 +34,7 @@ export const NavbarCaf = () => {
 	};
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-dark shadow'>
+		<nav className='dark101720 navbar navbar-expand-lg navbar-dark shadow'>
 			<div className='container'>
 				<NavLink className='navbar-brand' to='/'>
 					<img src={logo} alt='Logo de la tienda' style={{ height: '50px' }} />
@@ -100,7 +100,7 @@ export const NavbarCaf = () => {
 							>
 								Menú
 							</a>
-							<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+							<ul className='dropdown-menu dropdown-menu-dark' aria-labelledby='navbarDropdownMenuLink'>
 								<li>
 									<NavLink className='dropdown-item' to='/cafeteria//pastas'>
 										<FontAwesomeIcon icon={faHamburger} />
@@ -136,7 +136,7 @@ export const NavbarCaf = () => {
 									<FontAwesomeIcon icon={faCog} />
 									Gestionar
 								</a>
-								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+								<ul className='dropdown-menu dropdown-menu-dark' aria-labelledby='navbarDropdownMenuLink'>
 									<li>
 										<NavLink className='dropdown-item' to='/cafeteria/gestionar-inventario'>
 											Gestionar Inventario

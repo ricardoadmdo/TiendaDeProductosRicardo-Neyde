@@ -16,3 +16,14 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
 	display: none;
 }
+
+/* ? Estilos de la animación FadeIn General, para hacerla mas rápida */
+.animate__animated.animate__fadeIn {
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+}
+
+/* styles.css */
+body.no-scroll {
+	overflow: hidden;
+}

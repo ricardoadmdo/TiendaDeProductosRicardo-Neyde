@@ -227,6 +227,7 @@ export const Carrito = () => {
 							</div>
 
 							{/* Sección del formulario de pedido a la derecha */}
+
 							<div className='col-lg-4'>
 								<div className='card p-3 mb-2'>
 									<div className='text-center mb-3'>

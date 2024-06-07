@@ -96,6 +96,12 @@ export const CRUDUsuario = () => {
 				title: 'Usuario eliminado.',
 				showConfirmButton: false,
 				timer: 2000,
+				willOpen: () => {
+					document.body.classList.add('no-scroll'); // Deshabilitar scroll
+				},
+				willClose: () => {
+					document.body.classList.remove('no-scroll'); // Habilitar scroll
+				},
 			});
 		},
 		onError: (error) => {
@@ -103,6 +109,12 @@ export const CRUDUsuario = () => {
 				icon: 'error',
 				title: 'Oops...',
 				text: error.response?.data?.msg || 'Error desconocido al eliminar el usuario',
+				willOpen: () => {
+					document.body.classList.add('no-scroll'); // Deshabilitar scroll
+				},
+				willClose: () => {
+					document.body.classList.remove('no-scroll'); // Habilitar scroll
+				},
 			});
 		},
 	});
@@ -116,6 +128,12 @@ export const CRUDUsuario = () => {
 			confirmButtonColor: 'green',
 			cancelButtonColor: 'red',
 			confirmButtonText: 'Si, eliminarlo!',
+			willOpen: () => {
+				document.body.classList.add('no-scroll'); // Deshabilitar scroll
+			},
+			willClose: () => {
+				document.body.classList.remove('no-scroll'); // Habilitar scroll
+			},
 		}).then((result) => {
 			if (result.isConfirmed) {
 				deleteMutation.mutate(val.uid);

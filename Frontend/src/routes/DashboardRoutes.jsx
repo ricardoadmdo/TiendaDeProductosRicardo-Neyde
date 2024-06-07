@@ -3,7 +3,7 @@ import { CRUDUsuario } from '../components/usuario/CRUDUsuario.jsx';
 import { AdminRoute } from './AdminRoute.jsx';
 import { CRUDProducto } from '../components/producto/CRUDProducto.jsx';
 import { CRUDCombo } from '../components/combos/CRUDCombo.jsx';
-import { Perfil } from '../components/ui/Perfil.jsx';
+// import { Perfil } from '../components/ui/Perfil.jsx';
 import { BuscarUsuario } from '../components/usuario/BuscarUsuario.jsx';
 
 export const DashboardRoutes = () => {
@@ -34,14 +34,14 @@ export const DashboardRoutes = () => {
 						</AdminRoute>
 					}
 				/>
-				<Route
+				{/* <Route
 					path='perfil'
 					element={
 						<AdminRoute>
 							<Perfil />
 						</AdminRoute>
 					}
-				/>
+				/> */}
 				<Route
 					path='buscarusuarios'
 					element={

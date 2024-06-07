@@ -42,7 +42,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-dark shadow'>
+		<nav className='dark101720 navbar navbar-expand-lg navbar-dark shadow'>
 			<div className='container'>
 				<NavLink className='navbar-brand' to='/'>
 					<img src={logo} alt='Logo de la tienda' style={{ height: '50px' }} />
@@ -50,7 +50,7 @@ export const Navbar = () => {
 				<button
 					className='navbar-toggler'
 					type='button'
-					data-bs-toggle='collapse'
+					data-bs-toggle='offcanvas'
 					data-bs-target='#navbarNav'
 					aria-controls='navbarNav'
 					aria-expanded='false'
@@ -58,115 +58,115 @@ export const Navbar = () => {
 				>
 					<span className='navbar-toggler-icon'></span>
 				</button>
-				<div className='collapse navbar-collapse' id='navbarNav'>
-					<form className='d-flex me-auto mb-2 mb-lg-0' onSubmit={handleSearchSubmit}>
-						<input
-							type='search'
-							name='searchInput'
-							className='form-control me-1'
-							placeholder='Buscar productos...'
-							aria-label='Buscar'
-							value={searchTerm}
-							onChange={handleSearchChange}
-						/>
-						<button className='btn btn-outline-light' type='submit' aria-label='Buscar'>
-							<FontAwesomeIcon icon={faSearch} />
-						</button>
-					</form>
-
-					<ul className='navbar-nav'>
-						<NavLink className='nav-link' to='/'>
-							<FontAwesomeIcon icon={faStore} />
-							Tienda
-						</NavLink>
-
-						<li className='nav-item position-relative me-5'>
-							<NavLink className='nav-link' to='/cafeteria'>
-								<FontAwesomeIcon icon={faStore} />
-								Cafeteria
-							</NavLink>
-						</li>
-						<li className='nav-item position-relative'>
-							<NavLink className='nav-link' to='/carrito'>
-								<FontAwesomeIcon icon={faShoppingCart} />
-								{cartItemCount > 0 && (
-									<span className='position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success'>
-										{cartItemCount}
-									</span>
-								)}
-								Compra
-							</NavLink>
-						</li>
-						<li className='nav-item'>
-							<NavLink className='nav-link' to='/productos'>
-								<FontAwesomeIcon icon={faHamburger} />
-								Productos
-							</NavLink>
-						</li>
-						<li className='nav-item me-5'>
-							<NavLink className='nav-link' to='/combos'>
-								<FontAwesomeIcon icon={faUtensils} />
-								Combos
-							</NavLink>
-						</li>
-
-						{user.rol === 'ADMIN_ROLE' && (
-							<li className='nav-item dropdown me-2'>
-								<a
-									className='nav-link dropdown-toggle'
-									href='#'
-									id='navbarDropdownMenuLink'
-									role='button'
-									data-bs-toggle='dropdown'
-									aria-expanded='false'
-								>
-									<FontAwesomeIcon icon={faCog} />
-									Gestionar
-								</a>
-								<ul className='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
-									<li>
-										<NavLink className='dropdown-item' to='/dashboard/gestionar-usuarios'>
-											Gestionar Usuarios
-										</NavLink>
-									</li>
-									<li>
-										<NavLink className='dropdown-item' to='/dashboard/gestionar-productos'>
-											Gestionar Productos
-										</NavLink>
-									</li>
-									<li>
-										<NavLink className='dropdown-item' to='/dashboard/gestionar-combos'>
-											Gestionar Combos
-										</NavLink>
-									</li>
-								</ul>
-							</li>
-						)}
-
-						{user.logged ? (
-							<>
-								<li className='nav-item'>
-									<NavLink className='nav-link' to='/dashboard/perfil'>
-										<FontAwesomeIcon icon={faUser} />
-										{user.nombre}
-									</NavLink>
-								</li>
-								<li className='nav-item'>
-									<button className='nav-link' onClick={handleLogout}>
-										<FontAwesomeIcon icon={faSignOutAlt} />
-										Cerrar Sesión
-									</button>
-								</li>
-							</>
-						) : (
+				<div className='offcanvas offcanvas-end dark101720' tabIndex='-1' id='navbarNav' aria-labelledby='offcanvasNavbarLabel'>
+					<div className='offcanvas-header'>
+						<h5 className='offcanvas-title' id='offcanvasNavbarLabel'>
+							Menú
+						</h5>
+						<button type='button' className='btn-close btn-close-white' data-bs-dismiss='offcanvas' aria-label='Close'></button>
+					</div>
+					<div className='offcanvas-body'>
+						<form className='d-flex me-auto mb-2 mb-lg-0' onSubmit={handleSearchSubmit}>
+							<input
+								type='search'
+								name='searchInput'
+								className='form-control me-1'
+								placeholder='Buscar productos...'
+								aria-label='Buscar'
+								value={searchTerm}
+								onChange={handleSearchChange}
+							/>
+							<button className='btn btn-outline-light' type='submit' aria-label='Buscar'>
+								<FontAwesomeIcon icon={faSearch} />
+							</button>
+						</form>
+						<ul className='navbar-nav'>
 							<li className='nav-item'>
-								<NavLink className='nav-link' to='/login'>
-									<FontAwesomeIcon icon={faUser} />
-									Iniciar Sesión
+								<NavLink className='nav-link' to='/'>
+									<FontAwesomeIcon icon={faStore} />
+									Tienda
 								</NavLink>
 							</li>
-						)}
-					</ul>
+							<li className='nav-item position-relative me-5'>
+								<NavLink className='nav-link' to='/cafeteria'>
+									<FontAwesomeIcon icon={faStore} />
+									Cafeteria
+								</NavLink>
+							</li>
+							<li className='nav-item position-relative'>
+								<NavLink className='nav-link' to='/carrito'>
+									<FontAwesomeIcon icon={faShoppingCart} />
+									{cartItemCount > 0 && (
+										<span className='position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success'>
+											{cartItemCount}
+										</span>
+									)}
+									Compra
+								</NavLink>
+							</li>
+							<li className='nav-item'>
+								<NavLink className='nav-link' to='/productos'>
+									<FontAwesomeIcon icon={faHamburger} />
+									Productos
+								</NavLink>
+							</li>
+							<li className='nav-item me-5'>
+								<NavLink className='nav-link' to='/combos'>
+									<FontAwesomeIcon icon={faUtensils} />
+									Combos
+								</NavLink>
+							</li>
+							{user.rol === 'ADMIN_ROLE' && (
+								<li className='nav-item dropdown me-2'>
+									<a
+										className='nav-link dropdown-toggle'
+										href='#'
+										id='navbarDropdownMenuLink'
+										role='button'
+										data-bs-toggle='dropdown'
+										aria-expanded='false'
+									>
+										<FontAwesomeIcon icon={faCog} />
+										Gestionar
+									</a>
+									<ul className='dropdown-menu dropdown-menu-dark' aria-labelledby='navbarDropdownMenuLink'>
+										<li>
+											<NavLink className='dropdown-item' to='/dashboard/gestionar-usuarios'>
+												Gestionar Usuarios
+											</NavLink>
+										</li>
+										<li>
+											<NavLink className='dropdown-item' to='/dashboard/gestionar-productos'>
+												Gestionar Productos
+											</NavLink>
+										</li>
+										<li>
+											<NavLink className='dropdown-item' to='/dashboard/gestionar-combos'>
+												Gestionar Combos
+											</NavLink>
+										</li>
+									</ul>
+								</li>
+							)}
+							{user.logged ? (
+								<>
+									<li className='nav-item'>
+										<button className='nav-link' onClick={handleLogout}>
+											<FontAwesomeIcon icon={faSignOutAlt} />
+											Cerrar Sesión
+										</button>
+									</li>
+								</>
+							) : (
+								<li className='nav-item'>
+									<NavLink className='nav-link' to='/login'>
+										<FontAwesomeIcon icon={faUser} />
+										Iniciar Sesión
+									</NavLink>
+								</li>
+							)}
+						</ul>
+					</div>
 				</div>
 			</div>
 		</nav>
