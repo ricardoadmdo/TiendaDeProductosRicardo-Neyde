@@ -107,6 +107,22 @@ export const CRUDUsuario = () => {
 		},
 	});
 
+	const deleteUserWithConfirmation = (val) => {
+		Swal.fire({
+			title: 'Confirmar eliminado?',
+			html: '<i>Realmente desea eliminar a <strong>' + val.nombre + '</strong>?</i>',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: 'green',
+			cancelButtonColor: 'red',
+			confirmButtonText: 'Si, eliminarlo!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				deleteMutation.mutate(val.uid);
+			}
+		});
+	};
+
 	const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
 	const handleSearchSubmit = (e) => {
@@ -141,7 +157,7 @@ export const CRUDUsuario = () => {
 	const validar = (event) => {
 		event.preventDefault();
 		const { nombre, correo, password, rol } = formState;
-		if (nombre.trim() === '' || correo.trim() === '' || rol.trim() === '') {
+		if (nombre.trim() === '' || correo.trim() === '' || rol === '') {
 			Swal.fire({ icon: 'error', title: 'Campos Vacíos', text: 'Todos los campos son obligatorios' });
 			return;
 		}
@@ -188,7 +204,7 @@ export const CRUDUsuario = () => {
 					{ header: 'Estado en DB', accessor: 'estado' },
 				]}
 				onEdit={(usuario) => openModal(2, usuario)}
-				onDelete={(usuario) => deleteMutation.mutate(usuario.uid)}
+				onDelete={(usuario) => deleteUserWithConfirmation(usuario)}
 				title={title}
 				modalTitle='Añadir nuevo Usuario'
 				validate={validar}

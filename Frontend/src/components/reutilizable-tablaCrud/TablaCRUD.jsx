@@ -178,6 +178,22 @@ const TablaCRUD = ({
 							<input type='hidden' id='id'></input>
 							<form id='Form' onSubmit={(event) => validate(event, formState)}>
 								{formFields.map((field) => {
+									if (field.name === 'rol') {
+										return (
+											<div className='input-group mb-3' key={field.name}>
+												<span className='input-group-text'>{field.label}:</span>
+												<select
+													defaultValue='USER_ROLE'
+													className='form-control'
+													onChange={(event) => handleChange(field.name, event.target.value)}
+												>
+													<option value='USER_ROLE'>USER_ROLE</option>
+													<option value='ADMIN_ROLE'>ADMIN_ROLE</option>
+												</select>
+											</div>
+										);
+									}
+
 									if (field.name === 'password' && operationMode === 2) {
 										return null;
 									}

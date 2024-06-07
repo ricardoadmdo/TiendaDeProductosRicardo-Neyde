@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faMapMarkerAlt, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faMapMarkerAlt, faCreditCard, faUsd } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
@@ -234,10 +234,16 @@ export const Carrito = () => {
 									</div>
 									<div className='d-flex justify-content-between align-items-center'>
 										<div>
-											<h5 className='m-0'>💲{total} CUP</h5>
+											<h5 className='m-0'>
+												<FontAwesomeIcon icon={faUsd} />
+												{total} CUP
+											</h5>
 										</div>
 										<div>
-											<h5 className='m-0'>💲{(total / usdRate).toFixed(2)} USD</h5>
+											<h5 className='m-0'>
+												<FontAwesomeIcon icon={faUsd} />
+												{(total / usdRate).toFixed(2)} USD
+											</h5>
 										</div>
 									</div>
 								</div>

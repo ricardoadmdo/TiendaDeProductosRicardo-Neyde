@@ -31,12 +31,11 @@ const apiToke = async (currentDate = null) => {
 				Authorization: `Bearer ${apiKey}`,
 			},
 		});
-		console.log(response.data.tasas);
 		const { USD } = response.data.tasas;
-		return { USD }; // Retorna los datos necesarios
+		return { USD };
 	} catch (error) {
 		console.error('Error al obtener las tasas de cambio:', error);
-		throw error; // Lanza el error para que el componente lo maneje
+		throw error;
 	}
 };
 

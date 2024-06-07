@@ -5,7 +5,7 @@ import placeholder from '../../images/placeholder.png';
 export const Cafeteria = () => {
 	return (
 		<div className='bienvenida-container mt-5 animate__animated animate__fadeIn'>
-			<h1 className='text-center mb-4'>¡Bienvenidos a nuestra Cafetería !</h1>
+			<h1 className='text-center mb-4'>¡Bienvenidos a nuestra Cafetería!</h1>
 			<p className='text-center'>Explora nuestra deliciosa selección de productos y combos.</p>
 
 			{/* Sección de Menú*/}

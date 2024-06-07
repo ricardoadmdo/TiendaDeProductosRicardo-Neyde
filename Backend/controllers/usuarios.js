@@ -85,22 +85,26 @@ const usuariosPut = async (req, res) => {
 	const usuario = await Usuario.findByIdAndUpdate(id, dataToUpdate);
 	res.json(usuario);
 };
-
 const usuariosDelete = async (req, res) => {
-	const { id } = req.params;
+	try {
+		const { id } = req.params;
 
-	// Primero, intenta encontrar el usuario con el estado en true
-	const usuario = await Usuario.findOne({ _id: id, estado: true });
+		// Primero, intenta encontrar el usuario con el estado en true
+		const usuario = await Usuario.findOne({ _id: id, estado: true });
 
-	if (!usuario) {
-		return res.status(404).json({ msg: 'Usuario no encontrado o ya fue eliminado' });
+		if (!usuario) {
+			return res.status(404).json({ msg: 'Usuario no encontrado o ya fue eliminado' });
+		}
+
+		// Cambiar el estado del usuario a false
+		const usuarioEliminado = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true });
+
+		// Enviar respuesta con los detalles del usuario eliminado
+		return res.json({ msg: 'Usuario eliminado', usuario: usuarioEliminado });
+	} catch (error) {
+		// Manejar errores y enviar una respuesta con el error
+		return res.status(500).json({ error: 'Internal Server Error' });
 	}
-	if (!usuario.estado) {
-		return res.status(404).json({ msg: 'El Usuario ya fue eliminado' });
-	}
-
-	const usuarioEliminado = await Usuario.findByIdAndUpdate(id, { estado: false });
-	res.json({ msg: 'Usuario eliminado: ', usuario: usuarioEliminado });
 };
 
 const usuarioChangeName = async (req, res = response) => {

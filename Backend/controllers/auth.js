@@ -45,8 +45,8 @@ const googleLogin = async (req = request, res = response) => {
 			await usuario.save();
 
 			// Indicar que el usuario es nuevo
-			const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
-				expiresIn: '1h',
+			const token = jwt.sign({ uid: usuario.uid }, 'your_jwt_secret', {
+				expiresIn: '4h',
 			});
 
 			return res.json({
@@ -58,8 +58,8 @@ const googleLogin = async (req = request, res = response) => {
 		}
 
 		// Generar un token JWT
-		const token = jwt.sign({ uid: usuario._id }, 'your_jwt_secret', {
-			expiresIn: '1h',
+		const token = jwt.sign({ uid: usuario.uid }, 'your_jwt_secret', {
+			expiresIn: '4h',
 		});
 
 		res.json({
