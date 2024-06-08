@@ -17,7 +17,7 @@ const fetchProductos = async ({ queryKey }) => {
 	return response.data;
 };
 
-export const Productos = () => {
+const Productos = () => {
 	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -152,3 +152,5 @@ export const Productos = () => {
 		</div>
 	);
 };
+
+export default Productos;

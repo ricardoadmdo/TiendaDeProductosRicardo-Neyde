@@ -13,7 +13,7 @@ const fetchCombos = async ({ queryKey }) => {
 	return response.data;
 };
 
-export const CRUDCombo = () => {
+const CRUDCombo = () => {
 	const [id, setId] = useState('');
 	const [formState, setFormState] = useState({
 		nombre: '',
@@ -243,3 +243,5 @@ export const CRUDCombo = () => {
 		</>
 	);
 };
+
+export default CRUDCombo;

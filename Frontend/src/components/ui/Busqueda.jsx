@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Axios from 'axios'; // Importa Axios para hacer las solicitudes HTTP
 
-export const Busqueda = () => {
+const Busqueda = () => {
 	const [resultados, setResultados] = useState([]);
 	const [cantidad, setCantidad] = useState(1);
 	const location = useLocation(); // Usa useLocation para obtener la ubicación actual
@@ -111,3 +111,5 @@ export const Busqueda = () => {
 		</div>
 	);
 };
+
+export default Busqueda;

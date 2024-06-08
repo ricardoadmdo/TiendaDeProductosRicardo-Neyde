@@ -16,7 +16,7 @@ const fetchCombos = async ({ queryKey }) => {
 	return response.data;
 };
 
-export const Combos = () => {
+const Combos = () => {
 	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -113,3 +113,5 @@ export const Combos = () => {
 		</div>
 	);
 };
+
+export default Combos;

@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Axios from 'axios';
 import './styles.css';
 
-export const VerificationScreen = () => {
+const VerificationScreen = () => {
 	const [code, setCode] = useState('');
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -63,3 +63,5 @@ export const VerificationScreen = () => {
 		</div>
 	);
 };
+
+export default VerificationScreen;

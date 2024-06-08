@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import placeholder from '../../images/placeholder.png';
 
-export const Bienvenida = () => {
+const Bienvenida = () => {
 	return (
 		<div className='bienvenida container mt-5 animate__animated animate__fadeIn'>
 			<h1 className='text-center mb-4'>Bienvenidos a Ricardo & Neyde</h1>
@@ -124,3 +124,5 @@ export const Bienvenida = () => {
 		</div>
 	);
 };
+
+export default Bienvenida;

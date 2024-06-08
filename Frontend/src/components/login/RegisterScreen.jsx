@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
 
-export const RegisterScreen = () => {
+const RegisterScreen = () => {
 	const [nombre, setNombre] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
@@ -149,3 +149,5 @@ export const RegisterScreen = () => {
 		</div>
 	);
 };
+
+export default RegisterScreen;

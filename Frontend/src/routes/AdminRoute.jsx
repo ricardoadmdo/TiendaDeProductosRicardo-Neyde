@@ -3,7 +3,7 @@ import { AuthContext } from '../auth/authContext.jsx';
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export const AdminRoute = ({ children }) => {
+const AdminRoute = ({ children }) => {
 	const { user } = useContext(AuthContext);
 	const location = useLocation();
 
@@ -13,3 +13,5 @@ export const AdminRoute = ({ children }) => {
 AdminRoute.propTypes = {
 	children: PropTypes.node.isRequired,
 };
+
+export default AdminRoute;

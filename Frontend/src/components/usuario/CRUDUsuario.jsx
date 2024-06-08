@@ -13,7 +13,7 @@ const fetchUsuarios = async ({ page, searchTerm }) => {
 	return response.data;
 };
 
-export const CRUDUsuario = () => {
+const CRUDUsuario = () => {
 	const [id, setId] = useState('');
 	const [formState, setFormState] = useState({
 		nombre: '',
@@ -263,3 +263,5 @@ export const CRUDUsuario = () => {
 		</>
 	);
 };
+
+export default CRUDUsuario;

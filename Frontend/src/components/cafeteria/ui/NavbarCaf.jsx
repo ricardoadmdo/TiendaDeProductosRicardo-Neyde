@@ -7,7 +7,7 @@ import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faSearch, faStore, faCog } from '@fortawesome/free-solid-svg-icons';
 
-export const NavbarCaf = () => {
+const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState('');
@@ -174,3 +174,5 @@ export const NavbarCaf = () => {
 		</nav>
 	);
 };
+
+export default NavbarCaf;

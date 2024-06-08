@@ -11,7 +11,7 @@ import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import TermsAndConditions from './TermsAndConditions';
 
-export const Carrito = () => {
+const Carrito = () => {
 	const { usdRate } = useExchangeRates();
 	const [loading, setLoading] = useState(false);
 	const { cart, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
@@ -399,3 +399,5 @@ export const Carrito = () => {
 		</>
 	);
 };
+
+export default Carrito;

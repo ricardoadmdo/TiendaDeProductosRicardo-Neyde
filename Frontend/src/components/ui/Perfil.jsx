@@ -6,7 +6,7 @@ import { types } from '../../types/types';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 
-export const Perfil = () => {
+const Perfil = () => {
 	const { user, dispatch } = useContext(AuthContext);
 	const [editMode, setEditMode] = useState(false);
 	const [newName, setNewName] = useState(user.nombre);
@@ -95,3 +95,5 @@ export const Perfil = () => {
 		</div>
 	);
 };
+
+export default Perfil;

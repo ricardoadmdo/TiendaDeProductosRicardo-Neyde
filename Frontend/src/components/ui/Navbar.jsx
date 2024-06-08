@@ -8,7 +8,7 @@ import logo from '../../../public/logo.png';
 import { types } from '../../types/types';
 import { googleLogout } from '@react-oauth/google';
 
-export const Navbar = () => {
+const Navbar = () => {
 	const { user, dispatch } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState('');
@@ -172,3 +172,5 @@ export const Navbar = () => {
 		</nav>
 	);
 };
+
+export default Navbar;

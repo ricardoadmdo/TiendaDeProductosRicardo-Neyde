@@ -7,7 +7,7 @@ import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
 import { AuthContext } from '../../auth/authContext.jsx';
 
-export const BuscarUsuario = () => {
+const BuscarUsuario = () => {
 	const [id, setId] = useState('');
 	const [resultados, setResultados] = useState([]);
 	const location = useLocation(); // Usa useLocation para obtener la ubicación actual
@@ -293,3 +293,5 @@ export const BuscarUsuario = () => {
 		</div>
 	);
 };
+
+export default BuscarUsuario;

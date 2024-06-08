@@ -3,7 +3,7 @@ import { AuthContext } from '../auth/authContext.jsx';
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children }) => {
 	const { user } = useContext(AuthContext);
 	const { pathname, search } = useLocation();
 
@@ -15,3 +15,5 @@ export const PrivateRoute = ({ children }) => {
 PrivateRoute.propTypes = {
 	children: PropTypes.node.isRequired,
 };
+
+export default PrivateRoute;

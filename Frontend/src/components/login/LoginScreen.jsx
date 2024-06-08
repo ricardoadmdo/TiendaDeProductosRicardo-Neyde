@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import Axios from 'axios';
 import { useGoogleLogin } from '@react-oauth/google';
 
-export const LoginScreen = () => {
+const LoginScreen = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
@@ -248,3 +248,5 @@ export const LoginScreen = () => {
 		</div>
 	);
 };
+
+export default LoginScreen;

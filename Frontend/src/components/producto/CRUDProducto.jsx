@@ -13,7 +13,7 @@ const fetchProductos = async ({ queryKey }) => {
 	return response.data;
 };
 
-export const CRUDProducto = () => {
+const CRUDProducto = () => {
 	const [id, setId] = useState('');
 	const [formState, setFormState] = useState({
 		nombre: '',
@@ -228,3 +228,5 @@ export const CRUDProducto = () => {
 		</>
 	);
 };
+
+export default CRUDProducto;
