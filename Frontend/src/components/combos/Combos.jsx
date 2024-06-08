@@ -63,7 +63,7 @@ export const Combos = () => {
 								alt='Imagen del combo'
 								style={{ height: '200px', objectFit: 'cover' }}
 							/>
-							<h5 className='card-header'>{val.nombre}</h5>
+							<h3 className='card-header'>{val.nombre}</h3>
 							<div className='card-body'>
 								{val.cantidad > 0 ? (
 									<>
