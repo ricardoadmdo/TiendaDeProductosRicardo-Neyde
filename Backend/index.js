@@ -27,6 +27,7 @@ app.use('/api/auth', require('./routes/auth.js'));
 app.use('/api/pago', require('./routes/pago.js'));
 app.use('/api/pago', require('./routes/pago.js'));
 app.use('/api/location', require('./routes/location.js'));
+app.use('/api/venta', require('./routes/ventas.js'));
 
 //Escuchar peticiones
 app.listen(process.env.PORT, () => {
