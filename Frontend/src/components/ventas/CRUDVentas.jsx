@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LoadingSpinner from '../ui/LoadingSpinner.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const fetchProductos = async ({ page, searchTerm }) => {
 	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&search=${searchTerm}`);
@@ -44,6 +46,7 @@ const CRUDVentas = () => {
 				icon: 'success',
 				timer: 3000,
 			});
+			localStorage.removeItem('formState');
 		},
 		onError: (error) => {
 			Swal.fire({
@@ -59,7 +62,19 @@ const CRUDVentas = () => {
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
 		setDebouncedSearchTerm(searchTerm);
+		setCurrentPage(1);
 	};
+
+	useEffect(() => {
+		const ventaData = localStorage.getItem('formState');
+		if (ventaData) {
+			setFormState(JSON.parse(ventaData));
+		}
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('formState', JSON.stringify(formState));
+	}, [formState]);
 
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 
@@ -142,6 +157,7 @@ const CRUDVentas = () => {
 			};
 		});
 	};
+
 	const disminuirCantidad = (productoId) => {
 		setFormState((prevState) => {
 			const nuevosProductos = prevState.productos.map((p) => (p.uid === productoId ? { ...p, cantidad: p.cantidad - 1 } : p));
@@ -193,7 +209,7 @@ const CRUDVentas = () => {
 									<p className='mb-1'>Precio: ${producto.precio}</p>
 								</div>
 								<button className='btn btn-success' onClick={() => openModal(producto)}>
-									Agregar a la venta
+									Agregar <FontAwesomeIcon icon={faPlus} />
 								</button>
 							</div>
 						))}
@@ -207,7 +223,7 @@ const CRUDVentas = () => {
 				</>
 			)}
 			<hr />
-			<h4>Venta Actual</h4>
+			<h4>Detalles de la Venta</h4>
 			<ul className='list-group mb-4'>
 				{formState.productos.map((producto) => (
 					<li key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
@@ -218,13 +234,13 @@ const CRUDVentas = () => {
 						</div>
 						<div>
 							<button className='btn btn-danger me-2' onClick={() => eliminarProducto(producto.uid)}>
-								Eliminar
+								<FontAwesomeIcon icon={faTrashAlt} />
 							</button>
 							<button className='btn btn-primary me-2' onClick={() => disminuirCantidad(producto.uid)}>
-								-
+								<FontAwesomeIcon icon={faMinus} />
 							</button>
 							<button className='btn btn-primary' onClick={() => aumentarCantidad(producto.uid)}>
-								+
+								<FontAwesomeIcon icon={faPlus} />
 							</button>
 						</div>
 					</li>

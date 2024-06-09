@@ -1,41 +1,41 @@
 const { response, request } = require('express');
 const Venta = require('../models/venta');
 
-const obtenerVentas = async (req = request, res = response) => {
-	const page = parseInt(req.query.page) || 1;
-	const limit = parseInt(req.query.limit) || 10;
+const obtenerVentas = async (req, res) => {
+	const { limit = 8, page = 1, fecha } = req.query;
 	const skip = (page - 1) * limit;
 
+	// Convertir la fecha a un objeto Date
+	const fechaActual = new Date(fecha);
+
+	// Establecer el fin del día actual (23:59:59.999)
+	const endOfDay = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), fechaActual.getDate(), 23, 59, 59, 999);
+
 	try {
-		const totalVentas = await Venta.countDocuments();
-		const totalPages = Math.ceil(totalVentas / limit);
-		const ventas = await Venta.find().skip(skip).limit(limit);
+		const [ventas, total] = await Promise.all([
+			Venta.find({
+				fecha: { $gte: fechaActual, $lte: endOfDay },
+			})
+				.skip(Number(skip))
+				.limit(Number(limit)),
+			Venta.countDocuments({
+				fecha: { $gte: fechaActual, $lte: endOfDay },
+			}),
+		]);
 
 		res.json({
+			total,
 			ventas,
-			currentPage: page,
-			totalPages,
+			page: Number(page),
+			limit: Number(limit),
+			totalPages: Math.ceil(total / limit),
 		});
 	} catch (error) {
-		console.error(error);
-		res.status(500).json({ mensaje: 'Error al obtener las ventas' });
-	}
-};
-
-const obtenerVentaPorId = async (req = request, res = response) => {
-	const { id } = req.params;
-
-	try {
-		const venta = await Venta.findById(id);
-
-		if (!venta) {
-			return res.status(404).json({ mensaje: 'Venta no encontrada' });
-		}
-
-		res.json(venta);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ mensaje: 'Error al obtener la venta' });
+		console.error('Error al obtener ventas:', error);
+		res.status(500).json({
+			msg: 'Error al obtener ventas',
+			error: error.message,
+		});
 	}
 };
 
@@ -107,7 +107,6 @@ const eliminarVenta = async (req = request, res = response) => {
 
 module.exports = {
 	obtenerVentas,
-	obtenerVentaPorId,
 	crearVenta,
 	actualizarVenta,
 	eliminarVenta,

@@ -15,7 +15,7 @@ import VerificationScreen from '../components/login/VerificationScreen';
 import AdminRoute from './AdminRoute';
 import NoEncontrado from '../components/NoEncontrado.jsx';
 import Cafeteria from '../components/cafeteria/Cafeteria.jsx';
-import Ventas from '../components/ventas/Ventas.jsx';
+import ReporteVentas from '../components/ventas/ReporteVentas.jsx';
 
 const AppRouter = () => {
 	return (
@@ -53,7 +53,7 @@ const AppRouter = () => {
 						element={
 							<PrivateRoute>
 								<AdminRoute>
-									<Ventas />
+									<ReporteVentas />
 								</AdminRoute>
 							</PrivateRoute>
 						}

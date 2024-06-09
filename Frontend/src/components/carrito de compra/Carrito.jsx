@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faMapMarkerAlt, faCreditCard, faUsd } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faMapMarkerAlt, faCreditCard, faUsd, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
@@ -205,12 +205,12 @@ const Carrito = () => {
 																onClick={() => changeQuantity(val.uid, -1)}
 																disabled={val.cantidadAdd <= 1}
 															>
-																-
+																<FontAwesomeIcon icon={faMinus} />
 															</button>
 														</div>
 														<div className='col-4'>
 															<button className='btn btn-secondary' onClick={() => changeQuantity(val.uid, 1)}>
-																+
+																<FontAwesomeIcon icon={faPlus} />
 															</button>
 														</div>
 														<div className='col-4'>

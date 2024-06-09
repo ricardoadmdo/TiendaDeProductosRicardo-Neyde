@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const ProductoSchema = Schema({
+const ProductoSchema = new Schema({
 	nombre: {
 		type: String,
 		required: [true, 'El nombre es obligatorio'],
@@ -44,7 +44,7 @@ const VentaSchema = new Schema({
 
 VentaSchema.methods.toJSON = function () {
 	const { __v, _id, ...venta } = this.toObject();
-	venta.id = _id;
+	venta.uid = _id;
 	return venta;
 };
 

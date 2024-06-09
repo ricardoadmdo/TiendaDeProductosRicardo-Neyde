@@ -19,6 +19,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@iconify/react": "^5.0.1",
     "@mui/material": "^5.15.18",
     "@react-oauth/google": "^0.12.1",
     "@strapi/provider-upload-cloudinary": "^4.24.3",

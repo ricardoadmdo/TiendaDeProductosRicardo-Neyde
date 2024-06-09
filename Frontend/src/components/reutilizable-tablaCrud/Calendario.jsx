@@ -32,8 +32,10 @@ const Calendario = ({ onSeleccionarDias }) => {
 			} else {
 				updatedSelectedDates.push(day);
 			}
-			// Llama a la función de manejo proporcionada por el componente padre con las fechas formateadas
-			const fechasFormateadas = updatedSelectedDates.map((dia) => format(dia, 'd MMMM yyyy', { locale: es }));
+			// Verificar si las fechas son válidas antes de enviarlas
+			const fechasFormateadas = updatedSelectedDates
+				.filter((dia) => !isNaN(dia.getTime())) // Filtrar fechas válidas
+				.map((dia) => dia.toISOString()); // Convertir a cadenas ISO
 			onSeleccionarDias(fechasFormateadas);
 			return updatedSelectedDates;
 		});
