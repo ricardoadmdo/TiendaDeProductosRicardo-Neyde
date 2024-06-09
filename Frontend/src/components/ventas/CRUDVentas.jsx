@@ -1,54 +1,46 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
-import { AuthContext } from '../../auth/authContext.jsx';
 import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
-import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LoadingSpinner from '../ui/LoadingSpinner.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const fetchUsuarios = async ({ page, searchTerm }) => {
-	const response = await Axios.get(`http://localhost:3001/api/users?page=${page}&search=${searchTerm}`);
+const fetchProductos = async ({ page, searchTerm }) => {
+	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&search=${searchTerm}`);
 	return response.data;
 };
 
-const CRUDUsuario = () => {
-	const [id, setId] = useState('');
+const CRUDVentas = () => {
 	const [formState, setFormState] = useState({
-		nombre: '',
-		password: '',
-		correo: '',
-		rol: 'USER_ROLE',
-		estado: true,
+		productos: [],
+		totalProductos: 0,
+		precioTotal: 0,
+		fecha: new Date(),
 	});
-	const navigate = useNavigate();
-	const [operationMode, setOperationMode] = useState(1);
-	const { user } = useContext(AuthContext);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-	const [title, setTitle] = useState('');
 
 	const queryClient = useQueryClient();
-	const refetchUsuarios = () => {
-		queryClient.invalidateQueries(['usuarios']);
+	const refetchProductos = () => {
+		queryClient.invalidateQueries(['productos']);
 	};
 
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ['usuarios', { page: currentPage, searchTerm: debouncedSearchTerm }],
-		queryFn: () => fetchUsuarios({ page: currentPage, searchTerm: debouncedSearchTerm }),
+		queryKey: ['productos', { page: currentPage, searchTerm: debouncedSearchTerm }],
+		queryFn: () => fetchProductos({ page: currentPage, searchTerm: debouncedSearchTerm }),
 		keepPreviousData: true,
 	});
 
-	const mutation = useMutation({
-		mutationFn: (newUser) => Axios.post('http://localhost:3001/api/users', newUser),
+	const ventaMutation = useMutation({
+		mutationFn: (newVenta) => Axios.post('http://localhost:3001/api/venta', newVenta),
 		onSuccess: () => {
-			refetchUsuarios();
+			refetchProductos();
 			limpiarCampos();
 			Swal.fire({
-				title: '<strong>Registro exitoso!!!</strong>',
-				html: '<i>El usuario <strong>' + formState.nombre + '</strong> fue registrado con éxito</i>',
+				title: '<strong>Venta registrada con éxito!</strong>',
+				html: '<i>La venta fue registrada exitosamente</i>',
 				icon: 'success',
 				timer: 3000,
 			});
@@ -56,212 +48,197 @@ const CRUDUsuario = () => {
 		onError: (error) => {
 			Swal.fire({
 				icon: 'error',
-				title: 'Error al agregar un usuario',
-				text: error.response?.data?.error || 'Error desconocido al agregar un usuario',
+				title: 'Error al registrar la venta',
+				text: error.response?.data?.error || 'Error desconocido al registrar la venta',
 			});
 		},
 	});
-
-	const updateMutation = useMutation({
-		mutationFn: ({ id, data }) => Axios.put(`http://localhost:3001/api/users/${id}`, data),
-		onSuccess: () => {
-			refetchUsuarios();
-			limpiarCampos();
-			Swal.fire({
-				title: '<strong>Actualización exitosa!!!</strong>',
-				html: '<i>El usuario <strong>' + formState.nombre + '</strong> fue actualizado con éxito</i>',
-				icon: 'success',
-				timer: 3000,
-			});
-		},
-		onError: (error) => {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: error.response?.data?.msg || 'Error desconocido al actualizar el usuario',
-			});
-		},
-	});
-
-	const deleteMutation = useMutation({
-		mutationFn: (uid) =>
-			Axios.delete(`http://localhost:3001/api/users/${uid}`, {
-				headers: { 'x-token': user.token },
-			}),
-		onSuccess: () => {
-			refetchUsuarios();
-			limpiarCampos();
-			Swal.fire({
-				icon: 'success',
-				title: 'Usuario eliminado.',
-				showConfirmButton: false,
-				timer: 2000,
-				willOpen: () => {
-					document.body.classList.add('no-scroll'); // Deshabilitar scroll
-				},
-				willClose: () => {
-					document.body.classList.remove('no-scroll'); // Habilitar scroll
-				},
-			});
-		},
-		onError: (error) => {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: error.response?.data?.msg || 'Error desconocido al eliminar el usuario',
-				willOpen: () => {
-					document.body.classList.add('no-scroll'); // Deshabilitar scroll
-				},
-				willClose: () => {
-					document.body.classList.remove('no-scroll'); // Habilitar scroll
-				},
-			});
-		},
-	});
-
-	const deleteUserWithConfirmation = (val) => {
-		Swal.fire({
-			title: 'Confirmar eliminado?',
-			html: '<i>Realmente desea eliminar a <strong>' + val.nombre + '</strong>?</i>',
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: 'green',
-			cancelButtonColor: 'red',
-			confirmButtonText: 'Si, eliminarlo!',
-			willOpen: () => {
-				document.body.classList.add('no-scroll'); // Deshabilitar scroll
-			},
-			willClose: () => {
-				document.body.classList.remove('no-scroll'); // Habilitar scroll
-			},
-		}).then((result) => {
-			if (result.isConfirmed) {
-				deleteMutation.mutate(val.uid);
-			}
-		});
-	};
 
 	const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
-		navigate(`/dashboard/buscarusuarios?query=${searchTerm}`);
+		setDebouncedSearchTerm(searchTerm);
 	};
 
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE', estado: false });
+	const limpiarCampos = () => setFormState({ productos: [], totalProductos: 0, precioTotal: 0, fecha: new Date() });
 
-	// Debounce logic
-	useEffect(() => {
-		const timerId = setTimeout(() => {
-			setDebouncedSearchTerm(searchTerm);
-		}, 4000); // 4 segundos de retraso
-		return () => {
-			clearTimeout(timerId); // Limpiar el temporizador en cada cambio de término de búsqueda
-		};
-	}, [searchTerm]);
+	const openModal = (producto) => {
+		Swal.fire({
+			title: 'Ingrese la cantidad',
+			input: 'number',
+			inputAttributes: {
+				min: 1,
+				autocapitalize: 'off',
+			},
+			showCancelButton: true,
+			confirmButtonText: 'Agregar',
+			showLoaderOnConfirm: true,
+			preConfirm: (cantidad) => {
+				if (!cantidad || cantidad < 1) {
+					Swal.showValidationMessage('Debe ingresar una cantidad válida');
+					return false;
+				}
+				agregarProducto(producto, parseInt(cantidad));
+			},
+			allowOutsideClick: () => !Swal.isLoading(),
+		});
+	};
 
-	if (isLoading) {
-		return <LoadingSpinner />;
-	}
+	const agregarProducto = (producto, cantidad) => {
+		setFormState((prevState) => {
+			const productoExistente = prevState.productos.find((p) => p.uid === producto.uid);
+			let nuevosProductos;
 
-	if (isError) {
-		return <div>Error: {error.message}</div>;
-	}
+			if (productoExistente) {
+				nuevosProductos = prevState.productos.map((p) => (p.uid === producto.uid ? { ...p, cantidad: p.cantidad + cantidad } : p));
+			} else {
+				nuevosProductos = [...prevState.productos, { ...producto, cantidad }];
+			}
+
+			const totalProductos = nuevosProductos.reduce((acc, p) => acc + p.cantidad, 0);
+			const precioTotal = nuevosProductos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+
+			return {
+				...prevState,
+				productos: nuevosProductos,
+				totalProductos,
+				precioTotal,
+			};
+		});
+	};
+
+	const eliminarProducto = (productoId) => {
+		setFormState((prevState) => {
+			const nuevosProductos = prevState.productos.filter((p) => p.uid !== productoId);
+			const totalProductos = nuevosProductos.reduce((acc, p) => acc + p.cantidad, 0);
+			const precioTotal = nuevosProductos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+
+			return {
+				...prevState,
+				productos: nuevosProductos,
+				totalProductos,
+				precioTotal,
+			};
+		});
+	};
+
+	const aumentarCantidad = (productoId) => {
+		setFormState((prevState) => {
+			const nuevosProductos = prevState.productos.map((p) => (p.uid === productoId ? { ...p, cantidad: p.cantidad + 1 } : p));
+
+			const totalProductos = nuevosProductos.reduce((acc, p) => acc + p.cantidad, 0);
+			const precioTotal = nuevosProductos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+
+			return {
+				...prevState,
+				productos: nuevosProductos,
+				totalProductos,
+				precioTotal,
+			};
+		});
+	};
+	const disminuirCantidad = (productoId) => {
+		setFormState((prevState) => {
+			const nuevosProductos = prevState.productos.map((p) => (p.uid === productoId ? { ...p, cantidad: p.cantidad - 1 } : p));
+
+			const totalProductos = nuevosProductos.reduce((acc, p) => acc + p.cantidad, 0);
+			const precioTotal = nuevosProductos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+
+			return {
+				...prevState,
+				productos: nuevosProductos,
+				totalProductos,
+				precioTotal,
+			};
+		});
+	};
 
 	const validar = (event) => {
 		event.preventDefault();
-		const { nombre, correo, password, rol } = formState;
-		if (nombre.trim() === '' || correo.trim() === '' || rol === '') {
-			Swal.fire({ icon: 'error', title: 'Campos Vacíos', text: 'Todos los campos son obligatorios' });
+		const { productos } = formState;
+		if (productos.length === 0) {
+			Swal.fire({ icon: 'error', title: 'No hay productos', text: 'Debe agregar al menos un producto a la venta' });
 			return;
 		}
-		if (operationMode === 1 && (!password || password.length < 6)) {
-			Swal.fire({ icon: 'error', title: 'Contraseña no válida', text: 'La contraseña tiene que tener 6 o más caracteres' });
-			return;
-		}
-		if (operationMode === 1) {
-			mutation.mutate(formState);
-		} else if (operationMode === 2) {
-			updateMutation.mutate({ id, data: { ...formState, password: undefined } });
-		}
-		document.getElementById('btnCerrar').click();
-	};
-
-	const openModal = (op, usuario) => {
-		setFormState({
-			nombre: op === 2 ? usuario.nombre : '',
-			password: '',
-			correo: op === 2 ? usuario.correo : '',
-			rol: op === 2 ? usuario.rol : 'USER_ROLE',
-			estado: op === 2 ? usuario.estado : false,
-		});
-		setOperationMode(op);
-		setTitle(op === 1 ? 'Registrar Usuario' : 'Editar Usuario');
-		if (op === 2) setId(usuario.uid);
-		window.setTimeout(() => document.getElementById('nombre').focus(), 500);
+		ventaMutation.mutate(formState);
 	};
 
 	return (
-		<>
-			<TablaCRUD
-				searchTerm={searchTerm}
-				handleSearchChange={handleSearchChange}
-				handleSearchSubmit={handleSearchSubmit}
-				busqueda={true}
-				data={data?.usuarios || []}
-				onAdd={() => openModal(1)}
-				columns={[
-					{ header: 'ID', accessor: 'uid' },
-					{ header: 'Nombre', accessor: 'nombre' },
-					{ header: 'Correo Electrónico', accessor: 'correo' },
-					{ header: 'Rol', accessor: 'rol' },
-					{ header: 'Estado en DB', accessor: 'estado' },
-				]}
-				onEdit={(usuario) => openModal(2, usuario)}
-				onDelete={(usuario) => deleteUserWithConfirmation(usuario)}
-				title={title}
-				modalTitle='Añadir nuevo Usuario'
-				validate={validar}
-				operationMode={operationMode}
-				setOperationMode={setOperationMode}
-				formFields={[
-					{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-					{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
-					{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
-					{
-						name: 'estado',
-						label: 'Estado en Base de Datos',
-						type: 'select',
-						options: [
-							{ value: true, label: 'Activo' },
-							{ value: false, label: 'Inactivo' },
-						],
-					},
-					{
-						name: 'rol',
-						label: 'Rol',
-						type: 'select',
-						options: [
-							{ value: 'USER_ROLE', label: 'USER_ROLE' },
-							{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
-						],
-					},
-				]}
-				formState={formState}
-				setFormState={setFormState}
-			/>
-			<Pagination
-				currentPage={currentPage}
-				totalPages={data?.totalPages || 0}
-				handlePreviousPage={handlePreviousPage}
-				handleNextPage={handleNextPage}
-			/>
-		</>
+		<div className='container mt-4 my-5'>
+			<h2 className='mb-4'>Registrar Venta</h2>
+			<form onSubmit={handleSearchSubmit} className='mb-4'>
+				<div className='input-group'>
+					<input type='text' className='form-control' placeholder='Buscar producto' value={searchTerm} onChange={handleSearchChange} />
+					<button className='btn btn-primary' type='submit'>
+						Buscar
+					</button>
+				</div>
+			</form>
+			{isLoading ? (
+				<LoadingSpinner />
+			) : isError ? (
+				<div className='alert alert-danger'>Error: {error.message}</div>
+			) : (
+				<>
+					<div className='list-group mb-4'>
+						{data?.productos.map((producto) => (
+							<div key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
+								<div>
+									<h5 className='mb-1'>{producto.nombre}</h5>
+									<p className='mb-1'>Precio: ${producto.precio}</p>
+								</div>
+								<button className='btn btn-success' onClick={() => openModal(producto)}>
+									Agregar a la venta
+								</button>
+							</div>
+						))}
+					</div>
+					<Pagination
+						currentPage={currentPage}
+						totalPages={data?.totalPages || 0}
+						handlePreviousPage={handlePreviousPage}
+						handleNextPage={handleNextPage}
+					/>
+				</>
+			)}
+			<hr />
+			<h4>Venta Actual</h4>
+			<ul className='list-group mb-4'>
+				{formState.productos.map((producto) => (
+					<li key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
+						<div>
+							<h5 className='mb-1'>{producto.nombre}</h5>
+							<p className='mb-1'>Cantidad: {producto.cantidad}</p>
+							<p className='mb-1'>Precio Total: ${producto.precio * producto.cantidad}</p>
+						</div>
+						<div>
+							<button className='btn btn-danger me-2' onClick={() => eliminarProducto(producto.uid)}>
+								Eliminar
+							</button>
+							<button className='btn btn-primary me-2' onClick={() => disminuirCantidad(producto.uid)}>
+								-
+							</button>
+							<button className='btn btn-primary' onClick={() => aumentarCantidad(producto.uid)}>
+								+
+							</button>
+						</div>
+					</li>
+				))}
+			</ul>
+			<div className='d-flex justify-content-between align-items-center'>
+				<h5>Total Productos: {formState.totalProductos}</h5>
+				<h5>Precio Total: ${formState.precioTotal}</h5>
+			</div>
+			<button className='btn btn-primary mt-3' onClick={validar}>
+				Registrar Venta
+			</button>
+		</div>
 	);
 };
 
-export default CRUDUsuario;
+export default CRUDVentas;
