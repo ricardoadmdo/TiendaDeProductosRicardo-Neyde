@@ -206,7 +206,6 @@ const CRUDProducto = () => {
 					{ header: 'Nombre', accessor: 'nombre' },
 					{ header: 'Cantidad', accessor: 'cantidad' },
 					{ header: 'Precio', accessor: 'precio' },
-					{ header: 'Url', accessor: 'url' },
 				]}
 				onEdit={(usuario) => openModal(2, usuario)}
 				onDelete={deleteProductos}

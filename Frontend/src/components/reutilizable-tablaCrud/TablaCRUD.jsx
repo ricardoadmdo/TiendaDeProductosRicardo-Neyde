@@ -93,7 +93,7 @@ const TablaCRUD = ({
 	};
 
 	return (
-		<div className='container-fluid vh-100'>
+		<div className='container-fluid'>
 			<div className='row mt-5'>
 				<div className='col-md-4 offset-md-4'>
 					<div className='d-grid mx-auto'>

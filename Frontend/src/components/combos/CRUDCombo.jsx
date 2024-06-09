@@ -210,7 +210,6 @@ const CRUDCombo = () => {
 					{ header: 'Cantidad', accessor: 'cantidad' },
 					{ header: 'Precio', accessor: 'precio' },
 					{ header: 'Descripción', accessor: 'description' },
-					{ header: 'Url', accessor: 'url' },
 					{ header: 'Estado en DB', accessor: 'estado' },
 				]}
 				onEdit={(combo) => openModal(2, combo)}
