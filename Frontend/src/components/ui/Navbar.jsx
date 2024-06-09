@@ -145,6 +145,11 @@ const Navbar = () => {
 												Gestionar Combos
 											</NavLink>
 										</li>
+										<li>
+											<NavLink className='dropdown-item' to='/dashboard/gestionar-ventas'>
+												Gestionar Ventas
+											</NavLink>
+										</li>
 									</ul>
 								</li>
 							)}

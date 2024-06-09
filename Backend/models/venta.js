@@ -1,23 +1,50 @@
 const { Schema, model } = require('mongoose');
 
-const VentaSchema = Schema({
-	producto: {
+const ProductoSchema = Schema({
+	nombre: {
 		type: String,
-		required: true,
+		required: [true, 'El nombre es obligatorio'],
 	},
 	cantidad: {
 		type: Number,
 		required: true,
 	},
+	precio: {
+		type: Number,
+		required: true,
+	},
+	url: {
+		type: String,
+		required: true,
+	},
+	estado: {
+		type: Boolean,
+		default: true,
+	},
+});
+
+const VentaSchema = new Schema({
+	productos: {
+		type: [ProductoSchema],
+		required: true,
+	},
+	totalProductos: {
+		type: Number,
+		required: true,
+	},
+	precioTotal: {
+		type: Number,
+		required: true,
+	},
 	fecha: {
 		type: Date,
-		default: Date.now, // Puedes establecer la fecha actual como valor por defecto
+		default: Date.now, // Establece la fecha actual como valor por defecto
 	},
 });
 
 VentaSchema.methods.toJSON = function () {
 	const { __v, _id, ...venta } = this.toObject();
-	venta.id = _id; // Cambio 'usuario.uid' a 'venta.id'
+	venta.id = _id;
 	return venta;
 };
 

@@ -40,8 +40,8 @@ const Calendario = ({ onSeleccionarDias }) => {
 	};
 
 	return (
-		<div className='container  animate__animated animate__fadeIn my-4'>
-			<div className='calendar d-flex'>
+		<div className='calendar-container calendar'>
+			<div className='col-md-4'>
 				<div className='calendar-left text-uppercase' style={{ backgroundImage: `url(${bg})` }}>
 					<h3 className='text-white'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
 					<p className='text-white'>
@@ -50,46 +50,44 @@ const Calendario = ({ onSeleccionarDias }) => {
 							: format(today, 'd MMMM yyyy', { locale: es })}
 					</p>
 				</div>
-				<div className='calendar-right'>
-					<div className='d-flex align-items-center p-3'>
-						<button className='btn me-5' onClick={handlePrevMonth}>
-							<i className='fa fa-chevron-left'></i>
-						</button>
-						<h3 className='text-uppercase me-5'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
-						<button className='btn' onClick={handleNextMonth}>
-							<i className='fa fa-chevron-right'></i>
-						</button>
-					</div>
-					<div className='table-responsive'>
-						<table className='table table-bordered mb-0'>
-							<thead>
-								<tr className='table'>
-									{['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((day) => (
-										<th key={day} className='text-center'>
-											{day}
-										</th>
+				<div className='d-flex align-items-center justify-content-between p-3'>
+					<button className='btn me-5' onClick={handlePrevMonth}>
+						<i className='fa fa-chevron-left'></i>
+					</button>
+					<h3 className='text-uppercase me-5'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
+					<button className='btn' onClick={handleNextMonth}>
+						<i className='fa fa-chevron-right'></i>
+					</button>
+				</div>
+				<div className='table-responsive'>
+					<table className='table table-bordered mb-0'>
+						<thead>
+							<tr className='table'>
+								{['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((day) => (
+									<th key={day} className='text-center'>
+										{day}
+									</th>
+								))}
+							</tr>
+						</thead>
+						<tbody>
+							{Array.from({ length: Math.ceil(days.length / 7) }).map((_, weekIndex) => (
+								<tr key={weekIndex}>
+									{days.slice(weekIndex * 7, weekIndex * 7 + 7).map((day) => (
+										<td
+											key={day}
+											onClick={() => handleDateClick(day)}
+											className={`text-center ${isSameMonth(day, currentDate) ? '' : 'text-muted'} ${
+												isSameDay(day, today) ? 'today' : ''
+											} ${selectedDates.find((selectedDay) => isSameDay(selectedDay, day)) ? 'selected' : ''}`}
+										>
+											{format(day, 'd')}
+										</td>
 									))}
 								</tr>
-							</thead>
-							<tbody>
-								{Array.from({ length: Math.ceil(days.length / 7) }).map((_, weekIndex) => (
-									<tr key={weekIndex}>
-										{days.slice(weekIndex * 7, weekIndex * 7 + 7).map((day) => (
-											<td
-												key={day}
-												onClick={() => handleDateClick(day)}
-												className={`text-center ${isSameMonth(day, currentDate) ? '' : 'text-muted'} ${
-													isSameDay(day, today) ? 'today' : ''
-												} ${selectedDates.find((selectedDay) => isSameDay(selectedDay, day)) ? 'selected' : ''}`}
-											>
-												{format(day, 'd')}
-											</td>
-										))}
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
+							))}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

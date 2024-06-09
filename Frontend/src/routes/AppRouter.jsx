@@ -13,9 +13,9 @@ import CafeteriaLayout from './CafeteriaLayout';
 import Perfil from '../components/ui/Perfil';
 import VerificationScreen from '../components/login/VerificationScreen';
 import AdminRoute from './AdminRoute';
-import Ventas from '../components/cafeteria/ventas/Ventas.jsx';
 import NoEncontrado from '../components/NoEncontrado.jsx';
 import Cafeteria from '../components/cafeteria/Cafeteria.jsx';
+import Ventas from '../components/ventas/Ventas.jsx';
 
 const AppRouter = () => {
 	return (
@@ -49,7 +49,7 @@ const AppRouter = () => {
 					<Route index element={<Cafeteria />} />
 					<Route path='carrito' element={<Carrito />} />
 					<Route
-						path='gestionar-ventas'
+						path='reporte-ventas'
 						element={
 							<PrivateRoute>
 								<AdminRoute>

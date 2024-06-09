@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const { obtenerVentas, crearVenta } = require('../controllers/ventas');
+const { Router } = require('express');
+const { obtenerVentas, obtenerVentaPorId, crearVenta, actualizarVenta, eliminarVenta } = require('../controllers/ventas');
+const router = Router();
 
-// Ruta para obtener todas las ventas
 router.get('/', obtenerVentas);
-
-// Ruta para crear una nueva venta
+router.get('/:id', obtenerVentaPorId);
 router.post('/', crearVenta);
+router.put('/:id', actualizarVenta);
+router.delete('/:id', eliminarVenta);
 
 module.exports = router;

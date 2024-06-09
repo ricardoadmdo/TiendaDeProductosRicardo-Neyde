@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Calendario from '../../reutilizable-tablaCrud/Calendario';
+import Calendario from '../reutilizable-tablaCrud/Calendario';
 
 const Ventas = () => {
 	const [diasSeleccionados, setDiasSeleccionados] = useState([]);

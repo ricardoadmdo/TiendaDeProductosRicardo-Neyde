@@ -143,8 +143,8 @@ const NavbarCaf = () => {
 										</NavLink>
 									</li>
 									<li>
-										<NavLink className='dropdown-item' to='/cafeteria/gestionar-ventas'>
-											Gestionar Ventas
+										<NavLink className='dropdown-item' to='/cafeteria/reporte-ventas'>
+											Reporte Ventas
 										</NavLink>
 									</li>
 								</ul>

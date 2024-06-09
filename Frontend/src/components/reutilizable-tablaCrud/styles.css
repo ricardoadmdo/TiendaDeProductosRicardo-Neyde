@@ -1,37 +1,24 @@
 .calendar {
-	display: flex;
 	background: rgba(255, 255, 255, 0.8); /* Fondo ligeramente opaco */
 	border-radius: 10px;
 	overflow: hidden;
-	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 	z-index: 1; /* Z-index hacia atrás */
 }
 
 .calendar-left {
-	background-image: url('images/bg.jpg');
 	background-size: cover;
 	background-position: center center;
-	padding: 20px;
 	color: #fff;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	width: 40%;
-	text-align: center;
+	padding: 20px;
 }
 
 .calendar-left h3,
 .calendar-left p {
 	margin: 0;
-}
-
-.calendar-right {
-	width: 60%;
-	padding: 20px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 }
 
 .calendar-header {
@@ -91,51 +78,17 @@
 	box-shadow: 0 0 5px rgba(205, 34, 211, 0.5); /* Añadir sombra para resaltar */
 }
 
-.calendar .table tbody .selected:hover,
+.calendar .table tbody .selected:hover {
+	background-color: #552af0; /* Mantener el color de selección durante el hover */
+}
+
 .calendar .table tbody .today:hover {
-	background-color: #0056b3; /* Cambiar el color al hacer hover */
+	background-color: #cd22d3; /* Mantener el color de selección durante el hover */
 }
 
 .calendar .table tbody td:not(.selected):not(.today):hover {
 	background-color: #e9ecef; /* Cambiar el color de fondo al hacer hover */
 }
-
-.selected-dates {
-	margin-top: 20px;
-}
-
-.selected-dates h3 {
-	font-size: 18px;
-	margin-bottom: 10px;
-}
-
-.selected-dates ul {
-	list-style: none;
-	padding: 0;
-}
-
-.selected-dates ul li {
-	background: #f7f7f7;
-	padding: 10px;
-	border-radius: 5px;
-	margin-bottom: 5px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.calendar-left h3 {
-	background: rgba(0, 0, 0, 0.2);
-	border-radius: 10px;
-	padding: 10px;
-	margin: 0;
-}
-
-.calendar-left p {
-	font-size: 15px;
-}
-
-.calendar .table tbody td {
-	border-radius: 50%; /* Hace que los días del calendario sean circulares */
-	border: none; /* Eliminar bordes */
+.calendar .table tbody td:hover {
+	border-radius: 50%; /* Hacer la celda redonda */
 }
