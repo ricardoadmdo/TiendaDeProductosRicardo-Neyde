@@ -1,16 +1,14 @@
-import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AdminRoute } from './AdminRoute';
-import Loading from '../components/Loading';
-
-const CRUDUsuario = lazy(() => import('../components/usuario/CRUDUsuario.jsx'));
-const CRUDProducto = lazy(() => import('../components/producto/CRUDProducto.jsx'));
-const CRUDCombo = lazy(() => import('../components/combos/CRUDCombo.jsx'));
-const BuscarUsuario = lazy(() => import('../components/usuario/BuscarUsuario.jsx'));
+import CRUDUsuario from '../components/usuario/CRUDUsuario.jsx';
+import AdminRoute from './AdminRoute.jsx';
+import CRUDProducto from '../components/producto/CRUDProducto.jsx';
+import CRUDCombo from '../components/combos/CRUDCombo.jsx';
+// import { Perfil } from '../components/ui/Perfil.jsx';
+import BuscarUsuario from '../components/usuario/BuscarUsuario.jsx';
 
 const DashboardRoutes = () => {
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Routes>
 				<Route
 					path='gestionar-usuarios'
@@ -36,6 +34,14 @@ const DashboardRoutes = () => {
 						</AdminRoute>
 					}
 				/>
+				{/* <Route
+					path='perfil'
+					element={
+						<AdminRoute>
+							<Perfil />
+						</AdminRoute>
+					}
+				/> */}
 				<Route
 					path='buscarusuarios'
 					element={
@@ -45,8 +51,7 @@ const DashboardRoutes = () => {
 					}
 				/>
 			</Routes>
-		</Suspense>
+		</>
 	);
 };
-
 export default DashboardRoutes;
