@@ -32,10 +32,11 @@ const Calendario = ({ onSeleccionarDias }) => {
 			} else {
 				updatedSelectedDates.push(day);
 			}
-			// Verificar si las fechas son válidas antes de enviarlas
-			const fechasFormateadas = updatedSelectedDates
-				.filter((dia) => !isNaN(dia.getTime())) // Filtrar fechas válidas
-				.map((dia) => dia.toISOString()); // Convertir a cadenas ISO
+			// Convert dates to local ISO string without time
+			const fechasFormateadas = updatedSelectedDates.map((dia) => {
+				const localDate = new Date(dia.getTime() - dia.getTimezoneOffset() * 60000);
+				return localDate.toISOString().split('T')[0];
+			});
 			onSeleccionarDias(fechasFormateadas);
 			return updatedSelectedDates;
 		});
@@ -48,7 +49,7 @@ const Calendario = ({ onSeleccionarDias }) => {
 					<h3 className='text-white'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
 					<p className='text-white'>
 						{selectedDates.length > 0
-							? format(selectedDates[0], 'd MMMM yyyy', { locale: es })
+							? format(selectedDates[selectedDates.length - 1], 'd MMMM yyyy', { locale: es })
 							: format(today, 'd MMMM yyyy', { locale: es })}
 					</p>
 				</div>

@@ -1,27 +1,32 @@
 const { response, request } = require('express');
 const Venta = require('../models/venta');
+const venta = require('../models/venta');
 
 const obtenerVentas = async (req, res) => {
-	const { limit = 8, page = 1, fecha } = req.query;
-	const skip = (page - 1) * limit;
-
-	// Convertir la fecha a un objeto Date
-	const fechaActual = new Date(fecha);
-
-	// Establecer el fin del día actual (23:59:59.999)
-	const endOfDay = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), fechaActual.getDate(), 23, 59, 59, 999);
-
 	try {
-		const [ventas, total] = await Promise.all([
-			Venta.find({
-				fecha: { $gte: fechaActual, $lte: endOfDay },
-			})
-				.skip(Number(skip))
-				.limit(Number(limit)),
-			Venta.countDocuments({
-				fecha: { $gte: fechaActual, $lte: endOfDay },
-			}),
-		]);
+		const { limit = 8, page = 1, fechas } = req.query;
+		const skip = (page - 1) * limit;
+
+		let filtro = {};
+		if (fechas) {
+			// Convertir la fecha recibida a un objeto Date
+			const fechaConsulta = new Date(fechas);
+
+			// Ajustar la fecha para que sea el comienzo del día
+			fechaConsulta.setUTCHours(0, 0, 0, 0);
+
+			// Calcular la fecha de fin del día
+			const fechaFin = new Date(fechaConsulta);
+			fechaFin.setUTCHours(23, 59, 59, 999);
+
+			// Aplicar el filtro de fecha
+			filtro.fecha = {
+				$gte: fechaConsulta.toISOString(),
+				$lt: fechaFin.toISOString(),
+			};
+		}
+
+		const [ventas, total] = await Promise.all([Venta.find(filtro).skip(Number(skip)).limit(Number(limit)), Venta.countDocuments(filtro)]);
 
 		res.json({
 			total,
@@ -31,31 +36,36 @@ const obtenerVentas = async (req, res) => {
 			totalPages: Math.ceil(total / limit),
 		});
 	} catch (error) {
-		console.error('Error al obtener ventas:', error);
-		res.status(500).json({
-			msg: 'Error al obtener ventas',
-			error: error.message,
-		});
+		console.error('Error al obtener ventas:', error.message);
+		res.status(500).json({ message: 'Error al obtener ventas' });
 	}
 };
 
-const crearVenta = async (req = request, res = response) => {
+const crearVenta = async (req, res) => {
 	try {
-		const productos = req.body.productos;
-		const totalProductos = productos.reduce((acc, prod) => acc + prod.cantidad, 0);
-		const precioTotal = productos.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
+		const { fecha, precioTotal, totalProductos, productos, otrosDatos } = req.body;
 
-		const nuevaVenta = new Venta({
-			productos: productos,
-			totalProductos: totalProductos,
-			precioTotal: precioTotal,
-		});
+		// Verifica que los campos requeridos estén presentes
+		if (!fecha || !precioTotal || !totalProductos || !productos) {
+			return res.status(400).json({ message: 'Campos requeridos faltantes' });
+		}
 
+		// Verifica que la fecha sea válida
+		const fechaValida = new Date(fecha);
+		if (isNaN(fechaValida)) {
+			return res.status(400).json({ message: 'Fecha inválida' });
+		}
+
+		// Aquí guardas los productos en la base de datos si es necesario
+		// Por ejemplo, si tienes un modelo de Producto y una relación con el modelo Venta,
+		// puedes guardar los productos de la venta en la base de datos aquí.
+
+		const nuevaVenta = new Venta({ fecha: fechaValida, precioTotal, totalProductos, productos, ...otrosDatos });
 		await nuevaVenta.save();
-		res.json({ mensaje: 'Venta creada exitosamente', venta: nuevaVenta });
+		res.status(201).json(nuevaVenta);
 	} catch (error) {
-		console.error(error);
-		res.status(500).json({ mensaje: 'Error al crear la venta' });
+		console.error('Error al crear venta:', error.message);
+		res.status(500).json({ message: 'Error al crear venta' });
 	}
 };
 

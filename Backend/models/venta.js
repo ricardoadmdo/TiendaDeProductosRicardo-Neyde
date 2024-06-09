@@ -38,7 +38,8 @@ const VentaSchema = new Schema({
 	},
 	fecha: {
 		type: Date,
-		default: Date.now, // Establece la fecha actual como valor por defecto
+		required: true,
+		default: Date.now,
 	},
 });
 

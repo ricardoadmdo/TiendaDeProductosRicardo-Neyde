@@ -6,9 +6,9 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchVentas = async ({ queryKey }) => {
-	const [, page, limit, fecha] = queryKey;
+	const [, page, limit, fechas] = queryKey;
 	try {
-		const response = await Axios.get(`http://localhost:3001/api/venta?page=${page}&limit=${limit}&fecha=${fecha}`);
+		const response = await Axios.get(`http://localhost:3001/api/venta?page=${page}&limit=${limit}&fechas=${fechas}`);
 		return response.data;
 	} catch (error) {
 		throw new Error(error.response?.data?.msg || 'Error al obtener ventas');
@@ -16,20 +16,10 @@ const fetchVentas = async ({ queryKey }) => {
 };
 
 const ReporteVentas = () => {
-	const [diasSeleccionados, setDiasSeleccionados] = useState([new Date()]); // Por defecto, seleccionamos el día actual
+	const [diasSeleccionados, setDiasSeleccionados] = useState([new Date().toISOString().split('T')[0]]);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	useEffect(() => {
-		if (diasSeleccionados.length > 0) {
-			const fechaSeleccionada = diasSeleccionados[0];
-			refetchVentas(currentPage, fechaSeleccionada);
-		}
-	}, [diasSeleccionados, currentPage]);
-
-	const handleSeleccionarDias = (dias) => {
-		const fechas = dias.map((fechaString) => new Date(fechaString));
-		setDiasSeleccionados(fechas);
-	};
+	const fechasSeleccionadas = diasSeleccionados.join(',');
 
 	const {
 		data,
@@ -38,10 +28,18 @@ const ReporteVentas = () => {
 		error,
 		refetch: refetchVentas,
 	} = useQuery({
-		queryKey: ['ventas', currentPage, 8, diasSeleccionados[0]?.toISOString().split('T')[0]],
+		queryKey: ['ventas', currentPage, 8, fechasSeleccionadas],
 		queryFn: fetchVentas,
 		keepPreviousData: true,
 	});
+
+	useEffect(() => {
+		refetchVentas();
+	}, [diasSeleccionados, currentPage]);
+
+	const handleSeleccionarDias = (dias) => {
+		setDiasSeleccionados(dias);
+	};
 
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
@@ -51,44 +49,57 @@ const ReporteVentas = () => {
 			<h2 className='text-center mb-4'>Reporte de Ventas</h2>
 			<Calendario onSeleccionarDias={handleSeleccionarDias} />
 			<div className='mt-4'>
-				<h3>Día Seleccionado:</h3>
-				<ul className='list-unstyled'>
-					{diasSeleccionados.map((fecha, index) => (
-						<li key={index}>{fecha.toLocaleDateString()}</li>
-					))}
-				</ul>
+				{diasSeleccionados.length > 0 ? (
+					<div>
+						<h3 className='text-center'>Día Seleccionado:</h3>
+						<h1 className='text-center'>{new Date(diasSeleccionados[0]).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</h1>
+					</div>
+				) : (
+					<div className='alert alert-info text-center'>Selecciona una fecha del calendario</div>
+				)}
 			</div>
 			{isLoading ? (
 				<LoadingSpinner />
 			) : isError ? (
 				<div className='alert alert-danger mt-4'>Error: {error.message}</div>
 			) : (
-				<>
-					<div className='list-group mt-4'>
-						{data?.ventas.map((venta) => (
-							<div key={venta.uid} className='list-group-item'>
-								<h5 className='mb-1'>Fecha: {new Date(venta.fecha).toLocaleDateString()}</h5>
-								<p className='mb-1'>Total Productos: {venta.totalProductos}</p>
-								<p className='mb-1'>Precio Total: ${venta.precioTotal}</p>
-								<h6>Productos:</h6>
-								<ul className='list-unstyled'>
-									{venta.productos.map((producto) => (
-										<li key={producto._id}>
-											{producto.nombre} - {producto.cantidad} x ${producto.precio}
-										</li>
-									))}
-								</ul>
-							</div>
-						))}
-					</div>
+				<div className='mt-4'>
+					<h3 className='text-center'>Ventas del Día:</h3>
+					{data?.ventas.length > 0 ? (
+						<div className='row'>
+							{data?.ventas.map((venta) => (
+								<div key={venta.uid} className='col-md-6'>
+									<div className='card mb-4'>
+										<div className='card-body'>
+											<h5 className='card-title'>
+												Fecha: {new Date(venta.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}
+											</h5>
+											<p className='card-text'>Total Productos: {venta.totalProductos}</p>
+											<p className='card-text'>Precio Total: ${venta.precioTotal}</p>
+											<h6>Productos:</h6>
+											<ul className='list-group'>
+												{venta.productos.map((producto) => (
+													<li key={producto._id} className='list-group-item'>
+														{producto.nombre} - {producto.cantidad} x ${producto.precio}
+													</li>
+												))}
+											</ul>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					) : (
+						<div className='alert alert-info text-center'>No hay ventas para mostrar.</div>
+					)}
 					<Pagination
 						currentPage={currentPage}
-						totalPages={data?.totalPages || 0}
+						totalPages={data.totalPages}
 						handlePreviousPage={handlePreviousPage}
 						handleNextPage={handleNextPage}
 						className='mt-4'
 					/>
-				</>
+				</div>
 			)}
 		</div>
 	);
