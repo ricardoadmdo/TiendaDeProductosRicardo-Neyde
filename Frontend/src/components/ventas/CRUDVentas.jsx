@@ -14,12 +14,23 @@ const fetchProductos = async ({ page, searchTerm }) => {
 };
 
 const CRUDVentas = () => {
-	const [formState, setFormState] = useState({
-		productos: [],
-		totalProductos: 0,
-		precioTotal: 0,
-		fecha: new Date(),
+	const [formState, setFormState] = useState(() => {
+		const savedFormState = localStorage.getItem('formState');
+
+		return savedFormState
+			? JSON.parse(savedFormState)
+			: {
+					productos: [],
+					totalProductos: 0,
+					precioTotal: 0,
+					fecha: new Date(),
+			  };
 	});
+
+	useEffect(() => {
+		localStorage.setItem('formState', JSON.stringify(formState));
+	}, [formState]);
+
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -46,7 +57,6 @@ const CRUDVentas = () => {
 				icon: 'success',
 				timer: 3000,
 			});
-			localStorage.removeItem('formState');
 		},
 		onError: (error) => {
 			Swal.fire({
@@ -65,17 +75,6 @@ const CRUDVentas = () => {
 		setCurrentPage(1);
 	};
 
-	useEffect(() => {
-		const ventaData = localStorage.getItem('formState');
-		if (ventaData) {
-			setFormState(JSON.parse(ventaData));
-		}
-	}, []);
-
-	useEffect(() => {
-		localStorage.setItem('formState', JSON.stringify(formState));
-	}, [formState]);
-
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
@@ -90,6 +89,7 @@ const CRUDVentas = () => {
 				min: 1,
 				autocapitalize: 'off',
 			},
+			inputValue: '1',
 			showCancelButton: true,
 			confirmButtonText: 'Agregar',
 			showLoaderOnConfirm: true,
@@ -106,18 +106,25 @@ const CRUDVentas = () => {
 
 	const agregarProducto = (producto, cantidad) => {
 		setFormState((prevState) => {
-			const productoExistente = prevState.productos.find((p) => p.uid === producto.uid);
-			let nuevosProductos;
+			// Hacer una copia del array de productos
+			const nuevosProductos = [...prevState.productos];
 
-			if (productoExistente) {
-				nuevosProductos = prevState.productos.map((p) => (p.uid === producto.uid ? { ...p, cantidad: p.cantidad + cantidad } : p));
+			// Buscar si el producto ya está en la lista
+			const index = nuevosProductos.findIndex((p) => p.uid === producto.uid);
+
+			if (index !== -1) {
+				// Si el producto ya existe, actualizar su cantidad
+				nuevosProductos[index].cantidad += cantidad;
 			} else {
-				nuevosProductos = [...prevState.productos, { ...producto, cantidad }];
+				// Si el producto no existe, agregarlo al array
+				nuevosProductos.push({ ...producto, cantidad });
 			}
 
+			// Calcular el total de productos y el precio total
 			const totalProductos = nuevosProductos.reduce((acc, p) => acc + p.cantidad, 0);
 			const precioTotal = nuevosProductos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
 
+			// Devolver el nuevo estado
 			return {
 				...prevState,
 				productos: nuevosProductos,
@@ -185,8 +192,9 @@ const CRUDVentas = () => {
 	};
 
 	return (
-		<div className='container mt-4 my-5'>
-			<h2 className='mb-4'>Registrar Venta</h2>
+		<div className='container mt-4 my-5 animate__animated animate__fadeIn'>
+			<h2 className='text-center mb-4'>Registrar Ventas</h2>
+			<h3 className='text-center mb-4'>Día de Hoy: {new Date().toLocaleDateString()}</h3>
 			<form onSubmit={handleSearchSubmit} className='mb-4'>
 				<div className='input-group'>
 					<input type='text' className='form-control' placeholder='Buscar producto' value={searchTerm} onChange={handleSearchChange} />
@@ -209,7 +217,13 @@ const CRUDVentas = () => {
 									<p className='mb-1'>Precio: ${producto.precio}</p>
 								</div>
 								<button className='btn btn-success' onClick={() => openModal(producto)}>
-									Agregar <FontAwesomeIcon icon={faPlus} />
+									Agregar{' '}
+									<svg xmlns='http://www.w3.org/2000/svg' width='25px' height='25px' viewBox='0 0 24 24'>
+										<path
+											fill='currentColor'
+											d='M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4zm1 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8'
+										/>
+									</svg>
 								</button>
 							</div>
 						))}
@@ -236,10 +250,14 @@ const CRUDVentas = () => {
 							<button className='btn btn-danger me-2' onClick={() => eliminarProducto(producto.uid)}>
 								<FontAwesomeIcon icon={faTrashAlt} />
 							</button>
-							<button className='btn btn-primary me-2' onClick={() => disminuirCantidad(producto.uid)}>
+							<button
+								className='btn btn-secondary me-2'
+								onClick={() => disminuirCantidad(producto.uid)}
+								disabled={producto.cantidad <= 1}
+							>
 								<FontAwesomeIcon icon={faMinus} />
 							</button>
-							<button className='btn btn-primary' onClick={() => aumentarCantidad(producto.uid)}>
+							<button className='btn btn-secondary' onClick={() => aumentarCantidad(producto.uid)}>
 								<FontAwesomeIcon icon={faPlus} />
 							</button>
 						</div>

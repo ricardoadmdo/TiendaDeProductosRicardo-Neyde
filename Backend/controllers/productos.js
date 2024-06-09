@@ -1,15 +1,22 @@
 const { response, request } = require('express');
 const Producto = require('../models/producto');
 
-const productosGet = async (req = request, res = response) => {
-	const { limit = 8, page = 1 } = req.query; // Valores por defecto: 10 productos por página y página 1
+const productosGet = async (req, res) => {
+	const { limit = 8, page = 1, search } = req.query; // Valores por defecto: 10 productos por página y página 1
 	const skip = (page - 1) * limit;
 
-	// Buscar productos donde el estado es true
+	// Construir la consulta para buscar productos donde el estado es true y el nombre coincide con el término de búsqueda
+	const query = { estado: true };
+	if (search) {
+		query.nombre = { $regex: search, $options: 'i' }; // El operador $regex permite realizar búsquedas por expresiones regulares, 'i' ignora mayúsculas y minúsculas
+	}
+
+	// Buscar productos que coincidan con los criterios de búsqueda
 	const [productos, total] = await Promise.all([
-		Producto.find({ estado: true }).populate('nombre').skip(Number(skip)).limit(Number(limit)),
-		Producto.countDocuments({ estado: true }),
+		Producto.find(query).populate('nombre').skip(Number(skip)).limit(Number(limit)),
+		Producto.countDocuments(query),
 	]);
+
 	res.json({
 		total,
 		productos,

@@ -48,7 +48,7 @@ const ReporteVentas = () => {
 
 	return (
 		<div className='container-fluid animate__animated animate__fadeIn p-3'>
-			<h2 className='text-center mb-4'>Registro de Ventas</h2>
+			<h2 className='text-center mb-4'>Reporte de Ventas</h2>
 			<Calendario onSeleccionarDias={handleSeleccionarDias} />
 			<div className='mt-4'>
 				<h3>Día Seleccionado:</h3>
