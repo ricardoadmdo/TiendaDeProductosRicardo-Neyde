@@ -1,25 +1,13 @@
-import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../../auth/authContext';
-import { CartContext } from '../../auth/CartProvider';
+import { CartContext } from '../../../auth/CartProvider.jsx';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../auth/authContext.jsx';
+import { types } from '../../../types/types.jsx';
+import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faUser,
-	faShoppingCart,
-	faSignOutAlt,
-	faUtensils,
-	faHamburger,
-	faSearch,
-	faStore,
-	faCog,
-	faShirt,
-	faShop,
-} from '@fortawesome/free-solid-svg-icons';
-import logo from '../../../public/logo.png';
-import { types } from '../../types/types';
-import { googleLogout } from '@react-oauth/google';
+import { faUser, faShoppingCart, faSignOutAlt, faSearch, faStore, faCog, faShop, faShirt, faTShirt } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar = () => {
+const NavbarBoutique = () => {
 	const { user, dispatch } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState('');
@@ -32,14 +20,7 @@ const Navbar = () => {
 	}, [cart]);
 
 	const handleLogout = () => {
-		if (user.google) {
-			// Verifica si el usuario inició sesión con Google
-			googleLogout(); // Si inició sesión con Google, utiliza la función de logout de Google
-		} else {
-			// Si no inició sesión con Google, limpia los datos de sesión
-			dispatch({ type: types.logout });
-		}
-		// Redirige al usuario a la página de inicio
+		dispatch({ type: types.logout });
 		navigate('/', { replace: true });
 	};
 
@@ -69,6 +50,7 @@ const Navbar = () => {
 				>
 					<span className='navbar-toggler-icon'></span>
 				</button>
+
 				<div className='offcanvas offcanvas-end dark101720' tabIndex='-1' id='navbarNav' aria-labelledby='offcanvasNavbarLabel'>
 					<div className='offcanvas-header'>
 						<h5 className='offcanvas-title' id='offcanvasNavbarLabel'>
@@ -79,16 +61,15 @@ const Navbar = () => {
 					<div className='offcanvas-body'>
 						<ul className='navbar-nav'>
 							<div className='navbar-nav' style={{ border: '3px solid' }}>
-								<li className='nav-item'>
-									<NavLink className='nav-link' to='/'>
-										<FontAwesomeIcon icon={faShop} />
-										<span>Tienda</span>
-									</NavLink>
-								</li>
+								{' '}
+								<NavLink className='nav-link' to='/'>
+									<FontAwesomeIcon icon={faShop} />
+									Tienda
+								</NavLink>
 								<li className='nav-item position-relative'>
 									<NavLink className='nav-link' to='/cafeteria'>
 										<FontAwesomeIcon icon={faStore} />
-										<span>Cafetería</span>
+										Cafetería
 									</NavLink>
 								</li>
 								<li className='nav-item position-relative'>
@@ -104,40 +85,34 @@ const Navbar = () => {
 									type='search'
 									name='searchInput'
 									className='form-control me-1'
-									placeholder='Buscar productos...'
+									placeholder='Buscar en la boutique...'
 									aria-label='Buscar'
 									value={searchTerm}
 									onChange={handleSearchChange}
 									style={{ width: '226px' }}
 								/>
-
-								<button className='btn btn-outline-light' type='submit' aria-label='Buscar'>
+								<button className='btn btn-outline-light' type='submit'>
 									<FontAwesomeIcon icon={faSearch} />
 								</button>
 							</form>
 							<li className='nav-item position-relative'>
-								<NavLink className='nav-link' to='/carrito'>
+								<NavLink className='nav-link' to='/cafeteria/carrito'>
 									<FontAwesomeIcon icon={faShoppingCart} />
 									{cartItemCount > 0 && (
 										<span className='position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success'>
 											{cartItemCount}
 										</span>
 									)}
-									<span>Compra</span>
+									Compra
 								</NavLink>
 							</li>
-							<li className='nav-item'>
-								<NavLink className='nav-link' to='/productos'>
-									<FontAwesomeIcon icon={faHamburger} />
-									<span>Productos</span>
+							<li className='nav-item dropdown me-5'>
+								<NavLink className='nav-link' to='/boutique/BoutiqueMenu'>
+									<FontAwesomeIcon icon={faTShirt} />
+									Ropa
 								</NavLink>
 							</li>
-							<li className='nav-item me-5'>
-								<NavLink className='nav-link' to='/combos'>
-									<FontAwesomeIcon icon={faUtensils} />
-									<span>Combos</span>
-								</NavLink>
-							</li>
+
 							{user.rol === 'ADMIN_ROLE' && (
 								<li className='nav-item dropdown me-2'>
 									<a
@@ -149,38 +124,29 @@ const Navbar = () => {
 										aria-expanded='false'
 									>
 										<FontAwesomeIcon icon={faCog} />
-										<span>Gestionar</span>
+										Gestionar
 									</a>
 									<ul className='dropdown-menu dropdown-menu-dark' aria-labelledby='navbarDropdownMenuLink'>
 										<li>
-											<NavLink className='dropdown-item' to='/dashboard/gestionar-usuarios'>
-												Gestionar Usuarios
+											<NavLink className='dropdown-item' to='/cafeteria/gestionar-inventario'>
+												Gestionar Inventario
 											</NavLink>
 										</li>
 										<li>
-											<NavLink className='dropdown-item' to='/dashboard/gestionar-productos'>
-												Gestionar Productos
-											</NavLink>
-										</li>
-										<li>
-											<NavLink className='dropdown-item' to='/dashboard/gestionar-combos'>
-												Gestionar Combos
-											</NavLink>
-										</li>
-										<li>
-											<NavLink className='dropdown-item' to='/dashboard/gestionar-ventas'>
-												Gestionar Ventas
+											<NavLink className='dropdown-item' to='/cafeteria/reporte-ventas'>
+												Reporte Ventas
 											</NavLink>
 										</li>
 									</ul>
 								</li>
 							)}
+
 							{user.logged ? (
 								<>
 									<li className='nav-item'>
 										<button className='nav-link' onClick={handleLogout}>
 											<FontAwesomeIcon icon={faSignOutAlt} />
-											<span>Cerrar Sesión</span>
+											Cerrar Sesión
 										</button>
 									</li>
 								</>
@@ -188,7 +154,7 @@ const Navbar = () => {
 								<li className='nav-item'>
 									<NavLink className='nav-link' to='/login'>
 										<FontAwesomeIcon icon={faUser} />
-										<span>Iniciar Sesión</span>
+										Iniciar Sesión
 									</NavLink>
 								</li>
 							)}
@@ -200,4 +166,4 @@ const Navbar = () => {
 	);
 };
 
-export default Navbar;
+export default NavbarBoutique;

@@ -5,18 +5,7 @@ import { AuthContext } from '../../../auth/authContext.jsx';
 import { types } from '../../../types/types.jsx';
 import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faUser,
-	faShoppingCart,
-	faSignOutAlt,
-	faUtensils,
-	faHamburger,
-	faSearch,
-	faStore,
-	faCog,
-	faShop,
-	faShirt,
-} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faSearch, faStore, faCog, faShop, faShirt, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
@@ -118,37 +107,10 @@ const NavbarCaf = () => {
 								</NavLink>
 							</li>
 							<li className='nav-item dropdown me-5'>
-								<a
-									className='nav-link dropdown-toggle'
-									href='#'
-									id='navbarDropdownMenuLink'
-									role='button'
-									data-bs-toggle='dropdown'
-									aria-expanded='false'
-								>
+								<NavLink className='nav-link' to='/cafeteria/menu'>
+									<FontAwesomeIcon icon={faChartBar} />
 									Menú
-								</a>
-								<ul className='dropdown-menu dropdown-menu-dark' aria-labelledby='navbarDropdownMenuLink'>
-									<li>
-										<NavLink className='dropdown-item' to='/cafeteria//pastas'>
-											<FontAwesomeIcon icon={faHamburger} />
-											Pastas
-										</NavLink>
-									</li>
-
-									<li>
-										<NavLink className='dropdown-item' to='/cafeteria/cubana'>
-											<FontAwesomeIcon icon={faUtensils} />
-											Comida cubana
-										</NavLink>
-									</li>
-									<li>
-										<NavLink className='dropdown-item' to='/cafeteria/carnes'>
-											<FontAwesomeIcon icon={faUtensils} />
-											Carnes
-										</NavLink>
-									</li>
-								</ul>
+								</NavLink>
 							</li>
 
 							{user.rol === 'ADMIN_ROLE' && (

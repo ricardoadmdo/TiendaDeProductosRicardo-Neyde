@@ -16,6 +16,10 @@ import AdminRoute from './AdminRoute';
 import NoEncontrado from '../components/NoEncontrado.jsx';
 import Cafeteria from '../components/cafeteria/Cafeteria.jsx';
 import ReporteVentas from '../components/ventas/ReporteVentas.jsx';
+import Menu from '../components/cafeteria/Menu.jsx';
+import Boutique from '../components/Boutique/Boutique.jsx';
+import BoutiqueLayout from './BoutiqueLayout.jsx';
+import BoutiqueMenu from '../components/Boutique/BoutiqueMenu.jsx';
 
 const AppRouter = () => {
 	return (
@@ -48,6 +52,8 @@ const AppRouter = () => {
 				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
 					<Route index element={<Cafeteria />} />
 					<Route path='carrito' element={<Carrito />} />
+					<Route path='menu' element={<Menu />} />
+
 					<Route
 						path='reporte-ventas'
 						element={
@@ -61,6 +67,15 @@ const AppRouter = () => {
 					{/* Ruta 404 */}
 					<Route path='*' element={<NoEncontrado />} />
 				</Route>
+
+				{/* Rutas de la Boutique */}
+				<Route path='/boutique/*' element={<BoutiqueLayout />}>
+					<Route index element={<Boutique />} />
+					<Route path='boutiqueMenu' element={<BoutiqueMenu />} />
+				</Route>
+
+				{/* Ruta 404 */}
+				<Route path='*' element={<NoEncontrado />} />
 			</Routes>
 		</BrowserRouter>
 	);
