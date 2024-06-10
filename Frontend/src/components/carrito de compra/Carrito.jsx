@@ -10,13 +10,15 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import TermsAndConditions from './TermsAndConditions';
+import CountryCodeSelect from './CountryCodeSelect';
 
 const Carrito = () => {
 	const { usdRate } = useExchangeRates();
 	const [loading, setLoading] = useState(false);
 	const { cart, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
-	const { user } = useContext(AuthContext); // Utiliza AuthContext para verificar el estado de inicio de sesión
+	const { user } = useContext(AuthContext);
 	const location = useLocation();
+	const [countryCode, setCountryCode] = useState('+53'); // Valor predeterminado del código de país
 	const [recipient, setRecipient] = useState({
 		name: '',
 		mobile: '',
@@ -46,6 +48,10 @@ const Carrito = () => {
 		}
 	};
 
+	const handleCountryCodeChange = (event) => {
+		setCountryCode(event.target.value);
+	};
+
 	useEffect(() => {
 		const query = new URLSearchParams(location.search);
 		const status = query.get('status');
@@ -56,7 +62,6 @@ const Carrito = () => {
 				text: 'Gracias por comprar en Ricardo & Neyde',
 				icon: 'success',
 			});
-			//Limpiamos el carrito
 			clearCart();
 		} else if (status === 'cancel') {
 			Swal.fire({
@@ -73,7 +78,6 @@ const Carrito = () => {
 			return;
 		}
 
-		// Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
 		if (
 			!recipient.name ||
 			!recipient.mobile ||
@@ -91,15 +95,11 @@ const Carrito = () => {
 			return;
 		}
 
-		//TODO: FALTA LA LÓGICA DE COMPLETAR LA COMPRA POR AHORA UN SWEETALERT
-
-		// Mostrar mensaje de compra satisfactoria
 		Swal.fire({
 			title: 'Compra Satisfactoria',
 			text: 'Gracias por comprar en Ricardo & Neyde',
 			icon: 'success',
 		}).then(() => {
-			// Restablecer los valores del formulario
 			setRecipient({
 				name: '',
 				mobile: '',
@@ -109,23 +109,12 @@ const Carrito = () => {
 				reparto: '',
 				termsAccepted: false,
 			});
-
-			// Vaciar el carrito de compra
 			clearCart();
 		});
 	};
 
 	const pagoOnline = async () => {
 		setLoading(true);
-		// Verificar que todos los campos estén llenos y que los términos y condiciones estén aceptados
-		// if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.municipio || !recipient.nota || !recipient.termsAccepted) {
-		// 	Swal.fire({
-		// 		title: 'Formulario Incompleto',
-		// 		text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
-		// 		icon: 'error',
-		// 	});
-		// 	return;
-		// }
 
 		if (cart.length === 0) {
 			Swal.fire({ title: 'El carrito esta vacío', text: 'Añada elementos a su compra', icon: 'warning' });
@@ -163,7 +152,6 @@ const Carrito = () => {
 				<>
 					<div className='container my-5'>
 						<div className='row '>
-							{/* Sección de productos a la izquierda */}
 							<div className='col-lg-8 animate__animated animate__fadeIn'>
 								<div className='row'>
 									{cart.map((val) => (
@@ -226,8 +214,6 @@ const Carrito = () => {
 								</div>
 							</div>
 
-							{/* Sección del formulario de pedido a la derecha */}
-
 							<div className='col-lg-4'>
 								<div className='card p-3 mb-2'>
 									<div className='text-center mb-3'>
@@ -235,34 +221,46 @@ const Carrito = () => {
 									</div>
 									<div className='d-flex justify-content-between align-items-center'>
 										<div>
-											<h5 className='m-0'>
-												<FontAwesomeIcon icon={faUsd} />
-												{total} CUP
-											</h5>
+											<h5>Total CUP: </h5>
 										</div>
 										<div>
-											<h5 className='m-0'>
-												<FontAwesomeIcon icon={faUsd} />
-												{(total / usdRate).toFixed(2)} USD
+											<h5>
+												<strong>
+													<FontAwesomeIcon icon={faUsd} />
+													{total} CUP
+												</strong>
+											</h5>
+										</div>
+									</div>
+									<div className='d-flex justify-content-between align-items-center'>
+										<div>
+											<h5>Total USD:</h5>
+										</div>
+										<div>
+											<h5>
+												<strong>
+													<FontAwesomeIcon icon={faUsd} />
+													{usdRate ? (total / usdRate).toFixed(2) : 'N/A'} USD
+												</strong>
 											</h5>
 										</div>
 									</div>
 								</div>
-								<hr />
-								<h3 className='mb-4'>Información de Entrega</h3>
+
 								<form>
 									<div className='mb-3'>
 										<input
 											type='text'
 											className='form-control'
 											name='name'
-											placeholder='Nombre del receptor'
+											placeholder='Nombre y apellidos del receptor'
 											value={recipient.name}
 											onChange={handleInputChange}
 											required
 										/>
 									</div>
-									<div className='mb-3'>
+									<div className='mb-3 d-flex'>
+										<CountryCodeSelect value={countryCode} onChange={handleCountryCodeChange} />
 										<input
 											type='number'
 											className='form-control'
@@ -347,7 +345,6 @@ const Carrito = () => {
 										</button>
 									</div>
 
-									{/* Modal con los términos y condiciones */}
 									<div
 										className='modal fade'
 										id='termsModal'
