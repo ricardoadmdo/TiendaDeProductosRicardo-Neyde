@@ -10,7 +10,7 @@ const Bienvenida = () => {
 
 			{/* Sección de Productos y Combos */}
 			<div className='row justify-content-center'>
-				<section className='col-md-5'>
+				<section className='col-md-5 mb-5'>
 					<h2>Explora Nuestros Productos</h2>
 					<div className='card mb-4'>
 						<LazyLoadImage
@@ -20,14 +20,6 @@ const Bienvenida = () => {
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
 							style={{ objectFit: 'cover' }}
-							width='600'
-							height='400'
-							loading='eager'
-							srcSet='
-								https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg 600w,
-								https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib_small.jpg 300w
-							'
-							sizes='(max-width: 600px) 300px, 600px'
 						/>
 						<div className='card-body'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -38,7 +30,7 @@ const Bienvenida = () => {
 					</div>
 				</section>
 
-				<section className='col-md-5'>
+				<section className='col-md-5 mb-5'>
 					<h2>Combos Especiales</h2>
 					<div className='card mb-3'>
 						<LazyLoadImage
@@ -48,14 +40,6 @@ const Bienvenida = () => {
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
 							style={{ objectFit: 'cover' }}
-							width='600'
-							height='400'
-							loading='eager'
-							srcSet='
-								https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/kkplmrpcfpfftbg1lbby.jpg 600w,
-								https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/kkplmrpcfpfftbg1lbby_small.jpg 300w
-							'
-							sizes='(max-width: 600px) 300px, 600px'
 						/>
 						<div className='card-body'>
 							<p className='card-text'>Prueba nuestros irresistibles combos, perfectos para cualquier ocasión.</p>
@@ -67,6 +51,59 @@ const Bienvenida = () => {
 				</section>
 			</div>
 
+			{/* Sección de Cafeteria */}
+			<div className='container my-5'>
+				<h3 className='text-center mb-4'>Visita nuestra Cafetería y disfruta de la mejor comida</h3>
+				<p className='text-justify'>
+					En Ricardo & Neyde Cafetería tenemos una amplia variedad de pastas , comida cubana, mariscos , arroces y carnes de gran calidad y
+					sabor.
+				</p>
+				<hr />
+				<div className='card mb-4'>
+					<LazyLoadImage
+						effect='opacity'
+						placeholderSrc={placeholder}
+						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041269/ota6mfg9z7yz6uyh9adz.jpg'
+						className='card-img-top img-fluid'
+						alt='Imagen del producto'
+						style={{ objectFit: 'cover' }}
+					/>
+					<div className='card-body text-center'>
+						<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
+						<Link to='/productos' className='btn btn-dark'>
+							Ir a la Cafetería
+						</Link>
+					</div>
+				</div>
+			</div>
+
+			{/* Sección de Boutique */}
+			<div className='container my-5'>
+				<h3 className='text-center mb-4'>Visita nuestra Boutique y llévate la tela de mejor calidad</h3>
+				<p className='text-justify'>
+					En Ricardo & Neyde Boutique tenemos telas de todos tipos y tallas, para todo el publico. Camisas, Blusas, Zapatos., Pantalones,
+					Vestidos, etc
+				</p>
+				<hr />
+				<div className='card mb-4'>
+					<LazyLoadImage
+						effect='opacity'
+						placeholderSrc={placeholder}
+						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
+						className='card-img-top img-fluid'
+						alt='Imagen del producto'
+						style={{ objectFit: 'cover' }}
+					/>
+					<div className='card-body text-center'>
+						<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
+						<Link to='/productos' className='btn btn-dark'>
+							Ir a la Boutique
+						</Link>
+					</div>
+				</div>
+			</div>
+
+			{/* Sección Vista de Tienda */}
 			<div className='container my-5'>
 				<h3 className='text-center mb-4'>Más acerca de nuestra tienda Ricardo & Neyde</h3>
 				<p className='text-justify'>
@@ -79,18 +116,10 @@ const Bienvenida = () => {
 					<LazyLoadImage
 						effect='opacity'
 						placeholderSrc={placeholder}
-						src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711597/kjgjpyl3rf4drlm6uthd.jpg'
+						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041412/i0agcr3wwtibxdhwgoo6.jpg'
 						className='card-img-top img-fluid'
 						alt='Imagen del producto'
-						style={{ height: '200px', objectFit: 'cover' }}
-						width='600'
-						height='200'
-						loading='eager'
-						srcSet='
-							https://res.cloudinary.com/dber1pxea/image/upload/v1716711597/kjgjpyl3rf4drlm6uthd.jpg 600w,
-							https://res.cloudinary.com/dber1pxea/image/upload/v1716711597/kjgjpyl3rf4drlm6uthd_small.jpg 300w
-						'
-						sizes='(max-width: 600px) 300px, 600px'
+						style={{ objectFit: 'cover' }}
 					/>
 					<div className='card-body text-center'>
 						<p className='card-text'>Nuestra tienda en San Miguel, calle Delicia, Las Piedras, La Habana, Cuba.</p>
@@ -107,14 +136,14 @@ const Bienvenida = () => {
 					dangerouslySetInnerHTML={{
 						__html: `
         <iframe
-		  title='ubicación google maps de la tienda'
-          src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3670.7048252406435!2d-82.29946848126039!3d23.071280811154583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjPCsDA0JzE2LjciTiA4MsKwMTcnNTguMyJX!5e0!3m2!1ses-419!2scu!4v1716698429508!5m2!1ses-419!2scu&maptype=terrain"
-          width="100%"
-          height="450"
-          style="border:0"
-          allowFullScreen=""
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
+            title='ubicación google maps de la tienda'
+            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3670.7048252406435!2d-82.29946848126039!3d23.071280811154583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjPCsDA0JzE2LjciTiA4MsKwMTcnNTguMyJX!5e0!3m2!1ses-419!2scu!4v1716698429508!5m2!1ses-419!2scu&maptype=terrain"
+            width="100%"
+            height="450"
+            style="border:0"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
       `,
 					}}
