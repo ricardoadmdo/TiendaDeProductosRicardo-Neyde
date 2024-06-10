@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faSearch, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faCamera } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
@@ -105,20 +105,32 @@ const TablaCRUD = ({
 			</div>
 
 			{busqueda && (
-				<form className='d-flex me-auto mb-2 mb-lg-0' onSubmit={handleSearchSubmit}>
-					<input
-						type='search'
-						name='searchInput'
-						className='form me-1'
-						placeholder='Buscar usuarios...'
-						aria-label='Buscar'
-						value={searchTerm}
-						onChange={handleSearchChange}
-					/>
-					<button className='btn btn-outline-dark' type='submit'>
-						<FontAwesomeIcon color='black' icon={faSearch} />
-					</button>
-				</form>
+				<div className='position-relative d-inline-block'>
+					<form className='d-flex me-5' onSubmit={handleSearchSubmit}>
+						<input
+							type='search'
+							name='searchInput'
+							className='form-control'
+							placeholder='Buscar un usuario...'
+							aria-label='Buscar'
+							value={searchTerm}
+							onChange={handleSearchChange}
+							style={{ width: '400px', paddingLeft: '35px' }}
+						/>
+						<span
+							className='position-absolute'
+							style={{
+								left: '10px',
+								top: '50%',
+								transform: 'translateY(-50%)',
+								pointerEvents: 'none',
+								color: 'gray',
+							}}
+						>
+							<i className='fas fa-search'></i>
+						</span>
+					</form>
+				</div>
 			)}
 
 			<div className='row mt-3 animate__animated animate__fadeIn'>
