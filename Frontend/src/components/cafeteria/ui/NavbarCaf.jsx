@@ -5,7 +5,7 @@ import { AuthContext } from '../../../auth/authContext.jsx';
 import { types } from '../../../types/types.jsx';
 import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faSearch, faStore, faCog, faShop, faShirt, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faStore, faCog, faShop, faShirt, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
@@ -80,23 +80,34 @@ const NavbarCaf = () => {
 								</li>
 							</div>
 							<span className='me-5' />
-							<form className='d-flex me-5' onSubmit={handleSearchSubmit}>
-								<input
-									type='search'
-									name='searchInput'
-									className='form-control me-1'
-									placeholder='Buscar en la cafeteria...'
-									aria-label='Buscar'
-									value={searchTerm}
-									onChange={handleSearchChange}
-									style={{ width: '226px' }}
-								/>
-								<button className='btn btn-outline-light' type='submit'>
-									<FontAwesomeIcon icon={faSearch} />
-								</button>
-							</form>
+							<div className='position-relative d-inline-block'>
+								<form className='d-flex me-5' onSubmit={handleSearchSubmit}>
+									<input
+										type='search'
+										name='searchInput'
+										className='form-control me-1'
+										placeholder='Buscar en la cafeteria...'
+										aria-label='Buscar'
+										value={searchTerm}
+										onChange={handleSearchChange}
+										style={{ width: '267px', paddingLeft: '35px' }}
+									/>
+									<span
+										className='position-absolute'
+										style={{
+											left: '10px',
+											top: '40%',
+											transform: 'translateY(-50%)',
+											pointerEvents: 'none',
+											color: '#aaa',
+										}}
+									>
+										<i className='fas fa-search'></i>
+									</span>
+								</form>
+							</div>
 							<li className='nav-item position-relative'>
-								<NavLink className='nav-link' to='/cafeteria/carrito'>
+								<NavLink className='nav-link' to='/carrito'>
 									<FontAwesomeIcon icon={faShoppingCart} />
 									{cartItemCount > 0 && (
 										<span className='position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success'>

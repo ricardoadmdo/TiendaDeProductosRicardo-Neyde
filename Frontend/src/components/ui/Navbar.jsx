@@ -3,18 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../auth/authContext';
 import { CartContext } from '../../auth/CartProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faUser,
-	faShoppingCart,
-	faSignOutAlt,
-	faUtensils,
-	faHamburger,
-	faSearch,
-	faStore,
-	faCog,
-	faShirt,
-	faShop,
-} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faStore, faCog, faShirt, faShop } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../../public/logo.png';
 import { types } from '../../types/types';
 import { googleLogout } from '@react-oauth/google';
@@ -99,22 +88,33 @@ const Navbar = () => {
 								</li>
 							</div>
 							<span className='me-5' />
-							<form className='d-flex me-5' onSubmit={handleSearchSubmit}>
-								<input
-									type='search'
-									name='searchInput'
-									className='form-control me-1'
-									placeholder='Buscar productos...'
-									aria-label='Buscar'
-									value={searchTerm}
-									onChange={handleSearchChange}
-									style={{ width: '226px' }}
-								/>
+							<div className='position-relative d-inline-block'>
+								<form className='d-flex me-5' onSubmit={handleSearchSubmit}>
+									<input
+										type='search'
+										name='searchInput'
+										className='form-control me-1'
+										placeholder='Buscar productos...'
+										aria-label='Buscar'
+										value={searchTerm}
+										onChange={handleSearchChange}
+										style={{ width: '267px', paddingLeft: '35px' }}
+									/>
+									<span
+										className='position-absolute'
+										style={{
+											left: '10px',
+											top: '40%',
+											transform: 'translateY(-50%)',
+											pointerEvents: 'none',
+											color: '#aaa',
+										}}
+									>
+										<i className='fas fa-search'></i>
+									</span>
+								</form>
+							</div>
 
-								<button className='btn btn-outline-light' type='submit' aria-label='Buscar'>
-									<FontAwesomeIcon icon={faSearch} />
-								</button>
-							</form>
 							<li className='nav-item position-relative'>
 								<NavLink className='nav-link' to='/carrito'>
 									<FontAwesomeIcon icon={faShoppingCart} />

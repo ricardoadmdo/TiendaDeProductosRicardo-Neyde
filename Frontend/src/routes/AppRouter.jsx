@@ -51,7 +51,6 @@ const AppRouter = () => {
 				{/* Rutas de la Cafeteria */}
 				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
 					<Route index element={<Cafeteria />} />
-					<Route path='carrito' element={<Carrito />} />
 					<Route path='menu' element={<Menu />} />
 
 					<Route
