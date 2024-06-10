@@ -64,7 +64,7 @@ const ReporteVentas = () => {
 				<div className='alert alert-danger mt-4'>Error: {error.message}</div>
 			) : (
 				<div className='mt-4'>
-					<h3 className='text-center'>Ventas del Día:</h3>
+					<h3 className='text-center'>Ventas del día de Hoy:</h3>
 					{data?.ventas.length > 0 ? (
 						<div className='row'>
 							{data?.ventas.map((venta) => (

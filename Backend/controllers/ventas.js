@@ -1,7 +1,5 @@
 const { response, request } = require('express');
 const Venta = require('../models/venta');
-const venta = require('../models/venta');
-
 const obtenerVentas = async (req, res) => {
 	try {
 		const { limit = 8, page = 1, fechas } = req.query;
@@ -9,21 +7,30 @@ const obtenerVentas = async (req, res) => {
 
 		let filtro = {};
 		if (fechas) {
-			// Convertir la fecha recibida a un objeto Date
-			const fechaConsulta = new Date(fechas);
+			// Convertir la cadena de fechas en un array
+			const fechasArray = Array.isArray(fechas) ? fechas : fechas.split(',');
 
-			// Ajustar la fecha para que sea el comienzo del día
-			fechaConsulta.setUTCHours(0, 0, 0, 0);
+			// Crear un array para almacenar los rangos de fechas
+			const rangosFechas = fechasArray.map((fecha) => {
+				// Asegurarse de que la fecha esté en el formato correcto
+				const fechaConsulta = new Date(`${fecha}T00:00:00Z`);
+				if (isNaN(fechaConsulta)) {
+					throw new Error(`Invalid date format: ${fecha}`);
+				}
 
-			// Calcular la fecha de fin del día
-			const fechaFin = new Date(fechaConsulta);
-			fechaFin.setUTCHours(23, 59, 59, 999);
+				const fechaFin = new Date(fechaConsulta);
+				fechaFin.setUTCHours(23, 59, 59, 999);
 
-			// Aplicar el filtro de fecha
-			filtro.fecha = {
-				$gte: fechaConsulta.toISOString(),
-				$lt: fechaFin.toISOString(),
-			};
+				return {
+					fecha: {
+						$gte: fechaConsulta.toISOString(),
+						$lt: fechaFin.toISOString(),
+					},
+				};
+			});
+
+			// Usar $or a nivel de la consulta principal para buscar documentos que coincidan con cualquiera de los rangos de fechas
+			filtro = { $or: rangosFechas };
 		}
 
 		const [ventas, total] = await Promise.all([Venta.find(filtro).skip(Number(skip)).limit(Number(limit)), Venta.countDocuments(filtro)]);
@@ -37,7 +44,7 @@ const obtenerVentas = async (req, res) => {
 		});
 	} catch (error) {
 		console.error('Error al obtener ventas:', error.message);
-		res.status(500).json({ message: 'Error al obtener ventas' });
+		res.status(500).json({ message: `Error al obtener ventas: ${error.message}` });
 	}
 };
 
