@@ -2,6 +2,7 @@ const Role = require('../models/role');
 const Usuario = require('../models/usuario');
 const Producto = require('../models/producto');
 const Combo = require('../models/combo');
+const Cafeteria = require('../models/cafeteria');
 
 const esRoleValido = async (rol = '') => {
 	if (rol === '') {
@@ -38,6 +39,12 @@ const existeComboPorId = async (id) => {
 		throw new Error(`El combo con ese id no existe id: ${id}`);
 	}
 };
+const existeCafeteriaPorId = async (id) => {
+	const existeProducto = await Cafeteria.findById(id);
+	if (!existeProducto) {
+		throw new Error(`El producto con ese id no existe en la cafeteria id: ${id}`);
+	}
+};
 
 module.exports = {
 	esRoleValido,
@@ -45,4 +52,5 @@ module.exports = {
 	existeUsuarioPorId,
 	existeProductoPorId,
 	existeComboPorId,
+	existeCafeteriaPorId,
 };

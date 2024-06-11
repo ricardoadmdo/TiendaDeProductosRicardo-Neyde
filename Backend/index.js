@@ -22,9 +22,9 @@ app.use(express.json());
 //Rutas
 app.use('/api/users', require('./routes/usuarios.js'));
 app.use('/api/product', require('./routes/productos.js'));
+app.use('/api/cafeteria', require('./routes/cafeterias.js'));
 app.use('/api/combo', require('./routes/combos.js'));
 app.use('/api/auth', require('./routes/auth.js'));
-app.use('/api/pago', require('./routes/pago.js'));
 app.use('/api/pago', require('./routes/pago.js'));
 app.use('/api/location', require('./routes/location.js'));
 app.use('/api/venta', require('./routes/ventas.js'));

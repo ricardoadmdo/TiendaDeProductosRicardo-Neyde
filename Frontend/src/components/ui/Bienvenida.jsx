@@ -70,7 +70,7 @@ const Bienvenida = () => {
 					/>
 					<div className='card-body text-center'>
 						<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
-						<Link to='/productos' className='btn btn-dark'>
+						<Link to='/cafeteria' className='btn btn-dark'>
 							Ir a la Cafetería
 						</Link>
 					</div>
@@ -96,7 +96,7 @@ const Bienvenida = () => {
 					/>
 					<div className='card-body text-center'>
 						<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
-						<Link to='/productos' className='btn btn-dark'>
+						<Link to='/boutique' className='btn btn-dark'>
 							Ir a la Boutique
 						</Link>
 					</div>
