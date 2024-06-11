@@ -30,7 +30,7 @@ const NavbarCaf = () => {
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
-		navigate(`/busqueda?query=${searchTerm}`);
+		navigate(`/cafeteria/cafBusqueda?query=${searchTerm}`);
 	};
 
 	return (
@@ -139,8 +139,8 @@ const NavbarCaf = () => {
 									</a>
 									<ul className='dropdown-menu dropdown-menu-dark' aria-labelledby='navbarDropdownMenuLink'>
 										<li>
-											<NavLink className='dropdown-item' to='/cafeteria/gestionar-inventario'>
-												Gestionar Inventario
+											<NavLink className='dropdown-item' to='/cafeteria/gestionar-cafeteria'>
+												Gestionar Cafeteria
 											</NavLink>
 										</li>
 										<li>

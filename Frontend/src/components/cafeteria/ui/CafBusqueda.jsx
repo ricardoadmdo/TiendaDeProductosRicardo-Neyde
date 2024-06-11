@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import placeholder from '../../images/placeholder.png';
+import placeholder from '../../../images/placeholder.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Axios from 'axios'; // Importa Axios para hacer las solicitudes HTTP
-import useExchangeRates from '../../hooks/useExchangeRates';
+import useExchangeRates from '../../../hooks/useExchangeRates';
 
-const Busqueda = () => {
+const CafBusqueda = () => {
 	const { usdRate } = useExchangeRates();
 	const [resultados, setResultados] = useState([]);
 	const [cantidad, setCantidad] = useState(1);
@@ -22,20 +22,11 @@ const Busqueda = () => {
 		}
 	}, [query]);
 
-	// Función para buscar en productos y combos
+	// Función para buscar en Cafeteria
 	const buscar = (query) => {
-		Axios.get(`http://localhost:3001/api/product/search?query=${query}`)
+		Axios.get(`http://localhost:3001/api/cafeteria/search?query=${query}`)
 			.then((response) => {
-				const productos = response.data.productos;
-				Axios.get(`http://localhost:3001/api/combo/search?query=${query}`)
-					.then((response) => {
-						const combos = response.data.combos;
-						const resultados = [...productos, ...combos];
-						setResultados(resultados);
-					})
-					.catch((error) => {
-						console.log(error);
-					});
+				setResultados(response.data.productos);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -75,6 +66,7 @@ const Busqueda = () => {
 													<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
 												</strong>
 												<hr />
+												<p className='card-text'>{val.categoria}</p>
 												<div className='row align-items-center'>
 													<div className='col-6'>
 														<input
@@ -119,4 +111,4 @@ const Busqueda = () => {
 	);
 };
 
-export default Busqueda;
+export default CafBusqueda;

@@ -1,54 +1,145 @@
+import { useState, useContext } from 'react';
+import { CartContext } from '../../auth/CartProvider';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import Axios from 'axios';
+import placeholder from '../../images/placeholder.png';
+import Pagination from '../reutilizable-tablaCrud/Pagination';
+import useFetch from '../../hooks/useFetch';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import useExchangeRates from '../../hooks/useExchangeRates';
+import Categorias from './Categorias';
+
+const fetchCafeteriaProductos = async ({ queryKey }) => {
+	const [, page, limit] = queryKey;
+	const response = await Axios.get(`http://localhost:3001/api/cafeteria?page=${page}&limit=${limit}`);
+	return response.data;
+};
+
 const Menu = () => {
+	const { usdRate } = useExchangeRates();
+	const [cantidad, setCantidad] = useState(1);
+	const [currentPage, setCurrentPage] = useState(1);
+	const { addToCart } = useContext(CartContext);
+	const [selectedCategory, setSelectedCategory] = useState(null);
+
+	const {
+		data: productosData,
+		isLoading,
+		isError,
+		error,
+	} = useFetch(['productos', currentPage, 8], fetchCafeteriaProductos, { keepPreviousData: true });
+
+	const handlePreviousPage = () => {
+		if (currentPage > 1) {
+			setCurrentPage((prevPage) => prevPage - 1);
+		}
+	};
+
+	const handleNextPage = () => {
+		if (currentPage < (productosData?.totalPages || 0)) {
+			setCurrentPage((prevPage) => prevPage + 1);
+		}
+	};
+
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
+
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	const productosList = productosData?.productos || [];
+	const totalPages = productosData?.totalPages || 0;
+
 	return (
-		<div className='bienvenida-container mt-5 animate__animated animate__fadeIn'>
-			<h1 className='text-center mb-4'>¡Bienvenidos a nuestra Cafetería!</h1>
-			<p className='text-center'>Explora nuestra deliciosa selección de productos y combos.</p>
-
-			{/* Sección de Menú*/}
-			<div className='row justify-content-center'>
-				<section className='col-md-5'>
-					<h2>Explora Nuestro Menú</h2>
-					<div className='card mb-4'>
-						<div className='card-body'>
-							<p className='card-text'>Descubre nuestra amplia gama de productos de alta calidad.</p>
-							<div>
-								<h3>Carnes</h3>
-								<ul>
-									<li>Bistec de Res - $10</li>
-									<li>Pollo Asado - $8</li>
-									<li>Cerdo Adobado - $9</li>
-								</ul>
-							</div>
-							<div>
-								<h3>Comida Cubana</h3>
-								<ul>
-									<li>Ropa Vieja - $12</li>
-									<li>Arroz con Pollo - $10</li>
-									<li>Lechón Asado - $11</li>
-								</ul>
-							</div>
-							<div>
-								<h3>Pastas</h3>
-								<ul>
-									<li>Spaghetti Carbonara - $9</li>
-									<li>Lasaña de Carne - $11</li>
-									<li>Ravioli de Queso - $8</li>
-								</ul>
-							</div>
-						</div>
+		<div className='container animate__animated animate__fadeIn my-5 '>
+			<div className='row'>
+				<div className='row'>
+					<div className='col-12 col-md-3'>
+						<h4>Filtrar por categoría:</h4>
+						<select className='form-select mb-3' value={selectedCategory || ''} onChange={(e) => setSelectedCategory(e.target.value)}>
+							<option value=''>Todas las categorías</option>
+							{Categorias.map((categoria) => (
+								<option key={categoria.value} value={categoria.value}>
+									{categoria.label}
+								</option>
+							))}
+						</select>
 					</div>
-				</section>
+				</div>
+				{productosList.length > 0 ? (
+					productosList
+						.filter((producto) => !selectedCategory || producto.categoria === selectedCategory)
+						.map((val) => (
+							<div key={val.uid} className='col-sm-6 col-md-4 col-lg-3 mb-3'>
+								<div className='card h-100 shadow'>
+									<LazyLoadImage
+										threshold={10}
+										effect='blur'
+										placeholderSrc={placeholder}
+										src={val.url}
+										className='card-img-top img-fluid'
+										alt='Imagen del producto'
+										style={{ height: '200px', objectFit: 'cover' }}
+									/>
+									<h3 className='card-header'>{val.nombre}</h3>
+									<div className='card-body'>
+										{val.cantidad > 0 ? (
+											<>
+												<strong>
+													<p className='card-text'>{val.precio}$ CUP</p>
+												</strong>
+												<strong>
+													<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
+												</strong>
+												<hr />
+												<p className='card-text'>{val.categoria}</p>
+												<div className='row align-items-center'>
+													<div className='col-6'>
+														<input
+															type='number'
+															className='form-control'
+															placeholder='Cantidad'
+															min='1'
+															defaultValue='1'
+															onChange={(e) => setCantidad(parseInt(e.target.value, 10))}
+														/>
+													</div>
+													<div className='col-6'>
+														<button
+															aria-label='añadir al carrito'
+															className='btn btn-outline-dark w-100 btn-animated'
+															onClick={() => addToCart(val, cantidad)}
+														>
+															<svg xmlns='http://www.w3.org/2000/svg' width='1.13em' height='1em' viewBox='0 0 576 512'>
+																<path
+																	fill='currentColor'
+																	d='M0 24C0 10.7 10.7 0 24 0h45.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5l-51.6-271c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24m128 440a48 48 0 1 1 96 0a48 48 0 1 1-96 0m336-48a48 48 0 1 1 0 96a48 48 0 1 1 0-96M252 160c0 11 9 20 20 20h44v44c0 11 9 20 20 20s20-9 20-20v-44h44c11 0 20-9 20-20s-9-20-20-20h-44V96c0-11-9-20-20-20s-20 9-20 20v44h-44c-11 0-20 9-20 20'
+																/>
+															</svg>
+														</button>
+													</div>
+												</div>
+											</>
+										) : (
+											<div className='text-center'>
+												<strong className='text-uppercase text-center' style={{ fontSize: '1.5rem' }}>
+													Agotado
+												</strong>
+											</div>
+										)}
+									</div>
+								</div>
+							</div>
+						))
+				) : (
+					<div className='text-center'>
+						<h2>No se encontraron productos</h2>
+					</div>
+				)}
 			</div>
-
-			{/* Más acerca de la cafetería */}
-			<div className='container my-5'>
-				<h3 className='text-center mb-4'>Más Acerca de la Cafetería de Ricardo & Neyde</h3>
-				<p className='text-justify'>
-					Nuestra cafetería ofrece una amplia variedad de deliciosos productos, desde pizzas y hamburguesas hasta espaguetis y mucho más.
-					Disfruta de la mejor comida en un ambiente acogedor y amigable.
-				</p>
-				{/* Agregar más información sobre la cafetería si es necesario */}
-			</div>
+			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
 		</div>
 	);
 };

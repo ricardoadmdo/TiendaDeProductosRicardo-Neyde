@@ -30,6 +30,9 @@ const TablaCRUD = ({
 	const [uploading, setUploading] = useState(false);
 	const [url, setUrl] = useState('');
 	const [imageName, setImageName] = useState('');
+	const limpiarImagen = () => {
+		setUrl('');
+	};
 
 	const handleDrop = useCallback(
 		async (acceptedFiles) => {
@@ -70,8 +73,9 @@ const TablaCRUD = ({
 			rol: '',
 			url: '',
 		});
-		setOperationMode(1); // Modo 'crear'
+		setOperationMode(1);
 		onAdd();
+		limpiarImagen();
 	};
 
 	const handleEdit = (item) => {
@@ -84,6 +88,7 @@ const TablaCRUD = ({
 		});
 		setOperationMode(2); // Modo 'editar'
 		onEdit(item);
+		limpiarImagen();
 	};
 
 	const handleDelete = (item) => onDelete(item);
@@ -184,7 +189,7 @@ const TablaCRUD = ({
 					<div className='modal-content'>
 						<div className='modal-header'>
 							<label className='modal-title h5'>{title}</label>
-							<button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+							<button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close' onClick={limpiarImagen}></button>
 						</div>
 						<div className='modal-body'>
 							<input type='hidden' id='id'></input>

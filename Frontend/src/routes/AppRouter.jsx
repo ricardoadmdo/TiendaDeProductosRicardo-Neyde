@@ -20,6 +20,8 @@ import Menu from '../components/cafeteria/Menu.jsx';
 import Boutique from '../components/Boutique/Boutique.jsx';
 import BoutiqueLayout from './BoutiqueLayout.jsx';
 import BoutiqueMenu from '../components/Boutique/BoutiqueMenu.jsx';
+import CRUDCafeteria from '../components/cafeteria/CRUDCafeteria.jsx';
+import CafBusqueda from '../components/cafeteria/ui/CafBusqueda.jsx';
 
 const AppRouter = () => {
 	return (
@@ -52,13 +54,23 @@ const AppRouter = () => {
 				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
 					<Route index element={<Cafeteria />} />
 					<Route path='menu' element={<Menu />} />
-
+					<Route path='cafBusqueda' element={<CafBusqueda />} />
 					<Route
 						path='reporte-ventas'
 						element={
 							<PrivateRoute>
 								<AdminRoute>
 									<ReporteVentas />
+								</AdminRoute>
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path='gestionar-cafeteria'
+						element={
+							<PrivateRoute>
+								<AdminRoute>
+									<CRUDCafeteria />
 								</AdminRoute>
 							</PrivateRoute>
 						}
