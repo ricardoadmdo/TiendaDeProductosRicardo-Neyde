@@ -16,7 +16,6 @@ const fetchProductos = async ({ page, searchTerm }) => {
 const CRUDVentas = () => {
 	const [formState, setFormState] = useState(() => {
 		const savedFormState = localStorage.getItem('formState');
-
 		return savedFormState
 			? JSON.parse(savedFormState)
 			: {
@@ -24,6 +23,7 @@ const CRUDVentas = () => {
 					totalProductos: 0,
 					precioTotal: 0,
 					fecha: new Date(),
+					tipoPago: 'dependiente',
 			  };
 	});
 
@@ -79,7 +79,14 @@ const CRUDVentas = () => {
 
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	const limpiarCampos = () => setFormState({ productos: [], totalProductos: 0, precioTotal: 0, fecha: new Date() });
+	const limpiarCampos = () => {
+		setFormState({
+			productos: [],
+			totalProductos: 0,
+			precioTotal: 0,
+			fecha: new Date(),
+		});
+	};
 
 	const openModal = (producto) => {
 		Swal.fire({
@@ -184,11 +191,19 @@ const CRUDVentas = () => {
 	const validar = (event) => {
 		event.preventDefault();
 		const { productos } = formState;
+
 		if (productos.length === 0) {
 			Swal.fire({ icon: 'error', title: 'No hay productos', text: 'Debe agregar al menos un producto a la venta' });
 			return;
 		}
-		ventaMutation.mutate(formState);
+
+		ventaMutation.mutate({
+			productos,
+			totalProductos: formState.totalProductos,
+			precioTotal: formState.precioTotal,
+			fecha: new Date(),
+			tipoPago: 'dependiente', // Asegurando que tipoPago siempre se envía como 'dependiente'
+		});
 	};
 
 	return (

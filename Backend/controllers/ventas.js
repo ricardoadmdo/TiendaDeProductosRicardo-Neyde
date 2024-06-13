@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const Venta = require('../models/venta');
+
 const obtenerVentas = async (req, res) => {
 	try {
 		const { limit = 8, page = 1, fechas } = req.query;
@@ -50,26 +51,33 @@ const obtenerVentas = async (req, res) => {
 
 const crearVenta = async (req, res) => {
 	try {
-		const { fecha, precioTotal, totalProductos, productos, otrosDatos } = req.body;
+		const { fecha, precioTotal, totalProductos, productos, tipoPago, cliente } = req.body;
 
 		// Verifica que los campos requeridos estén presentes
-		if (!fecha || !precioTotal || !totalProductos || !productos) {
+		if (!fecha || !precioTotal || !totalProductos || !productos || !tipoPago) {
 			return res.status(400).json({ message: 'Campos requeridos faltantes' });
 		}
 
 		// Verifica que la fecha sea válida
 		const fechaValida = new Date(fecha);
-		if (isNaN(fechaValida)) {
+		if (isNaN(fechaValida.getTime())) {
 			return res.status(400).json({ message: 'Fecha inválida' });
 		}
 
-		// Aquí guardas los productos en la base de datos si es necesario
-		// Por ejemplo, si tienes un modelo de Producto y una relación con el modelo Venta,
-		// puedes guardar los productos de la venta en la base de datos aquí.
+		// Crear un nuevo objeto Venta con los datos recibidos
+		const nuevaVenta = new Venta({
+			fecha: fechaValida,
+			precioTotal,
+			totalProductos,
+			productos,
+			tipoPago,
+			cliente,
+		});
 
-		const nuevaVenta = new Venta({ fecha: fechaValida, precioTotal, totalProductos, productos, ...otrosDatos });
+		// Guardar la nueva venta en la base de datos
 		await nuevaVenta.save();
-		res.status(201).json(nuevaVenta);
+
+		res.status(201).json(nuevaVenta); // Responder con la venta creada
 	} catch (error) {
 		console.error('Error al crear venta:', error.message);
 		res.status(500).json({ message: 'Error al crear venta' });

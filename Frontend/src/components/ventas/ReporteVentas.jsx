@@ -46,7 +46,7 @@ const ReporteVentas = () => {
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	// Helper function to group ventas by date and calculate totals
+	//Para agregar las ventas por fechas
 	const agruparVentasPorFecha = (ventas) => {
 		const groupedVentas = ventas.reduce((groupedVentas, venta) => {
 			const fecha = new Date(venta.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' });
@@ -82,34 +82,69 @@ const ReporteVentas = () => {
 									<strong>Total de Productos Vendidos:</strong> {totalProductos} | <strong>Total Recaudado:</strong> $
 									{totalDinero.toFixed(2)}
 								</div>
-								<table className='table table-striped'>
-									<thead>
-										<tr>
-											<th>Fecha</th>
-											<th>Total Productos</th>
-											<th>Precio Total</th>
-											<th>Productos</th>
-										</tr>
-									</thead>
-									<tbody>
-										{ventas.map((venta) => (
-											<tr key={venta.uid}>
-												<td>{new Date(venta.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td>
-												<td>{venta.totalProductos}</td>
-												<td>${venta.precioTotal.toFixed(2)}</td>
-												<td>
-													<ul className='list-group'>
-														{venta.productos.map((producto) => (
-															<li key={producto._id} className='list-group-item'>
-																{producto.nombre} - {producto.cantidad} x ${producto.precio.toFixed(2)}
-															</li>
-														))}
-													</ul>
-												</td>
+								<div className='table-responsive'>
+									<table className='table table-striped'>
+										<thead>
+											<tr>
+												<th>Hora</th>
+												<th>Total Productos</th>
+												<th>Precio Total</th>
+												<th>Tipo de Pago</th>
+												<th>Productos</th>
+												<th>Cliente</th>
 											</tr>
-										))}
-									</tbody>
-								</table>
+										</thead>
+										<tbody>
+											{ventas.map((venta) => (
+												<tr key={venta.uid}>
+													<td>
+														{new Date(venta.fecha).toLocaleString('es-ES', {
+															timeZone: 'UTC',
+															hour: '2-digit',
+															minute: '2-digit',
+															second: '2-digit',
+														})}
+													</td>
+
+													<td>{venta.totalProductos}</td>
+													<td>${venta.precioTotal.toFixed(2)}</td>
+													<td>
+														{venta.tipoPago === 'presencial' && (
+															<span className='tipo-pago-presencial'>Pago Presencial</span>
+														)}
+														{venta.tipoPago === 'online' && <span className='tipo-pago-online'>Pago con Tarjeta</span>}
+														{venta.tipoPago === 'dependiente' && (
+															<span className='tipo-pago-en-tienda'>En la Tienda</span>
+														)}
+													</td>
+													<td>
+														<ul className='list-group'>
+															{venta.productos.map((producto) => (
+																<li key={producto._id} className='list-group-item'>
+																	{producto.nombre} - {producto.cantidad} x ${producto.precio.toFixed(2)}
+																</li>
+															))}
+														</ul>
+													</td>
+													<td>
+														{venta.cliente ? (
+															<>
+																<strong>{venta.cliente.nombre}</strong>
+																<br />
+																Teléfono: {venta.cliente.telefono}
+																<br />
+																Dirección: {venta.cliente.direccion}, {venta.cliente.municipio},{' '}
+																{venta.cliente.reparto}
+															</>
+														) : (
+															'En la Tienda'
+														)}
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						))
 					) : (

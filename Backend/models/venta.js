@@ -15,12 +15,19 @@ const ProductoSchema = new Schema({
 	},
 	url: {
 		type: String,
-		required: true,
 	},
 	estado: {
 		type: Boolean,
-		default: true,
 	},
+});
+
+const ClienteSchema = new Schema({
+	nombre: { type: String },
+	telefono: { type: String },
+	direccion: { type: String },
+	municipio: { type: String },
+	reparto: { type: String },
+	nota: { type: String },
 });
 
 const VentaSchema = new Schema({
@@ -40,6 +47,12 @@ const VentaSchema = new Schema({
 		type: Date,
 		required: true,
 		default: Date.now,
+	},
+	cliente: ClienteSchema,
+	tipoPago: {
+		type: String,
+		enum: ['online', 'presencial', 'dependiente'],
+		required: true,
 	},
 });
 

@@ -11,6 +11,7 @@ import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import TermsAndConditions from './TermsAndConditions';
 import CountryCodeSelect from './CountryCodeSelect';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const Carrito = () => {
 	const { usdRate } = useExchangeRates();
@@ -27,6 +28,54 @@ const Carrito = () => {
 		nota: '',
 		reparto: '',
 		termsAccepted: false,
+	});
+
+	const registrarVenta = async (tipoPago) => {
+		const venta = {
+			productos: cart.map((item) => ({
+				uid: item.uid,
+				nombre: item.nombre,
+				cantidad: item.cantidadAdd,
+				precio: item.precio,
+				url: item.url,
+			})),
+			totalProductos: cart.reduce((acc, item) => acc + item.cantidadAdd, 0),
+			precioTotal: total,
+			fecha: new Date(),
+			cliente: {
+				nombre: recipient.name,
+				telefono: recipient.mobile,
+				direccion: recipient.address,
+				municipio: recipient.municipio,
+				reparto: recipient.reparto,
+				nota: recipient.nota,
+			},
+			tipoPago: tipoPago, // Agregar el tipo de pago
+		};
+
+		return ventaMutation.mutateAsync(venta);
+	};
+
+	const queryClient = useQueryClient();
+	//Función para agregar venta usando Mutation react query
+	const ventaMutation = useMutation({
+		mutationFn: (newVenta) => Axios.post('http://localhost:3001/api/venta', newVenta),
+		onSuccess: () => {
+			queryClient.invalidateQueries('productos'); // Refrescar la lista de productos si es necesario
+			Swal.fire({
+				title: '<strong>Venta registrada con éxito!</strong>',
+				html: '<i>La venta fue registrada exitosamente</i>',
+				icon: 'success',
+				timer: 3000,
+			});
+		},
+		onError: (error) => {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error al registrar la venta',
+				text: error.response?.data?.error || 'Error desconocido al registrar la venta',
+			});
+		},
 	});
 
 	// Calcula el total general de la compra
@@ -72,7 +121,7 @@ const Carrito = () => {
 		}
 	}, [location]);
 
-	const finalizeOrder = () => {
+	const finalizeOrder = async () => {
 		if (!user.logged) {
 			Swal.fire({ title: 'Inicia Sesión', text: 'No has iniciado sesión!', icon: 'warning' });
 			return;
@@ -95,52 +144,88 @@ const Carrito = () => {
 			return;
 		}
 
-		Swal.fire({
-			title: 'Compra Satisfactoria',
-			text: 'Gracias por comprar en Ricardo & Neyde',
-			icon: 'success',
-		}).then(() => {
-			setRecipient({
-				name: '',
-				mobile: '',
-				address: '',
-				municipio: '',
-				nota: '',
-				reparto: '',
-				termsAccepted: false,
-			});
-			clearCart();
-		});
-	};
-
-	const pagoOnline = async () => {
-		setLoading(true);
-
-		if (cart.length === 0) {
-			Swal.fire({ title: 'El carrito esta vacío', text: 'Añada elementos a su compra', icon: 'warning' });
-			return;
-		}
-
-		if (!user.logged) {
-			Swal.fire({ title: 'Inicia Sesión', text: 'No has iniciado sesión!', icon: 'warning' });
-			return;
-		}
-
 		try {
-			await Axios.post('http://localhost:3001/api/pago/create-checkout-session', { cartItems: cart, usdRate })
-				.then((response) => {
-					window.location.href = response.data.url;
-				})
-				.catch((error) => {
-					console.log(error);
+			await registrarVenta('presencial');
+			Swal.fire({
+				title: 'Compra Satisfactoria',
+				text: 'Gracias por comprar en Ricardo & Neyde',
+				icon: 'success',
+			}).then(() => {
+				setRecipient({
+					name: '',
+					mobile: '',
+					address: '',
+					municipio: '',
+					nota: '',
+					reparto: '',
+					termsAccepted: false,
 				});
+				clearCart();
+			});
 		} catch (error) {
 			Swal.fire({
 				title: 'Error',
 				text: 'Ha ocurrido un error con su compra',
 				icon: 'error',
 			});
-			console.error('Error en el pago:', error);
+			console.error('Error en el registro de la venta:', error.response?.data || error.message || error);
+		}
+	};
+
+	const pagoOnline = async () => {
+		setLoading(true);
+
+		if (cart.length === 0) {
+			Swal.fire({ title: 'El carrito está vacío', text: 'Añada elementos a su compra', icon: 'warning' });
+			setLoading(false);
+			return;
+		}
+
+		if (
+			!recipient.name ||
+			!recipient.mobile ||
+			!recipient.address ||
+			!recipient.municipio ||
+			!recipient.reparto ||
+			!recipient.nota ||
+			!recipient.termsAccepted
+		) {
+			Swal.fire({
+				title: 'Formulario Incompleto',
+				text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
+				icon: 'error',
+			});
+			setLoading(false);
+			return;
+		}
+
+		try {
+			await registrarVenta('online');
+			Swal.fire({
+				title: 'Compra Satisfactoria',
+				text: 'Gracias por comprar en Ricardo & Neyde',
+				icon: 'success',
+			}).then(() => {
+				setRecipient({
+					name: '',
+					mobile: '',
+					address: '',
+					municipio: '',
+					nota: '',
+					reparto: '',
+					termsAccepted: false,
+				});
+				clearCart();
+			});
+		} catch (error) {
+			Swal.fire({
+				title: 'Error',
+				text: 'Ha ocurrido un error con su compra',
+				icon: 'error',
+			});
+			console.error('Error en el registro de la venta:', error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
