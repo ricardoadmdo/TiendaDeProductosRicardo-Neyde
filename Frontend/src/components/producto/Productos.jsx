@@ -37,7 +37,6 @@ const Productos = () => {
 	};
 
 	if (isLoading) {
-		// Muestra un mensaje de carga mientras se obtienen los datos
 		return <LoadingSpinner />;
 	}
 
@@ -48,38 +47,6 @@ const Productos = () => {
 	const productosList = productosData?.productos || [];
 	const totalPages = productosData?.totalPages || 0;
 
-	// const getUserLocation = () => {
-	// 	navigator.geolocation.getCurrentPosition(success, error);
-
-	// 	function success(position) {
-	// 		const { latitude, longitude } = position.coords;
-	// 		getCountry(latitude, longitude);
-	// 	}
-
-	// 	function error() {
-	// 		console.log('No se pudo obtener la ubicación');
-	// 	}
-
-	// 	const getCountry = async (latitude, longitude) => {
-	// 		try {
-	// 			const response = await Axios.get('http://localhost:3001/api/location/get-country', {
-	// 				params: { latitude, longitude },
-	// 			});
-	// 			console.log(response);
-	// 			const country = response.data.country;
-	// 			setCurrency(country === 'CU' ? 'CUP' : 'USD');
-	// 		} catch (error) {
-	// 			console.error('Error obteniendo el país:', error);
-	// 		}
-	// 	};
-	// };
-
-	// const formatPrice = (price) => {
-	// 	if (currency === 'CUP') {
-	// 		return `${(price * exchangeRate).toFixed(2)} CUP`;
-	// 	}
-	// 	return `${price} USD`;
-	// };
 	return (
 		<div className='container animate__animated animate__fadeIn my-5'>
 			<div className='row'>

@@ -1,7 +1,29 @@
-import { FaWhatsapp, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaWhatsapp, FaFacebook, FaInstagram, FaShareAlt } from 'react-icons/fa';
 
 const Footer = () => {
 	const year = new Date().getFullYear();
+	const shareUrl = window.location.href;
+
+	const handleShare = () => {
+		if (navigator.share) {
+			navigator
+				.share({
+					title: 'Tu Título',
+					text: 'Descripción breve de tu web',
+					url: shareUrl,
+				})
+				.then(() => {
+					console.log('Compartido con éxito');
+				})
+				.catch((error) => {
+					console.log('Error al compartir:', error);
+				});
+		} else {
+			// Fallback para navegadores que no soportan la API de compartir
+			alert('El navegador no soporta la función de compartir');
+		}
+	};
+
 	return (
 		<footer className='dark101720 footer-margin text-center text-white py-4'>
 			<div className='container'>
@@ -35,6 +57,13 @@ const Footer = () => {
 					>
 						<FaInstagram size={30} style={{ color: '#FF6347' }} /> Instagram
 					</a>
+					<button
+						style={{ color: '#FFFFFF', background: 'none', border: 'none' }}
+						className='text-decoration-none mx-3'
+						onClick={handleShare}
+					>
+						<FaShareAlt size={26} color='gray' /> Compartir
+					</button>
 				</div>
 
 				{/* Avisos Legales */}

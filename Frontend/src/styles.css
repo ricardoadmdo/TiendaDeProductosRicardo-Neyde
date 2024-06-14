@@ -6,6 +6,7 @@ html {
 }
 
 body {
+	background-color: #fff6ed;
 	overflow: -moz-scrollbars-none; /* Firefox */
 	-ms-overflow-style: none; /* Internet Explorer and Edge */
 	scrollbar-width: none; /* Firefox */
