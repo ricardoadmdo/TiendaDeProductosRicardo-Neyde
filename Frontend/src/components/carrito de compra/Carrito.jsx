@@ -12,6 +12,7 @@ import useExchangeRates from '../../hooks/useExchangeRates';
 import TermsAndConditions from './TermsAndConditions';
 import CountryCodeSelect from './CountryCodeSelect';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import EmptyCart from './EmptyCart';
 
 const Carrito = () => {
 	const { usdRate } = useExchangeRates();
@@ -235,245 +236,251 @@ const Carrito = () => {
 				<LoadingSpinner />
 			) : (
 				<>
-					<div className='container my-5'>
-						<div className='row '>
-							<div className='col-lg-8 animate__animated animate__fadeIn'>
-								<div className='row'>
-									{cart.map((val) => (
-										<div key={val.uid} className='col-sm-6 col-md-4 col-lg-4 mb-3'>
-											<div className='card h-100 shadow'>
-												<img
-													src={val.url}
-													className='card-img-top img-fluid'
-													alt={val.nombre}
-													style={{ height: '200px', objectFit: 'cover' }}
-												/>
-												<h5 className='card-header'>{val.nombre}</h5>
-												<div className='card-body'>
-													<div className='card-text'>
-														<strong>
-															<p className='card-text'>{val.precio}$ CUP</p>
-														</strong>
-														<strong>
-															<p className='card-text'>
-																{usdRate ? Math.round((val.precio / usdRate) * 10) / 10 : 'N/A'}$ USD
-															</p>
-														</strong>
-													</div>
-													<p className='card-text'>
-														<strong>Cantidad a comprar:</strong> {val.cantidadAdd}
-													</p>
-													<p className='card-text'>
-														<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
-													</p>
-													<p className='card-text'>
-														<strong>Subtotal :</strong>{' '}
-														{usdRate ? ((val.precio * val.cantidadAdd) / usdRate).toFixed(2) : 'N/A'} USD
-													</p>
-													<hr />
-													<div className='row align-items-center'>
-														<div className='col-2'>
-															<button
-																className='btn btn-secondary'
-																onClick={() => changeQuantity(val.uid, -1)}
-																disabled={val.cantidadAdd <= 1}
-															>
-																<FontAwesomeIcon icon={faMinus} />
-															</button>
+					<div className='container my-5 '>
+						<div className='row'>
+							{cart.length === 0 ? (
+								<EmptyCart />
+							) : (
+								<div className='col-lg-8 animate__animated animate__fadeIn'>
+									<div className='row'>
+										{cart.map((val) => (
+											<div key={val.uid} className='col-sm-6 col-md-4 col-lg-4 mb-3'>
+												<div className='card h-100 shadow'>
+													<img
+														src={val.url}
+														className='card-img-top img-fluid'
+														alt={val.nombre}
+														style={{ height: '200px', objectFit: 'cover' }}
+													/>
+													<h5 className='card-header'>{val.nombre}</h5>
+													<div className='card-body'>
+														<div className='card-text'>
+															<strong>
+																<p className='card-text'>{val.precio}$ CUP</p>
+															</strong>
+															<strong>
+																<p className='card-text'>
+																	{usdRate ? Math.round((val.precio / usdRate) * 10) / 10 : 'N/A'}$ USD
+																</p>
+															</strong>
 														</div>
-														<div className='col-4'>
-															<button className='btn btn-secondary' onClick={() => changeQuantity(val.uid, 1)}>
-																<FontAwesomeIcon icon={faPlus} />
-															</button>
-														</div>
-														<div className='col-4'>
-															<button className='btn btn-danger' onClick={() => removeFromCart(val.uid)}>
-																<FontAwesomeIcon icon={faTrashAlt} />
-															</button>
+														<p className='card-text'>
+															<strong>Cantidad a comprar:</strong> {val.cantidadAdd}
+														</p>
+														<p className='card-text'>
+															<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
+														</p>
+														<p className='card-text'>
+															<strong>Subtotal :</strong>{' '}
+															{usdRate ? ((val.precio * val.cantidadAdd) / usdRate).toFixed(2) : 'N/A'} USD
+														</p>
+														<hr />
+														<div className='row align-items-center'>
+															<div className='col-2'>
+																<button
+																	className='btn btn-secondary'
+																	onClick={() => changeQuantity(val.uid, -1)}
+																	disabled={val.cantidadAdd <= 1}
+																>
+																	<FontAwesomeIcon icon={faMinus} />
+																</button>
+															</div>
+															<div className='col-4'>
+																<button className='btn btn-secondary' onClick={() => changeQuantity(val.uid, 1)}>
+																	<FontAwesomeIcon icon={faPlus} />
+																</button>
+															</div>
+															<div className='col-4'>
+																<button className='btn btn-danger' onClick={() => removeFromCart(val.uid)}>
+																	<FontAwesomeIcon icon={faTrashAlt} />
+																</button>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-									))}
-								</div>
-							</div>
-
-							<div className='col-lg-4'>
-								<div className='card p-3 mb-2'>
-									<div className='text-center mb-3'>
-										<h5>Valor Total de la Compra</h5>
-									</div>
-									<div className='d-flex justify-content-between align-items-center'>
-										<div>
-											<h5>Total CUP: </h5>
-										</div>
-										<div>
-											<h5>
-												<strong>
-													<FontAwesomeIcon icon={faUsd} />
-													{total} CUP
-												</strong>
-											</h5>
-										</div>
-									</div>
-									<div className='d-flex justify-content-between align-items-center'>
-										<div>
-											<h5>Total USD:</h5>
-										</div>
-										<div>
-											<h5>
-												<strong>
-													<FontAwesomeIcon icon={faUsd} />
-													{usdRate ? (total / usdRate).toFixed(2) : 'N/A'} USD
-												</strong>
-											</h5>
-										</div>
+										))}
 									</div>
 								</div>
+							)}
 
-								<form>
-									<div className='mb-3'>
-										<input
-											type='text'
-											className='form-control'
-											name='name'
-											placeholder='Nombre y apellidos del receptor'
-											value={recipient.name}
-											onChange={handleInputChange}
-											required
-										/>
+							{cart.length > 0 && (
+								<div className='col-lg-4'>
+									<div className='card p-3 mb-2'>
+										<div className='text-center mb-3'>
+											<h5>Valor Total de la Compra</h5>
+										</div>
+										<div className='d-flex justify-content-between align-items-center'>
+											<div>
+												<h5>Total CUP: </h5>
+											</div>
+											<div>
+												<h5>
+													<strong>
+														<FontAwesomeIcon icon={faUsd} />
+														{total} CUP
+													</strong>
+												</h5>
+											</div>
+										</div>
+										<div className='d-flex justify-content-between align-items-center'>
+											<div>
+												<h5>Total USD:</h5>
+											</div>
+											<div>
+												<h5>
+													<strong>
+														<FontAwesomeIcon icon={faUsd} />
+														{usdRate ? (total / usdRate).toFixed(2) : 'N/A'} USD
+													</strong>
+												</h5>
+											</div>
+										</div>
 									</div>
-									<div className='mb-3 d-flex'>
-										<CountryCodeSelect value={countryCode} onChange={handleCountryCodeChange} />
-										<input
-											type='number'
-											className='form-control'
-											name='mobile'
-											placeholder='Teléfono móvil'
-											value={recipient.mobile}
-											onChange={handleInputChange}
-											required
-										/>
-									</div>
-									<div className='mb-3'>
-										<input
-											type='text'
-											className='form-control'
-											name='address'
-											placeholder='Dirección exacta'
-											value={recipient.address}
-											onChange={handleInputChange}
-											required
-										/>
-									</div>
-									<div className='mb-3'>
-										<select
-											className='form-control'
-											name='municipio'
-											value={recipient.municipio}
-											onChange={handleInputChange}
-											required
-										>
-											<option value=''>Seleccione un municipio</option>
-											{Object.keys(municipiosRepartos).map((municipio) => (
-												<option key={municipio} value={municipio}>
-													{municipio}
-												</option>
-											))}
-										</select>
-									</div>
-									<div className='mb-3'>
-										<select
-											className='form-control'
-											name='reparto'
-											value={recipient.reparto}
-											onChange={handleInputChange}
-											required
-											disabled={!recipient.municipio}
-										>
-											<option value=''>Seleccione el barrio</option>
-											{recipient.municipio &&
-												municipiosRepartos[recipient.municipio].map((reparto) => (
-													<option key={reparto} value={reparto}>
-														{reparto}
+
+									<form>
+										<div className='mb-3'>
+											<input
+												type='text'
+												className='form-control'
+												name='name'
+												placeholder='Nombre y apellidos del receptor'
+												value={recipient.name}
+												onChange={handleInputChange}
+												required
+											/>
+										</div>
+										<div className='mb-3 d-flex'>
+											<CountryCodeSelect value={countryCode} onChange={handleCountryCodeChange} />
+											<input
+												type='number'
+												className='form-control'
+												name='mobile'
+												placeholder='Teléfono móvil'
+												value={recipient.mobile}
+												onChange={handleInputChange}
+												required
+											/>
+										</div>
+										<div className='mb-3'>
+											<input
+												type='text'
+												className='form-control'
+												name='address'
+												placeholder='Dirección exacta'
+												value={recipient.address}
+												onChange={handleInputChange}
+												required
+											/>
+										</div>
+										<div className='mb-3'>
+											<select
+												className='form-control'
+												name='municipio'
+												value={recipient.municipio}
+												onChange={handleInputChange}
+												required
+											>
+												<option value=''>Seleccione un municipio</option>
+												{Object.keys(municipiosRepartos).map((municipio) => (
+													<option key={municipio} value={municipio}>
+														{municipio}
 													</option>
 												))}
-										</select>
-									</div>
-									<div className='mb-3'>
-										<input
-											type='text'
-											className='form-control'
-											name='nota'
-											placeholder='Escribe alguna nota para el mensajero..'
-											value={recipient.nota}
-											onChange={handleInputChange}
-											required
-										/>
-									</div>
-									<div className='form-check mb-4'>
-										<input
-											type='checkbox'
-											className='form-check-input'
-											name='termsAccepted'
-											checked={recipient.termsAccepted}
-											id='termsAccepted'
-											onChange={handleInputChange}
-											required
-										/>
-										<label className='form-check-label me-3' htmlFor='termsAccepted'>
-											Acepto Términos y Condiciones.
-										</label>
-										<button type='button' className='btn btn-link p-0' data-toggle='modal' data-target='#termsModal'>
-											Ver Términos
-										</button>
-									</div>
+											</select>
+										</div>
+										<div className='mb-3'>
+											<select
+												className='form-control'
+												name='reparto'
+												value={recipient.reparto}
+												onChange={handleInputChange}
+												required
+												disabled={!recipient.municipio}
+											>
+												<option value=''>Seleccione el barrio</option>
+												{recipient.municipio &&
+													municipiosRepartos[recipient.municipio].map((reparto) => (
+														<option key={reparto} value={reparto}>
+															{reparto}
+														</option>
+													))}
+											</select>
+										</div>
+										<div className='mb-3'>
+											<input
+												type='text'
+												className='form-control'
+												name='nota'
+												placeholder='Escribe alguna nota para el mensajero..'
+												value={recipient.nota}
+												onChange={handleInputChange}
+												required
+											/>
+										</div>
+										<div className='form-check mb-4'>
+											<input
+												type='checkbox'
+												className='form-check-input'
+												name='termsAccepted'
+												checked={recipient.termsAccepted}
+												id='termsAccepted'
+												onChange={handleInputChange}
+												required
+											/>
+											<label className='form-check-label me-3' htmlFor='termsAccepted'>
+												Acepto Términos y Condiciones.
+											</label>
+											<button type='button' className='btn btn-link p-0' data-toggle='modal' data-target='#termsModal'>
+												Ver Términos
+											</button>
+										</div>
 
-									<div
-										className='modal fade'
-										id='termsModal'
-										tabIndex='-1'
-										role='dialog'
-										aria-labelledby='termsModalLabel'
-										aria-hidden='true'
-									>
-										<div className='modal-dialog' role='document'>
-											<div className='modal-content'>
-												<div className='modal-header'>
-													<h5 className='modal-title' id='termsModalLabel'>
-														Términos y Condiciones
-													</h5>
-													<button type='button' className='close' data-dismiss='modal' aria-label='Close'>
-														<span aria-hidden='true'> &times;</span>
-													</button>
-												</div>
-												<div className='modal-body'>
-													<TermsAndConditions />
-												</div>
+										<div
+											className='modal fade'
+											id='termsModal'
+											tabIndex='-1'
+											role='dialog'
+											aria-labelledby='termsModalLabel'
+											aria-hidden='true'
+										>
+											<div className='modal-dialog' role='document'>
+												<div className='modal-content'>
+													<div className='modal-header'>
+														<h5 className='modal-title' id='termsModalLabel'>
+															Términos y Condiciones
+														</h5>
+														<button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+															<span aria-hidden='true'> &times;</span>
+														</button>
+													</div>
+													<div className='modal-body'>
+														<TermsAndConditions />
+													</div>
 
-												<div className='modal-footer'>
-													<button type='button' className='btn btn-secondary' data-dismiss='modal'>
-														Cerrar
-													</button>
+													<div className='modal-footer'>
+														<button type='button' className='btn btn-secondary' data-dismiss='modal'>
+															Cerrar
+														</button>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div className='d-grid gap-2'>
-										<button type='button' className='btn btn-outline-dark btn-lg custom-button' onClick={finalizeOrder}>
-											<FontAwesomeIcon icon={faMapMarkerAlt} /> Pago Presencial
-										</button>
-										<button type='button' className='btn btn-outline-dark btn-lg custom-button mt-2' onClick={pagoOnline}>
-											<FontAwesomeIcon icon={faCreditCard} /> Pago con Tarjeta
-										</button>
-										<hr />
-										<button type='button' className='btn btn-dark mt-3' onClick={clearCart}>
-											<FontAwesomeIcon icon={faTrashAlt} /> Limpiar Carrito
-										</button>
-									</div>
-								</form>
-							</div>
+										<div className='d-grid gap-2'>
+											<button type='button' className='btn btn-outline-dark btn-lg custom-button' onClick={finalizeOrder}>
+												<FontAwesomeIcon icon={faMapMarkerAlt} /> Pago Presencial
+											</button>
+											<button type='button' className='btn btn-outline-dark btn-lg custom-button mt-2' onClick={pagoOnline}>
+												<FontAwesomeIcon icon={faCreditCard} /> Pago con Tarjeta
+											</button>
+											<hr />
+											<button type='button' className='btn btn-dark mt-3' onClick={clearCart}>
+												<FontAwesomeIcon icon={faTrashAlt} /> Limpiar Carrito
+											</button>
+										</div>
+									</form>
+								</div>
+							)}
 						</div>
 					</div>
 				</>

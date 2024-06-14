@@ -37,14 +37,6 @@ const Footer = () => {
 					</a>
 				</div>
 
-				{/* Horarios de Apertura */}
-				<div className='mb-4'>
-					<h3>Horarios de Apertura</h3>
-					<p>Lunes a Viernes: 9:00 AM - 8:00 PM</p>
-					<p>Sábado: 10:00 AM - 6:00 PM</p>
-					<p>Domingo: Cerrado</p>
-				</div>
-
 				{/* Avisos Legales */}
 				<div className='mt-3'>
 					<span>&copy; {year} Ricardo & Neyde. Todos los derechos reservados.</span>

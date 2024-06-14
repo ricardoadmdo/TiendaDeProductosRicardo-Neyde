@@ -12,6 +12,7 @@ import useExchangeRates from '../../hooks/useExchangeRates';
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
 	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`);
+
 	return response.data;
 };
 
