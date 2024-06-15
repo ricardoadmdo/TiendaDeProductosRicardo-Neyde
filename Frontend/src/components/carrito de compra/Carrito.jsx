@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faMapMarkerAlt, faCreditCard, faUsd, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faMapMarkerAlt, faCreditCard, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
@@ -13,6 +13,7 @@ import TermsAndConditions from './TermsAndConditions';
 import CountryCodeSelect from './CountryCodeSelect';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import EmptyCart from './EmptyCart';
+import AnimatedNumber from '../ui/AnimatedNumber';
 
 const Carrito = () => {
 	const { usdRate } = useExchangeRates();
@@ -264,35 +265,56 @@ const Carrito = () => {
 																</p>
 															</strong>
 														</div>
-														<p className='card-text'>
-															<strong>Cantidad a comprar:</strong> {val.cantidadAdd}
-														</p>
-														<p className='card-text'>
-															<strong>Subtotal:</strong> {val.precio * val.cantidadAdd} CUP
-														</p>
-														<p className='card-text'>
-															<strong>Subtotal :</strong>{' '}
-															{usdRate ? ((val.precio * val.cantidadAdd) / usdRate).toFixed(2) : 'N/A'} USD
-														</p>
+														<div className='card-text'>
+															<strong className='me-1'>Cantidad a comprar:</strong>
+															<div className='animated-number-container me-1'>
+																<AnimatedNumber value={val.cantidadAdd} />
+															</div>
+														</div>
+
+														<div className='card-text'>
+															<strong className='me-1'>Subtotal:</strong>
+															<div className='animated-number-container me-1'>
+																<AnimatedNumber value={val.precio * val.cantidadAdd} />
+															</div>
+															CUP
+														</div>
+														<div className='card-text'>
+															<strong className='me-1'>Subtotal:</strong>
+															<div className='animated-number-container me-1'>
+																{usdRate ? (
+																	<AnimatedNumber
+																		value={Number(((val.precio * val.cantidadAdd) / usdRate).toFixed(2))}
+																	/>
+																) : (
+																	'N/A'
+																)}
+															</div>
+															USD
+														</div>
 														<hr />
 														<div className='row align-items-center'>
 															<div className='col-2'>
 																<button
 																	className='btn btn-secondary'
-																	onClick={() => changeQuantity(val.uid, -1)}
-																	disabled={val.cantidadAdd <= 1}
+																	onClick={() => {
+																		if (val.cantidadAdd <= 1) {
+																			removeFromCart(val.uid);
+																		} else {
+																			changeQuantity(val.uid, -1);
+																		}
+																	}}
 																>
-																	<FontAwesomeIcon icon={faMinus} />
+																	{val.cantidadAdd <= 1 ? (
+																		<FontAwesomeIcon icon={faTrashAlt} />
+																	) : (
+																		<FontAwesomeIcon icon={faMinus} />
+																	)}
 																</button>
 															</div>
 															<div className='col-4'>
 																<button className='btn btn-secondary' onClick={() => changeQuantity(val.uid, 1)}>
 																	<FontAwesomeIcon icon={faPlus} />
-																</button>
-															</div>
-															<div className='col-4'>
-																<button className='btn btn-danger' onClick={() => removeFromCart(val.uid)}>
-																	<FontAwesomeIcon icon={faTrashAlt} />
 																</button>
 															</div>
 														</div>
@@ -316,10 +338,11 @@ const Carrito = () => {
 											</div>
 											<div>
 												<h5>
-													<strong>
-														<FontAwesomeIcon icon={faUsd} />
-														{total} CUP
-													</strong>
+													$
+													<div className='animated-number-container me-1'>
+														<AnimatedNumber value={total} />
+													</div>
+													CUP
 												</h5>
 											</div>
 										</div>
@@ -329,10 +352,15 @@ const Carrito = () => {
 											</div>
 											<div>
 												<h5>
-													<strong>
-														<FontAwesomeIcon icon={faUsd} />
-														{usdRate ? (total / usdRate).toFixed(2) : 'N/A'} USD
-													</strong>
+													$
+													{usdRate ? (
+														<div className='animated-number-container me-1'>
+															<AnimatedNumber value={Number((total / usdRate).toFixed(2))} />
+														</div>
+													) : (
+														'N/A'
+													)}
+													USD
 												</h5>
 											</div>
 										</div>

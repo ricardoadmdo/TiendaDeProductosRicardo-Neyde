@@ -6,7 +6,6 @@ html {
 }
 
 body {
-	background-color: #fff6ed;
 	overflow: -moz-scrollbars-none; /* Firefox */
 	-ms-overflow-style: none; /* Internet Explorer and Edge */
 	scrollbar-width: none; /* Firefox */
@@ -24,7 +23,17 @@ body::-webkit-scrollbar {
 	animation-duration: 0.5s;
 }
 
+/* Estilos de la animación BounceIn General, para hacerla mas rápida  */
+
 /* styles.css */
 body.no-scroll {
 	overflow: hidden;
+}
+
+.card {
+	transition: transform 0.3s ease;
+}
+
+.card:hover {
+	transform: scale(1.05);
 }

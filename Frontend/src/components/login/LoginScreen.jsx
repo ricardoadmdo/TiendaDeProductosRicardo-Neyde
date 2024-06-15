@@ -194,7 +194,7 @@ const LoginScreen = () => {
 					</>
 				) : (
 					<>
-						<h3 className='mb-3'>Bienvenido Amigo!</h3>
+						<h4 className='mb-3'>Bienvenido Amigo!</h4>
 						<h2 className='mb-4'>Inicia Sesión</h2>
 						<form className='d-grid gap-3' onSubmit={handleLogin}>
 							<div className='form-group'>

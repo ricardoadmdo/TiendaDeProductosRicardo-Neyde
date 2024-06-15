@@ -77,7 +77,7 @@ const RegisterScreen = () => {
 				className='card p-4 shadow text-center animate__animated animate__fadeIn'
 				style={{ borderRadius: '24px', backgroundColor: 'rgba(250, 250, 250, 0.819)', zIndex: '2' }}
 			>
-				<h3 className='mb-3'>¡Crea una cuenta para continuar!</h3>
+				<h4 className='mb-3'>¡Crea una cuenta para continuar!</h4>
 				<h2 className='mb-4'>Registrarse</h2>
 				<form className='d-grid gap-3' onSubmit={handleRegister}>
 					<div className='form-group'>

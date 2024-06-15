@@ -43,3 +43,7 @@
 		width: 30%; /* Ancho del offcanvas en pantallas más grandes */
 	}
 }
+
+.animated-number-container {
+	display: inline-block; /* Asegura que el contenedor se muestre en línea */
+}

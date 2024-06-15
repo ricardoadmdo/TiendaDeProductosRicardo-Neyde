@@ -37,7 +37,7 @@ const BusinessStatus = () => {
 
 	return (
 		<div
-			className='card text-center'
+			className='card text-center animate__animated animate__bounceIn'
 			style={{ border: '1px solid #333', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', margin: '20px auto', maxWidth: '400px' }}
 		>
 			<div className='card-header' style={{ backgroundColor: isOpen ? '#d4edda' : '#f8d7da', color: isOpen ? '#155724' : '#721c24' }}>
