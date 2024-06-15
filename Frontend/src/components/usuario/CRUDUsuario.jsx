@@ -1,12 +1,12 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, lazy, Suspense } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
 import { AuthContext } from '../../auth/authContext.jsx';
-import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LoadingSpinner from '../ui/LoadingSpinner.jsx';
+const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
+const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
 const fetchUsuarios = async ({ page, searchTerm }) => {
 	const response = await Axios.get(`http://localhost:3001/api/users?page=${page}&search=${searchTerm}`);
@@ -207,60 +207,63 @@ const CRUDUsuario = () => {
 
 	return (
 		<>
-			<TablaCRUD
-				searchTerm={searchTerm}
-				handleSearchChange={handleSearchChange}
-				handleSearchSubmit={handleSearchSubmit}
-				busqueda={true}
-				data={data?.usuarios || []}
-				onAdd={() => openModal(1)}
-				columns={[
-					{ header: 'ID', accessor: 'uid' },
-					{ header: 'Nombre', accessor: 'nombre' },
-					{ header: 'Correo Electrónico', accessor: 'correo' },
-					{ header: 'Rol', accessor: 'rol' },
-					{ header: 'Estado en DB', accessor: 'estado' },
-				]}
-				onEdit={(usuario) => openModal(2, usuario)}
-				onDelete={(usuario) => deleteUserWithConfirmation(usuario)}
-				title={title}
-				modalTitle='Añadir nuevo Usuario'
-				validate={validar}
-				operationMode={operationMode}
-				setOperationMode={setOperationMode}
-				formFields={[
-					{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-					{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
-					{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
-					{
-						name: 'estado',
-						label: 'Estado en Base de Datos',
-						type: 'select',
-						options: [
-							{ value: true, label: 'Activo' },
-							{ value: false, label: 'Inactivo' },
-						],
-					},
-					{
-						name: 'rol',
-						label: 'Rol',
-						type: 'select',
-						options: [
-							{ value: 'USER_ROLE', label: 'USER_ROLE' },
-							{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
-							{ value: 'GESTOR_VENTAS', label: 'GESTOR_VENTAS' },
-						],
-					},
-				]}
-				formState={formState}
-				setFormState={setFormState}
-			/>
-			<Pagination
-				currentPage={currentPage}
-				totalPages={data?.totalPages || 0}
-				handlePreviousPage={handlePreviousPage}
-				handleNextPage={handleNextPage}
-			/>
+			<Suspense fallback={<LoadingSpinner />}>
+				{' '}
+				<TablaCRUD
+					searchTerm={searchTerm}
+					handleSearchChange={handleSearchChange}
+					handleSearchSubmit={handleSearchSubmit}
+					busqueda={true}
+					data={data?.usuarios || []}
+					onAdd={() => openModal(1)}
+					columns={[
+						{ header: 'ID', accessor: 'uid' },
+						{ header: 'Nombre', accessor: 'nombre' },
+						{ header: 'Correo Electrónico', accessor: 'correo' },
+						{ header: 'Rol', accessor: 'rol' },
+						{ header: 'Estado en DB', accessor: 'estado' },
+					]}
+					onEdit={(usuario) => openModal(2, usuario)}
+					onDelete={(usuario) => deleteUserWithConfirmation(usuario)}
+					title={title}
+					modalTitle='Añadir nuevo Usuario'
+					validate={validar}
+					operationMode={operationMode}
+					setOperationMode={setOperationMode}
+					formFields={[
+						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
+						{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
+						{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
+						{
+							name: 'estado',
+							label: 'Estado en Base de Datos',
+							type: 'select',
+							options: [
+								{ value: true, label: 'Activo' },
+								{ value: false, label: 'Inactivo' },
+							],
+						},
+						{
+							name: 'rol',
+							label: 'Rol',
+							type: 'select',
+							options: [
+								{ value: 'USER_ROLE', label: 'USER_ROLE' },
+								{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
+								{ value: 'GESTOR_VENTAS', label: 'GESTOR_VENTAS' },
+							],
+						},
+					]}
+					formState={formState}
+					setFormState={setFormState}
+				/>
+				<Pagination
+					currentPage={currentPage}
+					totalPages={data?.totalPages || 0}
+					handlePreviousPage={handlePreviousPage}
+					handleNextPage={handleNextPage}
+				/>
+			</Suspense>
 		</>
 	);
 };

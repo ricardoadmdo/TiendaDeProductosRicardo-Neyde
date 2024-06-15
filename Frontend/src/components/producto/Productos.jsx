@@ -1,12 +1,12 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, lazy, Suspense } from 'react';
 import { CartContext } from '../../auth/CartProvider';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Axios from 'axios';
-import './styles.css';
-import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
+const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
+import './styles.css';
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -61,7 +61,7 @@ const Productos = () => {
 									className='card-img-top img-fluid'
 									alt='Imagen del producto'
 									height='200px'
-									objectFit='cover'
+									style={{ objectFit: 'cover' }}
 								/>
 								<h3 className='card-header'>{val.nombre}</h3>
 								<div className='card-body'>
@@ -118,7 +118,14 @@ const Productos = () => {
 					</div>
 				)}
 			</div>
-			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
+			<Suspense fallback={<LoadingSpinner />}>
+				<Pagination
+					currentPage={currentPage}
+					totalPages={totalPages}
+					handlePreviousPage={handlePreviousPage}
+					handleNextPage={handleNextPage}
+				/>
+			</Suspense>
 		</div>
 	);
 };

@@ -18,7 +18,6 @@ const Cafeteria = () => {
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1717128320/011e3d91c7bf417a150ac7902da3b669--menu-design-menus_kywi7e.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							objectFit='cover'
 						/>
 						<div className='card-body'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos de alta calidad.</p>

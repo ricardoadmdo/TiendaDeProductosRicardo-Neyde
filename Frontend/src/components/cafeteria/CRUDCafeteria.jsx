@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
-import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
 import Categorias from './Categorias.jsx';
+const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
+const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -199,35 +199,42 @@ const CRUDCafeteria = () => {
 
 	return (
 		<>
-			<TablaCRUD
-				busqueda={false}
-				data={productosList}
-				onAdd={() => openModal(1)}
-				columns={[
-					{ header: 'ID', accessor: 'uid' },
-					{ header: 'Nombre', accessor: 'nombre' },
-					{ header: 'Cantidad', accessor: 'cantidad' },
-					{ header: 'Precio', accessor: 'precio' },
-					{ header: 'Categoría', accessor: 'categoria' },
-				]}
-				onEdit={(usuario) => openModal(2, usuario)}
-				onDelete={deleteProductos}
-				title={title}
-				modalTitle='Añadir nuevo Producto'
-				validate={validar}
-				operationMode={operationMode}
-				setOperationMode={setOperationMode}
-				formFields={[
-					{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-					{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
-					{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
-					{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
-					{ name: 'categoria', label: 'Categoría', placeholder: 'Seleccione una categoría', type: 'select', options: Categorias },
-				]}
-				formState={formState}
-				setFormState={setFormState}
-			/>
-			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
+			<Suspense fallback={<LoadingSpinner />}>
+				<TablaCRUD
+					busqueda={false}
+					data={productosList}
+					onAdd={() => openModal(1)}
+					columns={[
+						{ header: 'ID', accessor: 'uid' },
+						{ header: 'Nombre', accessor: 'nombre' },
+						{ header: 'Cantidad', accessor: 'cantidad' },
+						{ header: 'Precio', accessor: 'precio' },
+						{ header: 'Categoría', accessor: 'categoria' },
+					]}
+					onEdit={(usuario) => openModal(2, usuario)}
+					onDelete={deleteProductos}
+					title={title}
+					modalTitle='Añadir nuevo Producto'
+					validate={validar}
+					operationMode={operationMode}
+					setOperationMode={setOperationMode}
+					formFields={[
+						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
+						{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
+						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
+						{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
+						{ name: 'categoria', label: 'Categoría', placeholder: 'Seleccione una categoría', type: 'select', options: Categorias },
+					]}
+					formState={formState}
+					setFormState={setFormState}
+				/>
+				<Pagination
+					currentPage={currentPage}
+					totalPages={totalPages}
+					handlePreviousPage={handlePreviousPage}
+					handleNextPage={handleNextPage}
+				/>
+			</Suspense>
 		</>
 	);
 };

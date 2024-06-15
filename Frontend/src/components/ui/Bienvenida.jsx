@@ -1,13 +1,18 @@
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import BusinessStatus from './BusinessStatus';
+import { lazy, Suspense } from 'react';
+import LoadingSpinner from './LoadingSpinner';
+
+const BusinessStatus = lazy(() => import('./BusinessStatus'));
 
 const Bienvenida = () => {
 	return (
 		<>
 			<div className='bienvenida container mt-5 animate__animated animate__fadeIn'>
 				<h1 className='text-center mb-4'>Bienvenidos a Ricardo & Neyde</h1>
-				<BusinessStatus />
+				<Suspense fallback={<LoadingSpinner />}>
+					<BusinessStatus />
+				</Suspense>
 
 				<p className='text-center'>Explora nuestra selección exclusiva de productos y combos de comida en La Habana.</p>
 
@@ -22,7 +27,6 @@ const Bienvenida = () => {
 								src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg'
 								className='card-img-top img-fluid'
 								alt='Imagen del producto'
-								objectFit='cover'
 							/>
 							<div className='card-body'>
 								<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -41,7 +45,6 @@ const Bienvenida = () => {
 								src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/kkplmrpcfpfftbg1lbby.jpg'
 								className='card-img-top img-fluid'
 								alt='Imagen del producto'
-								objectFit='cover'
 							/>
 							<div className='card-body'>
 								<p className='card-text'>Prueba nuestros irresistibles combos, perfectos para cualquier ocasión.</p>
@@ -67,7 +70,6 @@ const Bienvenida = () => {
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041269/ota6mfg9z7yz6uyh9adz.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							objectFit='cover'
 						/>
 						<div className='card-body text-center'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -92,7 +94,6 @@ const Bienvenida = () => {
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							objectFit='cover'
 						/>
 						<div className='card-body text-center'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -118,7 +119,6 @@ const Bienvenida = () => {
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041412/i0agcr3wwtibxdhwgoo6.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							objectFit='cover'
 						/>
 						<div className='card-body text-center'>
 							<p className='card-text'>Nuestra tienda en San Miguel, calle Delicia, Las Piedras, La Habana, Cuba.</p>

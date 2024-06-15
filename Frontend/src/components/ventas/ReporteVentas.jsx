@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import Calendario from '../reutilizable-tablaCrud/Calendario';
-import Pagination from '../reutilizable-tablaCrud/Pagination';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Axios from 'axios';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQuery } from '@tanstack/react-query';
+const Calendario = lazy(() => import('../reutilizable-tablaCrud/Calendario'));
+const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 
 // Fetch function for ventas
 const fetchVentas = async ({ queryKey }) => {
@@ -65,7 +65,9 @@ const ReporteVentas = () => {
 	return (
 		<div className='container animate__animated animate__fadeIn p-3'>
 			<h2 className='text-center mb-4'>Reporte de Ventas</h2>
-			<Calendario onSeleccionarDias={handleSeleccionarDias} />
+			<Suspense fallback={<LoadingSpinner />}>
+				<Calendario onSeleccionarDias={handleSeleccionarDias} />
+			</Suspense>
 
 			{isLoading ? (
 				<LoadingSpinner />
@@ -150,13 +152,15 @@ const ReporteVentas = () => {
 					) : (
 						<div className='alert alert-info text-center'>No hay ventas para mostrar.</div>
 					)}
-					<Pagination
-						currentPage={currentPage}
-						totalPages={data.totalPages}
-						handlePreviousPage={handlePreviousPage}
-						handleNextPage={handleNextPage}
-						className='mt-4'
-					/>
+					<Suspense fallback={<LoadingSpinner />}>
+						<Pagination
+							currentPage={currentPage}
+							totalPages={data.totalPages}
+							handlePreviousPage={handlePreviousPage}
+							handleNextPage={handleNextPage}
+							className='mt-4'
+						/>
+					</Suspense>
 				</div>
 			)}
 		</div>

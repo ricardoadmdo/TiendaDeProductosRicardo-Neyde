@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, lazy, Suspense } from 'react';
 import { CartContext } from '../../auth/CartProvider';
 import { AuthContext } from '../../auth/authContext';
 import { useLocation } from 'react-router-dom';
@@ -7,13 +7,13 @@ import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faMapMarkerAlt, faCreditCard, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import municipiosRepartos from '../../helpers/municipiosRepartos';
 import useExchangeRates from '../../hooks/useExchangeRates';
-import TermsAndConditions from './TermsAndConditions';
-import CountryCodeSelect from './CountryCodeSelect';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import EmptyCart from './EmptyCart';
+import municipiosRepartos from '../../helpers/municipiosRepartos';
 import AnimatedNumber from '../ui/AnimatedNumber';
+const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
+const CountryCodeSelect = lazy(() => import('./CountryCodeSelect'));
+const EmptyCart = lazy(() => import('./EmptyCart'));
 
 const Carrito = () => {
 	const { usdRate } = useExchangeRates();
@@ -240,7 +240,9 @@ const Carrito = () => {
 					<div className='container my-5 '>
 						<div className='row'>
 							{cart.length === 0 ? (
-								<EmptyCart />
+								<Suspense fallback={<LoadingSpinner />}>
+									<EmptyCart />
+								</Suspense>
 							) : (
 								<div className='col-lg-8 animate__animated animate__fadeIn'>
 									<div className='row'>
@@ -379,7 +381,10 @@ const Carrito = () => {
 											/>
 										</div>
 										<div className='mb-3 d-flex'>
-											<CountryCodeSelect value={countryCode} onChange={handleCountryCodeChange} />
+											<Suspense fallback={<LoadingSpinner />}>
+												<CountryCodeSelect value={countryCode} onChange={handleCountryCodeChange} />
+											</Suspense>
+
 											<input
 												type='number'
 												className='form-control'
@@ -483,7 +488,9 @@ const Carrito = () => {
 														</button>
 													</div>
 													<div className='modal-body'>
-														<TermsAndConditions />
+														<Suspense fallback={<LoadingSpinner />}>
+															<TermsAndConditions />
+														</Suspense>
 													</div>
 
 													<div className='modal-footer'>

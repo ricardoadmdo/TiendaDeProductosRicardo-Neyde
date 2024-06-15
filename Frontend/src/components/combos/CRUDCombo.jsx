@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
-import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
+const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
+const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 
 const fetchCombos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -200,45 +200,52 @@ const CRUDCombo = () => {
 
 	return (
 		<>
-			<TablaCRUD
-				busqueda={false}
-				data={combosList}
-				onAdd={() => openModal(1)}
-				columns={[
-					{ header: 'ID', accessor: 'uid' },
-					{ header: 'Nombre', accessor: 'nombre' },
-					{ header: 'Cantidad', accessor: 'cantidad' },
-					{ header: 'Precio', accessor: 'precio' },
-					{ header: 'Descripción', accessor: 'description' },
-					{ header: 'Estado en DB', accessor: 'estado' },
-				]}
-				onEdit={(combo) => openModal(2, combo)}
-				onDelete={deleteCombos}
-				title={title}
-				modalTitle='Añadir nuevo Combo'
-				validate={validar}
-				operationMode={operationMode}
-				setOperationMode={setOperationMode}
-				formFields={[
-					{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-					{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
-					{ name: 'description', label: 'Descripción', placeholder: 'Ingrese una descripción', type: 'text' },
-					{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
-					{
-						name: 'estado',
-						label: 'Estado en Base de Datos',
-						type: 'select',
-						options: [
-							{ value: true, label: 'Activo' },
-							{ value: false, label: 'Inactivo' },
-						],
-					},
-					{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
-				]}
-				formState={formState}
-				setFormState={setFormState}
-			/>
-			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
+			<Suspense fallback={<LoadingSpinner />}>
+				<TablaCRUD
+					busqueda={false}
+					data={combosList}
+					onAdd={() => openModal(1)}
+					columns={[
+						{ header: 'ID', accessor: 'uid' },
+						{ header: 'Nombre', accessor: 'nombre' },
+						{ header: 'Cantidad', accessor: 'cantidad' },
+						{ header: 'Precio', accessor: 'precio' },
+						{ header: 'Descripción', accessor: 'description' },
+						{ header: 'Estado en DB', accessor: 'estado' },
+					]}
+					onEdit={(combo) => openModal(2, combo)}
+					onDelete={deleteCombos}
+					title={title}
+					modalTitle='Añadir nuevo Combo'
+					validate={validar}
+					operationMode={operationMode}
+					setOperationMode={setOperationMode}
+					formFields={[
+						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
+						{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
+						{ name: 'description', label: 'Descripción', placeholder: 'Ingrese una descripción', type: 'text' },
+						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
+						{
+							name: 'estado',
+							label: 'Estado en Base de Datos',
+							type: 'select',
+							options: [
+								{ value: true, label: 'Activo' },
+								{ value: false, label: 'Inactivo' },
+							],
+						},
+						{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
+					]}
+					formState={formState}
+					setFormState={setFormState}
+				/>
+				<Pagination
+					currentPage={currentPage}
+					totalPages={totalPages}
+					handlePreviousPage={handlePreviousPage}
+					handleNextPage={handleNextPage}
+				/>
+			</Suspense>
 		</>
 	);
 };

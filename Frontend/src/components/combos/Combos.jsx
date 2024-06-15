@@ -60,7 +60,7 @@ const Combos = () => {
 								className='card-img-top img-fluid'
 								alt='Imagen del combo'
 								height='200px'
-								objectFit='cover'
+								style={{ objectFit: 'cover' }}
 							/>
 							<h3 className='card-header'>{val.nombre}</h3>
 							<div className='card-body'>

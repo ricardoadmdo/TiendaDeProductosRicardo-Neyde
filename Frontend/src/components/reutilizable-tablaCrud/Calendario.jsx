@@ -2,7 +2,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, isSameMonth, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
 const Calendario = ({ onSeleccionarDias }) => {

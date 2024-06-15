@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, lazy, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
-import 'react-lazy-load-image-component/src/effects/blur.css';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import Pagination from '../reutilizable-tablaCrud/Pagination.jsx';
-import TablaCRUD from '../reutilizable-tablaCrud/TablaCRUD.jsx';
 import { AuthContext } from '../../auth/authContext.jsx';
+import LoadingSpinner from '../ui/LoadingSpinner.jsx';
+const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
+const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
 const BuscarUsuario = () => {
 	const [id, setId] = useState('');
@@ -234,56 +234,58 @@ const BuscarUsuario = () => {
 				<>
 					<h2 className='text-center mb-4'>Resultados de la Búsqueda</h2>
 					<div className='row'></div>
-					<TablaCRUD
-						busqueda={false}
-						data={resultados}
-						onAdd={() => openModal(1)}
-						columns={[
-							{ header: 'ID', accessor: 'uid' },
-							{ header: 'Nombre', accessor: 'nombre' },
-							{ header: 'Correo Electrónico', accessor: 'correo' },
-							{ header: 'Rol', accessor: 'rol' },
-							{ header: 'Estado en DB', accessor: 'estado' },
-						]}
-						onEdit={(usuario) => openModal(2, usuario)}
-						onDelete={deleteUser}
-						title={title}
-						modalTitle='Añadir nuevo Usuario'
-						validate={validar}
-						operationMode={operationMode}
-						setOperationMode={setOperationMode}
-						formFields={[
-							{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-							{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
-							{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
-							{
-								name: 'estado',
-								label: 'Estado en Base de Datos',
-								type: 'select',
-								options: [
-									{ value: true, label: 'Activo' },
-									{ value: false, label: 'Inactivo' },
-								],
-							},
-							{
-								name: 'rol',
-								label: 'Rol',
-								type: 'select',
-								options: [
-									{ value: 'USER_ROLE', label: 'USER_ROLE' },
-									{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
-								],
-							},
-						]}
-						formState={formState}
-						setFormState={setFormState}
-					/>
-					<Pagination
-						currentPage={currentPage}
-						totalPages={totalPages}
-						handlePreviousPage={handlePreviousPage}
-						handleNextPage={handleNextPage}
-					/>
+					<Suspense fallback={<LoadingSpinner />}>
+						<TablaCRUD
+							busqueda={false}
+							data={resultados}
+							onAdd={() => openModal(1)}
+							columns={[
+								{ header: 'ID', accessor: 'uid' },
+								{ header: 'Nombre', accessor: 'nombre' },
+								{ header: 'Correo Electrónico', accessor: 'correo' },
+								{ header: 'Rol', accessor: 'rol' },
+								{ header: 'Estado en DB', accessor: 'estado' },
+							]}
+							onEdit={(usuario) => openModal(2, usuario)}
+							onDelete={deleteUser}
+							title={title}
+							modalTitle='Añadir nuevo Usuario'
+							validate={validar}
+							operationMode={operationMode}
+							setOperationMode={setOperationMode}
+							formFields={[
+								{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
+								{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
+								{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
+								{
+									name: 'estado',
+									label: 'Estado en Base de Datos',
+									type: 'select',
+									options: [
+										{ value: true, label: 'Activo' },
+										{ value: false, label: 'Inactivo' },
+									],
+								},
+								{
+									name: 'rol',
+									label: 'Rol',
+									type: 'select',
+									options: [
+										{ value: 'USER_ROLE', label: 'USER_ROLE' },
+										{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
+									],
+								},
+							]}
+							formState={formState}
+							setFormState={setFormState}
+						/>
+						<Pagination
+							currentPage={currentPage}
+							totalPages={totalPages}
+							handlePreviousPage={handlePreviousPage}
+							handleNextPage={handleNextPage}
+						/>
+					</Suspense>
 				</>
 			) : (
 				<div className='container-fluid d-flex justify-content-center vh-100'>

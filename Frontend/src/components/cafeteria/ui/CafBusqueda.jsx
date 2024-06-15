@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Axios from 'axios'; // Importa Axios para hacer las solicitudes HTTP
 import useExchangeRates from '../../../hooks/useExchangeRates';
-import EmptySearch from '../../ui/EmptySearch';
+import LoadingSpinner from '../../ui/LoadingSpinner';
+const EmptySearch = lazy(() => import('../../ui/EmptySearch'));
 
 const CafBusqueda = () => {
 	const { usdRate } = useExchangeRates();
@@ -52,7 +52,8 @@ const CafBusqueda = () => {
 										src={val.url}
 										className='card-img-top img-fluid'
 										alt='Imagen del producto'
-										style={{ height: '200px', objectFit: 'cover' }}
+										height='200px'
+										style={{ objectFit: 'cover' }}
 									/>
 									<h5 className='card-header'>{val.nombre}</h5>
 									<div className='card-body'>
@@ -102,7 +103,9 @@ const CafBusqueda = () => {
 					</div>
 				</>
 			) : (
-				<EmptySearch />
+				<Suspense fallback={<LoadingSpinner />}>
+					<EmptySearch />
+				</Suspense>
 			)}
 		</div>
 	);
