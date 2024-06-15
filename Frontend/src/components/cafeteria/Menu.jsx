@@ -2,7 +2,6 @@ import { useState, useContext } from 'react';
 import { CartContext } from '../../auth/CartProvider';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Axios from 'axios';
-import placeholder from '../../images/placeholder.png';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
@@ -77,11 +76,11 @@ const Menu = () => {
 									<LazyLoadImage
 										threshold={10}
 										effect='blur'
-										placeholderSrc={placeholder}
 										src={val.url}
 										className='card-img-top img-fluid'
 										alt='Imagen del producto'
-										style={{ height: '200px', objectFit: 'cover' }}
+										height='200px'
+										objectFit='cover'
 									/>
 									<h3 className='card-header'>{val.nombre}</h3>
 									<div className='card-body'>

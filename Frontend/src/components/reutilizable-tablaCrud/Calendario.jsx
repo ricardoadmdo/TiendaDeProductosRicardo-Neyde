@@ -4,7 +4,6 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMont
 import { es } from 'date-fns/locale';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
-import bg from '../../images/bg.jpg';
 
 const Calendario = ({ onSeleccionarDias }) => {
 	const [currentDate, setCurrentDate] = useState(new Date());
@@ -45,7 +44,10 @@ const Calendario = ({ onSeleccionarDias }) => {
 	return (
 		<div className='calendar-container calendar'>
 			<div className='col-md-4'>
-				<div className='calendar-left text-uppercase' style={{ backgroundImage: `url(${bg})` }}>
+				<div
+					className='calendar-left text-uppercase'
+					style={{ backgroundImage: `url(https://res.cloudinary.com/dber1pxea/image/upload/v1718429890/wrjz2wn8txxeeev3imxd.jpg)` }}
+				>
 					<h3 className='text-white'>{format(currentDate, 'MMMM yyyy', { locale: es })}</h3>
 					<p className='text-white'>
 						{selectedDates.length > 0

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import placeholder from '../../images/placeholder.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Axios from 'axios'; // Importa Axios para hacer las solicitudes HTTP
@@ -59,11 +58,11 @@ const Busqueda = () => {
 									<LazyLoadImage
 										threshold={10}
 										effect='blur'
-										placeholderSrc={placeholder}
 										src={val.url}
 										className='card-img-top img-fluid'
 										alt='Imagen del producto'
-										style={{ height: '200px', objectFit: 'cover' }}
+										height='200px'
+										objectFit='cover'
 									/>
 									<h5 className='card-header'>{val.nombre}</h5>
 									<div className='card-body'>

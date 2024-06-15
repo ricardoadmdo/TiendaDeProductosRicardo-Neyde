@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import placeholder from '../../images/placeholder.png';
 
 const Boutique = () => {
 	return (
@@ -16,11 +15,10 @@ const Boutique = () => {
 						<LazyLoadImage
 							threshold={10}
 							effect='blur'
-							placeholderSrc={placeholder}
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							style={{ objectFit: 'cover' }}
+							objectFit='cover'
 						/>
 						<div className='card-body'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos de moda.</p>

@@ -1,11 +1,9 @@
-import notFound from '../images/NotFound.jpg'; // Asegúrate de que la ruta de la imagen sea correcta
-
 const NoEncontrado = () => {
 	return (
 		<div
 			className='container-fluid text-center vh-100  animate__animated animate__fadeIn'
 			style={{
-				backgroundImage: `url(${notFound})`,
+				backgroundImage: `url(https://res.cloudinary.com/dber1pxea/image/upload/v1718429890/eepyqzqjqlzl6umteojw.jpg)`,
 				backgroundSize: 'cover',
 				backgroundPosition: 'center',
 				backgroundRepeat: 'no-repeat',

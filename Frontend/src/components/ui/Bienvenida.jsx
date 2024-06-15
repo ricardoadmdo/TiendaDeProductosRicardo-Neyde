@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import placeholder from '../../images/placeholder.png';
 import BusinessStatus from './BusinessStatus';
 
 const Bienvenida = () => {
@@ -18,12 +17,12 @@ const Bienvenida = () => {
 						<h2>Explora Nuestros Productos</h2>
 						<div className='card mb-4'>
 							<LazyLoadImage
+								threshold={10}
 								effect='opacity'
-								placeholderSrc={placeholder}
 								src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg'
 								className='card-img-top img-fluid'
 								alt='Imagen del producto'
-								style={{ objectFit: 'cover' }}
+								objectFit='cover'
 							/>
 							<div className='card-body'>
 								<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -39,11 +38,10 @@ const Bienvenida = () => {
 						<div className='card mb-3'>
 							<LazyLoadImage
 								effect='opacity'
-								placeholderSrc={placeholder}
 								src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/kkplmrpcfpfftbg1lbby.jpg'
 								className='card-img-top img-fluid'
 								alt='Imagen del producto'
-								style={{ objectFit: 'cover' }}
+								objectFit='cover'
 							/>
 							<div className='card-body'>
 								<p className='card-text'>Prueba nuestros irresistibles combos, perfectos para cualquier ocasión.</p>
@@ -66,11 +64,10 @@ const Bienvenida = () => {
 					<div className='card mb-4'>
 						<LazyLoadImage
 							effect='opacity'
-							placeholderSrc={placeholder}
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041269/ota6mfg9z7yz6uyh9adz.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							style={{ objectFit: 'cover' }}
+							objectFit='cover'
 						/>
 						<div className='card-body text-center'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -92,11 +89,10 @@ const Bienvenida = () => {
 					<div className='card mb-4'>
 						<LazyLoadImage
 							effect='opacity'
-							placeholderSrc={placeholder}
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							style={{ objectFit: 'cover' }}
+							objectFit='cover'
 						/>
 						<div className='card-body text-center'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</p>
@@ -119,11 +115,10 @@ const Bienvenida = () => {
 					<div className='card mb-4'>
 						<LazyLoadImage
 							effect='opacity'
-							placeholderSrc={placeholder}
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041412/i0agcr3wwtibxdhwgoo6.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							style={{ objectFit: 'cover' }}
+							objectFit='cover'
 						/>
 						<div className='card-body text-center'>
 							<p className='card-text'>Nuestra tienda en San Miguel, calle Delicia, Las Piedras, La Habana, Cuba.</p>
