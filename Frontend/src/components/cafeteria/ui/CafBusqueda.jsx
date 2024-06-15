@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Axios from 'axios'; // Importa Axios para hacer las solicitudes HTTP
 import useExchangeRates from '../../../hooks/useExchangeRates';
+import EmptySearch from '../../ui/EmptySearch';
 
 const CafBusqueda = () => {
 	const { usdRate } = useExchangeRates();
@@ -103,9 +104,7 @@ const CafBusqueda = () => {
 					</div>
 				</>
 			) : (
-				<div className='container-fluid d-flex justify-content-center vh-100'>
-					<h2>No se encontró ningún producto</h2>
-				</div>
+				<EmptySearch />
 			)}
 		</div>
 	);

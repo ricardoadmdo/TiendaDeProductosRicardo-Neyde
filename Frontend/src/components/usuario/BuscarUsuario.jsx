@@ -229,7 +229,7 @@ const BuscarUsuario = () => {
 	};
 
 	return (
-		<div className='container-fluid  my-5'>
+		<div className='container-fluid my-5 animate__animated animate__fadeIn'>
 			{resultados.length > 0 ? (
 				<>
 					<h2 className='text-center mb-4'>Resultados de la Búsqueda</h2>

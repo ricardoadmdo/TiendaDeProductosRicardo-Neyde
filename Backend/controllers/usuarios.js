@@ -8,8 +8,8 @@ const usuariosGet = async (req = request, res = response) => {
 
 	try {
 		const [usuarios, total] = await Promise.all([
-			Usuario.find({ estado: true }).populate('nombre').skip(Number(skip)).limit(Number(limit)),
-			Usuario.countDocuments({ estado: true }),
+			Usuario.find().populate('nombre').skip(Number(skip)).limit(Number(limit)),
+			Usuario.countDocuments(),
 		]);
 
 		res.json({
@@ -39,7 +39,6 @@ const usuariosBuscar = async (req = request, res = response) => {
 	try {
 		const usuarios = await Usuario.find({
 			nombre: { $regex: query, $options: 'i' },
-			estado: true,
 		}).populate('nombre');
 
 		res.json({

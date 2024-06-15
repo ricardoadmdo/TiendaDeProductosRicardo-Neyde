@@ -248,6 +248,7 @@ const CRUDUsuario = () => {
 						options: [
 							{ value: 'USER_ROLE', label: 'USER_ROLE' },
 							{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
+							{ value: 'GESTOR_VENTAS', label: 'GESTOR_VENTAS' },
 						],
 					},
 				]}

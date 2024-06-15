@@ -165,13 +165,12 @@ const TablaCRUD = ({
 											<button
 												type='button'
 												onClick={() => handleEdit(item)}
-												className='btn btn-warning'
+												className='btn btn-warning me-1'
 												data-bs-toggle='modal'
 												data-bs-target='#modal'
 											>
 												<FontAwesomeIcon icon={faEdit} /> Editar
 											</button>
-											<span style={{ marginRight: '0px' }}></span>
 											<button type='button' onClick={() => handleDelete(item)} className='btn btn-danger'>
 												<FontAwesomeIcon icon={faTrashAlt} /> Eliminar
 											</button>
@@ -206,6 +205,7 @@ const TablaCRUD = ({
 												>
 													<option value='USER_ROLE'>USER_ROLE</option>
 													<option value='ADMIN_ROLE'>ADMIN_ROLE</option>
+													<option value='GESTOR_VENTAS'>GESTOR_VENTAS</option>
 												</select>
 											</div>
 										);
