@@ -55,8 +55,9 @@ const BusinessStatus = () => {
 							marginRight: '10px',
 						}}
 					></span>
-					{isOpen ? 'Estamos Abiertos!' : 'Estamos Cerrados'}
+					{isOpen ? 'Estamos Abiertos!' : 'Estamos Cerrados '}
 				</h5>
+				<p>Hoy ({new Date().toLocaleDateString('es-ES', { weekday: 'long' })})</p>
 				<p className='card-text'>
 					<strong>Horario:</strong>
 					<br />
