@@ -262,15 +262,17 @@ const CRUDVentas = () => {
 							<p className='mb-1'>Precio Total: ${producto.precio * producto.cantidad}</p>
 						</div>
 						<div>
-							<button className='btn btn-danger me-2' onClick={() => eliminarProducto(producto.uid)}>
-								<FontAwesomeIcon icon={faTrashAlt} />
-							</button>
 							<button
-								className='btn btn-secondary me-2'
-								onClick={() => disminuirCantidad(producto.uid)}
-								disabled={producto.cantidad <= 1}
+								className='btn btn-secondary me-1'
+								onClick={() => {
+									if (producto.cantidad <= 1) {
+										eliminarProducto(producto.uid);
+									} else {
+										disminuirCantidad(producto.uid);
+									}
+								}}
 							>
-								<FontAwesomeIcon icon={faMinus} />
+								{producto.cantidad <= 1 ? <FontAwesomeIcon icon={faTrashAlt} /> : <FontAwesomeIcon icon={faMinus} />}
 							</button>
 							<button className='btn btn-secondary' onClick={() => aumentarCantidad(producto.uid)}>
 								<FontAwesomeIcon icon={faPlus} />
