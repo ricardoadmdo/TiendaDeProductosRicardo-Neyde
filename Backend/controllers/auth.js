@@ -57,10 +57,8 @@ const googleLogin = async (req = request, res = response) => {
 			});
 		}
 
-		// Generar un token JWT
-		const token = jwt.sign({ uid: usuario.uid }, 'your_jwt_secret', {
-			expiresIn: '4h',
-		});
+		// Generar el JWT
+		const token = await generarJWT(usuario.id);
 
 		res.json({
 			msg: 'Login successful',
@@ -170,6 +168,7 @@ const login = async (req, res = response) => {
 		});
 	}
 };
+
 const register = async (req, res = response) => {
 	const { nombre, correo, password, rol } = req.body;
 

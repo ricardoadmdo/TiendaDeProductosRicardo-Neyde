@@ -85,6 +85,7 @@ const usuariosPut = async (req, res) => {
 	const usuario = await Usuario.findByIdAndUpdate(id, dataToUpdate);
 	res.json(usuario);
 };
+
 const usuariosDelete = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -96,8 +97,7 @@ const usuariosDelete = async (req, res) => {
 			return res.status(404).json({ msg: 'Usuario no encontrado o ya fue eliminado' });
 		}
 
-		// Cambiar el estado del usuario a false
-		const usuarioEliminado = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true });
+		const usuarioEliminado = await Usuario.findByIdAndDelete(id);
 
 		// Enviar respuesta con los detalles del usuario eliminado
 		return res.json({ msg: 'Usuario eliminado', usuario: usuarioEliminado });
