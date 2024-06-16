@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, lazy, Suspense } from 'react';
 import { CartContext } from '../../auth/CartProvider';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,8 @@ import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
+const EmptyProducts = lazy(() => import('../producto/EmptyProducts.jsx'));
+const ErrorComponent = lazy(() => import('../ui/ErrorComponent.jsx'));
 
 const fetchCombos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -38,9 +40,12 @@ const Combos = () => {
 	if (isLoading) {
 		return <LoadingSpinner />;
 	}
-
 	if (isError) {
-		return <div>Error: {error.message}</div>;
+		return (
+			<Suspense fallback={<LoadingSpinner />}>
+				<ErrorComponent message={error.message} />;
+			</Suspense>
+		);
 	}
 
 	const combosList = combosData?.combos || [];
@@ -59,8 +64,7 @@ const Combos = () => {
 								src={val.url}
 								className='card-img-top img-fluid'
 								alt='Imagen del combo'
-								height='200px'
-								style={{ objectFit: 'cover' }}
+								style={{ objectFit: 'cover', height: '200px' }}
 							/>
 							<h3 className='card-header'>{val.nombre}</h3>
 							<div className='card-body'>
@@ -97,18 +101,23 @@ const Combos = () => {
 										</div>
 									</>
 								) : (
-									<div className='text-center'>
-										<strong className='text-uppercase text-center' style={{ fontSize: '1.5rem' }}>
-											Agotado
-										</strong>
-									</div>
+									<Suspense fallback={<LoadingSpinner />}>
+										<EmptyProducts />
+									</Suspense>
 								)}
 							</div>
 						</div>
 					</div>
 				))}
 			</div>
-			<Pagination currentPage={currentPage} totalPages={totalPages} handlePreviousPage={handlePreviousPage} handleNextPage={handleNextPage} />
+			<Suspense fallback={<LoadingSpinner />}>
+				<Pagination
+					currentPage={currentPage}
+					totalPages={totalPages}
+					handlePreviousPage={handlePreviousPage}
+					handleNextPage={handleNextPage}
+				/>
+			</Suspense>
 		</div>
 	);
 };

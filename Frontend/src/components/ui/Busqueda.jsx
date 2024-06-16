@@ -61,8 +61,7 @@ const Busqueda = () => {
 										src={val.url}
 										className='card-img-top img-fluid'
 										alt='Imagen del producto'
-										height='200px'
-										style={{ objectFit: 'cover' }}
+										style={{ objectFit: 'cover', height: '200px' }}
 									/>
 									<h5 className='card-header'>{val.nombre}</h5>
 									<div className='card-body'>

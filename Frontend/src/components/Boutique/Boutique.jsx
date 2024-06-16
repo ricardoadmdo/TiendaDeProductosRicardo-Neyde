@@ -18,7 +18,6 @@ const Boutique = () => {
 							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
-							objectFit='cover'
 						/>
 						<div className='card-body'>
 							<p className='card-text'>Descubre nuestra amplia gama de productos de moda.</p>

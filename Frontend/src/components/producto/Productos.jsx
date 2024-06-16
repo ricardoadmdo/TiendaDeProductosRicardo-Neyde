@@ -6,6 +6,8 @@ import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
+const EmptyProducts = lazy(() => import('./EmptyProducts.jsx'));
+const ErrorComponent = lazy(() => import('../ui/ErrorComponent.jsx'));
 import './styles.css';
 
 const fetchProductos = async ({ queryKey }) => {
@@ -40,7 +42,11 @@ const Productos = () => {
 	}
 
 	if (isError) {
-		return <div>Error: {error.message}</div>;
+		return (
+			<Suspense fallback={<LoadingSpinner />}>
+				<ErrorComponent message={error.message} />;
+			</Suspense>
+		);
 	}
 
 	const productosList = productosData?.productos || [];
@@ -60,8 +66,7 @@ const Productos = () => {
 									src={val.url}
 									className='card-img-top img-fluid'
 									alt='Imagen del producto'
-									height='200px'
-									style={{ objectFit: 'cover' }}
+									style={{ objectFit: 'cover', height: '200px' }}
 								/>
 								<h3 className='card-header'>{val.nombre}</h3>
 								<div className='card-body'>
@@ -113,9 +118,9 @@ const Productos = () => {
 						</div>
 					))
 				) : (
-					<div className='text-center'>
-						<h2>No se encontraron productos</h2>
-					</div>
+					<Suspense fallback={<LoadingSpinner />}>
+						<EmptyProducts />
+					</Suspense>
 				)}
 			</div>
 			<Suspense fallback={<LoadingSpinner />}>
