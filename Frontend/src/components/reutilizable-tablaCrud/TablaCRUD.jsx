@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faCamera } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import useExchangeRates from '../../hooks/useExchangeRates';
 
 const cloudName = import.meta.env.VITE_CLOUDNAME;
 const uploadPreset = import.meta.env.VITE_UPLOADPRESET;
@@ -27,6 +28,7 @@ const TablaCRUD = ({
 	formState,
 	setFormState,
 }) => {
+	const { usdRate } = useExchangeRates();
 	const [uploading, setUploading] = useState(false);
 	const [url, setUrl] = useState('');
 	const [imageName, setImageName] = useState('');
@@ -158,6 +160,12 @@ const TablaCRUD = ({
 													? item[column.accessor]
 														? 'Activo'
 														: 'Inactivo'
+													: column.accessor === 'precio'
+													? `$${item[column.accessor]}`
+													: column.accessor === 'usd'
+													? usdRate
+														? `${(item['precio'] / usdRate).toFixed(2)}$ USD`
+														: 'N/A'
 													: item[column.accessor]}
 											</td>
 										))}

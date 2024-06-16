@@ -91,7 +91,7 @@ const Bienvenida = () => {
 					<div className='card mb-4'>
 						<LazyLoadImage
 							effect='opacity'
-							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
+							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718562608/nmmdqyfs1dy7yihak0ca.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
 						/>

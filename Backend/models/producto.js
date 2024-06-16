@@ -5,6 +5,10 @@ const ProductoSchema = Schema({
 		type: String,
 		required: [true, 'El nombre es obligatorio'],
 	},
+	cantidadTienda: {
+		type: Number,
+		required: true,
+	},
 	cantidad: {
 		type: Number,
 		required: true,

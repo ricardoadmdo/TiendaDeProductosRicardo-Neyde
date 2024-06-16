@@ -18,6 +18,7 @@ const CRUDProducto = () => {
 	const [formState, setFormState] = useState({
 		nombre: '',
 		cantidad: '',
+		cantidadTienda: '',
 		precio: '',
 		url: '',
 	});
@@ -59,6 +60,7 @@ const CRUDProducto = () => {
 		setFormState({
 			nombre: '',
 			cantidad: '',
+			cantidadTienda: '',
 			precio: '',
 			url: '',
 		});
@@ -151,8 +153,8 @@ const CRUDProducto = () => {
 
 	const validar = (event) => {
 		event.preventDefault();
-		const { nombre, cantidad, precio, url } = formState;
-		if (nombre.trim() === '' || cantidad === 0 || precio === 0 || url.trim() === '') {
+		const { nombre, cantidad, precio, url, cantidadTienda } = formState;
+		if (nombre.trim() === '' || cantidad === 0 || precio === 0 || url.trim() === '' || cantidadTienda === 0) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Campos Vacíos',
@@ -176,6 +178,7 @@ const CRUDProducto = () => {
 		setFormState({
 			nombre: op === 2 ? producto.nombre : '',
 			cantidad: op === 2 ? producto.cantidad : '',
+			cantidadTienda: op === 2 ? producto.cantidadTienda : '',
 			precio: op === 2 ? producto.precio : '',
 			url: op === 2 ? producto.url : '',
 		});
@@ -206,8 +209,11 @@ const CRUDProducto = () => {
 					columns={[
 						{ header: 'ID', accessor: 'uid' },
 						{ header: 'Nombre', accessor: 'nombre' },
-						{ header: 'Cantidad', accessor: 'cantidad' },
-						{ header: 'Precio', accessor: 'precio' },
+						{ header: 'Cantidad en Tienda', accessor: 'cantidad' },
+						{ header: 'Cantidad en Almacén', accessor: 'cantidadTienda' },
+						{ header: 'Precio en CUP', accessor: 'precio' },
+						{ header: 'Precio en USD', accessor: 'usd' },
+						{ header: 'Estado en DB', accessor: 'estado' },
 					]}
 					onEdit={(usuario) => openModal(2, usuario)}
 					onDelete={deleteProductos}
@@ -218,8 +224,18 @@ const CRUDProducto = () => {
 					setOperationMode={setOperationMode}
 					formFields={[
 						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-						{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
+						{ name: 'cantidad', label: 'Cantidad en Tienda', placeholder: 'Ingrese la cantidad', type: 'number' },
+						{ name: 'cantidadTienda', label: 'Cantidad en Almacén', placeholder: 'Ingrese la cantidad', type: 'number' },
 						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
+						{
+							name: 'estado',
+							label: 'Estado en Base de Datos',
+							type: 'select',
+							options: [
+								{ value: true, label: 'Activo' },
+								{ value: false, label: 'Inactivo' },
+							],
+						},
 						{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
 					]}
 					formState={formState}

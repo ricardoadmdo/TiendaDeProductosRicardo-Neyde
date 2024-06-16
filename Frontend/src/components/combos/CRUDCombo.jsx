@@ -209,7 +209,8 @@ const CRUDCombo = () => {
 						{ header: 'ID', accessor: 'uid' },
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Cantidad', accessor: 'cantidad' },
-						{ header: 'Precio', accessor: 'precio' },
+						{ header: 'Precio en CUP', accessor: 'precio' },
+						{ header: 'Precio en USD', accessor: 'usd' },
 						{ header: 'Descripción', accessor: 'description' },
 						{ header: 'Estado en DB', accessor: 'estado' },
 					]}

@@ -11,7 +11,7 @@ const EmptyCart = () => {
 			<p className='h5'>Tu carrito se encuentra vacío</p>
 			<p className='mb-4'>Parece que aún no has agregado ningún producto</p>
 			<NavLink to='/productos' className=' btn btn-dark btn-lg'>
-				Seguir comprando
+				Ir a Comprar
 			</NavLink>
 		</div>
 	);

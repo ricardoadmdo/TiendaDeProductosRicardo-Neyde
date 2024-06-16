@@ -73,10 +73,10 @@ const Productos = () => {
 									{val.cantidad > 0 ? (
 										<>
 											<strong>
-												<p className='card-text'>{val.precio}$ CUP</p>
+												<p className='card-text'>${val.precio} CUP</p>
 											</strong>
 											<strong>
-												<p className='card-text'>{usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'}$ USD</p>
+												<p className='card-text'>${usdRate ? (val.precio / usdRate).toFixed(2) : 'N/A'} USD</p>
 											</strong>
 											<hr />
 											<div className='row align-items-center'>

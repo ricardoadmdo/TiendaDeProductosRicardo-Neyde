@@ -15,7 +15,7 @@ const Boutique = () => {
 						<LazyLoadImage
 							threshold={10}
 							effect='blur'
-							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041271/udua1fvzut5bnmali9pd.jpg'
+							src='https://res.cloudinary.com/dber1pxea/image/upload/v1718562608/nmmdqyfs1dy7yihak0ca.jpg'
 							className='card-img-top img-fluid'
 							alt='Imagen del producto'
 						/>

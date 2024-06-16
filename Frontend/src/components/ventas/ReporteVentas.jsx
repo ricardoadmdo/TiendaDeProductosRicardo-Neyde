@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import Axios from 'axios';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQuery } from '@tanstack/react-query';
+import useExchangeRates from '../../hooks/useExchangeRates';
 const Calendario = lazy(() => import('../reutilizable-tablaCrud/Calendario'));
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 
@@ -18,6 +19,7 @@ const fetchVentas = async ({ queryKey }) => {
 
 // Main component
 const ReporteVentas = () => {
+	const { usdRate } = useExchangeRates();
 	const [diasSeleccionados, setDiasSeleccionados] = useState([new Date().toISOString().split('T')[0]]);
 	const [currentPage, setCurrentPage] = useState(1);
 
@@ -90,7 +92,8 @@ const ReporteVentas = () => {
 											<tr>
 												<th>Hora</th>
 												<th>Total Productos</th>
-												<th>Precio Total</th>
+												<th>Precio Total CUP</th>
+												<th>Precio Total USD</th>
 												<th>Tipo de Pago</th>
 												<th>Productos</th>
 												<th>Cliente</th>
@@ -110,6 +113,7 @@ const ReporteVentas = () => {
 
 													<td>{venta.totalProductos}</td>
 													<td>${venta.precioTotal.toFixed(2)}</td>
+													<td>${(venta.precioTotal / usdRate).toFixed(2)}</td>
 													<td>
 														{venta.tipoPago === 'presencial' && (
 															<span className='tipo-pago-presencial'>Pago Presencial</span>
@@ -128,6 +132,7 @@ const ReporteVentas = () => {
 															))}
 														</ul>
 													</td>
+
 													<td>
 														{venta.cliente ? (
 															<>
