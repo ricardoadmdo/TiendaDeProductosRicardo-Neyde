@@ -21,7 +21,7 @@ const CRUDCafeteria = () => {
 		cantidad: '',
 		precio: '',
 		url: '',
-		categoria: '', // Agregado el atributo categoría
+		categoria: '',
 	});
 	const [operationMode, setOperationMode] = useState(1);
 	const [title, setTitle] = useState('');
