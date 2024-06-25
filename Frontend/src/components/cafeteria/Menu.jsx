@@ -6,6 +6,7 @@ import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import Categorias from './Categorias';
+import EmptyProducts from '../producto/EmptyProducts';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 
 const fetchCafeteriaProductos = async ({ queryKey }) => {
@@ -52,7 +53,7 @@ const Menu = () => {
 	const totalPages = productosData?.totalPages || 0;
 
 	return (
-		<div className='container animate__animated animate__fadeIn my-5 '>
+		<div className='container animate__animated animate__fadeIn my-5'>
 			<div className='row'>
 				<div className='row'>
 					<div className='col-12 col-md-3'>
@@ -133,7 +134,7 @@ const Menu = () => {
 						))
 				) : (
 					<div className='text-center'>
-						<h2>No se encontraron productos</h2>
+						<EmptyProducts />
 					</div>
 				)}
 			</div>
