@@ -19,7 +19,6 @@ const BuscarUsuario = () => {
 		password: '',
 		correo: '',
 		rol: 'USER_ROLE', // Valor predeterminado para el rol,
-		estado: true, //Predeterminado como activo
 	});
 	const { user } = useContext(AuthContext);
 	const [title, setTitle] = useState('');
@@ -31,7 +30,6 @@ const BuscarUsuario = () => {
 			password: '',
 			correo: '',
 			rol: 'USER_ROLE',
-			estado: false,
 		});
 	};
 
@@ -208,7 +206,6 @@ const BuscarUsuario = () => {
 			password: '', // La contraseña siempre debe estar vacía al abrir el modal
 			correo: op === 2 ? usuario.correo : '',
 			rol: op === 2 ? usuario.rol : 'USER_ROLE', // Valor predeterminado para el rol
-			estado: op === 2 ? usuario.estado : false,
 		});
 
 		// Establece el modo de operación y el título del modal
@@ -229,7 +226,7 @@ const BuscarUsuario = () => {
 	};
 
 	return (
-		<div className='container-fluid my-5 animate__animated animate__fadeIn'>
+		<div className='container-fluid my-5'>
 			{resultados.length > 0 ? (
 				<>
 					<h2 className='text-center mb-4'>Resultados de la Búsqueda</h2>
@@ -240,11 +237,9 @@ const BuscarUsuario = () => {
 							data={resultados}
 							onAdd={() => openModal(1)}
 							columns={[
-								{ header: 'ID', accessor: 'uid' },
 								{ header: 'Nombre', accessor: 'nombre' },
 								{ header: 'Correo Electrónico', accessor: 'correo' },
 								{ header: 'Rol', accessor: 'rol' },
-								{ header: 'Estado en DB', accessor: 'estado' },
 							]}
 							onEdit={(usuario) => openModal(2, usuario)}
 							onDelete={deleteUser}
@@ -257,15 +252,6 @@ const BuscarUsuario = () => {
 								{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
 								{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
 								{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
-								{
-									name: 'estado',
-									label: 'Estado en Base de Datos',
-									type: 'select',
-									options: [
-										{ value: true, label: 'Activo' },
-										{ value: false, label: 'Inactivo' },
-									],
-								},
 								{
 									name: 'rol',
 									label: 'Rol',
