@@ -384,7 +384,6 @@ const Carrito = () => {
 											<Suspense fallback={<LoadingSpinner />}>
 												<CountryCodeSelect value={countryCode} onChange={handleCountryCodeChange} />
 											</Suspense>
-
 											<input
 												type='number'
 												className='form-control'
