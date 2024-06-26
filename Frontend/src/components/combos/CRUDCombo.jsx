@@ -207,7 +207,6 @@ const CRUDCombo = () => {
 					data={combosList}
 					onAdd={() => openModal(1)}
 					columns={[
-						{ header: 'ID', accessor: 'uid' },
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Cantidad', accessor: 'cantidad' },
 						{ header: 'Precio en CUP', accessor: 'precio' },

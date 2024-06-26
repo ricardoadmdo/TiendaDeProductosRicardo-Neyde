@@ -20,7 +20,6 @@ const CRUDUsuario = () => {
 		password: '',
 		correo: '',
 		rol: 'USER_ROLE',
-		estado: true,
 	});
 	const navigate = useNavigate();
 	const [operationMode, setOperationMode] = useState(1);
@@ -152,7 +151,7 @@ const CRUDUsuario = () => {
 
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE', estado: false });
+	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE' });
 
 	// Debounce logic
 	useEffect(() => {
@@ -197,7 +196,6 @@ const CRUDUsuario = () => {
 			password: '',
 			correo: op === 2 ? usuario.correo : '',
 			rol: op === 2 ? usuario.rol : 'USER_ROLE',
-			estado: op === 2 ? usuario.estado : false,
 		});
 		setOperationMode(op);
 		setTitle(op === 1 ? 'Registrar Usuario' : 'Editar Usuario');
@@ -217,11 +215,9 @@ const CRUDUsuario = () => {
 					data={data?.usuarios || []}
 					onAdd={() => openModal(1)}
 					columns={[
-						{ header: 'ID', accessor: 'uid' },
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Correo Electrónico', accessor: 'correo' },
 						{ header: 'Rol', accessor: 'rol' },
-						{ header: 'Estado en DB', accessor: 'estado' },
 					]}
 					onEdit={(usuario) => openModal(2, usuario)}
 					onDelete={(usuario) => deleteUserWithConfirmation(usuario)}
@@ -234,15 +230,6 @@ const CRUDUsuario = () => {
 						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
 						{ name: 'password', label: 'Contraseña', placeholder: 'Ingrese una contraseña', type: 'password' },
 						{ name: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese un correo electrónico', type: 'email' },
-						{
-							name: 'estado',
-							label: 'Estado en Base de Datos',
-							type: 'select',
-							options: [
-								{ value: true, label: 'Activo' },
-								{ value: false, label: 'Inactivo' },
-							],
-						},
 						{
 							name: 'rol',
 							label: 'Rol',

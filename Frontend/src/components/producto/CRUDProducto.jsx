@@ -208,13 +208,11 @@ const CRUDProducto = () => {
 					data={productosList}
 					onAdd={() => openModal(1)}
 					columns={[
-						{ header: 'ID', accessor: 'uid' },
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Cantidad en Tienda', accessor: 'cantidad' },
 						{ header: 'Cantidad en Almacén', accessor: 'cantidadTienda' },
 						{ header: 'Precio en CUP', accessor: 'precio' },
 						{ header: 'Precio en USD', accessor: 'usd' },
-						{ header: 'Estado en DB', accessor: 'estado' },
 					]}
 					onEdit={(usuario) => openModal(2, usuario)}
 					onDelete={deleteProductos}
@@ -228,15 +226,6 @@ const CRUDProducto = () => {
 						{ name: 'cantidad', label: 'Cantidad en Tienda', placeholder: 'Ingrese la cantidad', type: 'number' },
 						{ name: 'cantidadTienda', label: 'Cantidad en Almacén', placeholder: 'Ingrese la cantidad', type: 'number' },
 						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
-						{
-							name: 'estado',
-							label: 'Estado en Base de Datos',
-							type: 'select',
-							options: [
-								{ value: true, label: 'Activo' },
-								{ value: false, label: 'Inactivo' },
-							],
-						},
 						{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
 					]}
 					formState={formState}

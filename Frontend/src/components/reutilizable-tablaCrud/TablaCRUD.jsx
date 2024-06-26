@@ -66,7 +66,6 @@ const TablaCRUD = ({
 		onDrop: handleDrop,
 	});
 
-	// Funciones para manejar eventos generales
 	const handleAdd = () => {
 		setFormState({
 			nombre: '',
@@ -87,8 +86,9 @@ const TablaCRUD = ({
 			correo: item.correo,
 			rol: item.rol,
 			url: item.url,
+			estado: item.estado,
 		});
-		setOperationMode(2); // Modo 'editar'
+		setOperationMode(2);
 		onEdit(item);
 		limpiarImagen();
 	};
@@ -235,8 +235,8 @@ const TablaCRUD = ({
 														className='form-control'
 														onChange={(event) => handleChange(field.name, event.target.value === 'Activo')}
 													>
-														<option value='Inactivo'>Inactivo</option>
 														<option value='Activo'>Activo</option>
+														<option value='Inactivo'>Inactivo</option>
 													</select>
 												</div>
 											);
