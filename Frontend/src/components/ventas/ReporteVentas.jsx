@@ -3,10 +3,10 @@ import Axios from 'axios';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQuery } from '@tanstack/react-query';
 import useExchangeRates from '../../hooks/useExchangeRates';
+import ErrorComponent from '../ui/ErrorComponent';
 const Calendario = lazy(() => import('../reutilizable-tablaCrud/Calendario'));
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 
-// Fetch function for ventas
 const fetchVentas = async ({ queryKey }) => {
 	const [, page, limit, fechas] = queryKey;
 	try {
@@ -17,7 +17,6 @@ const fetchVentas = async ({ queryKey }) => {
 	}
 };
 
-// Main component
 const ReporteVentas = () => {
 	const { usdRate } = useExchangeRates();
 	const [diasSeleccionados, setDiasSeleccionados] = useState([new Date().toISOString().split('T')[0]]);
@@ -29,7 +28,6 @@ const ReporteVentas = () => {
 		data,
 		isLoading,
 		isError,
-		error,
 		refetch: refetchVentas,
 	} = useQuery({
 		queryKey: ['ventas', currentPage, 8, fechasSeleccionadas],
@@ -74,7 +72,7 @@ const ReporteVentas = () => {
 			{isLoading ? (
 				<LoadingSpinner />
 			) : isError ? (
-				<div className='alert alert-danger mt-4'>Error: {error.message}</div>
+				<ErrorComponent />
 			) : (
 				<div className='mt-4 my-2'>
 					{data?.ventas.length > 0 ? (
@@ -84,7 +82,7 @@ const ReporteVentas = () => {
 								<h3 className='text-center'>Ventas del {fecha}:</h3>
 								<div className='text-center mb-3'>
 									<strong>Total de Productos Vendidos:</strong> {totalProductos} | <strong>Total Recaudado:</strong> $
-									{totalDinero.toFixed(2)}
+									{totalDinero.toFixed(2)} CUP | <strong>Total Recaudado:</strong> ${(totalDinero / usdRate).toFixed(2)} USD
 								</div>
 								<div className='table-responsive'>
 									<table className='table table-striped'>

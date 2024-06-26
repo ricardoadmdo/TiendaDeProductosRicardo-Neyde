@@ -8,6 +8,7 @@ import Pagination from '../reutilizable-tablaCrud/Pagination';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
+import ProductSkeleton from '../producto/ProductSkeleton.jsx';
 const EmptyCombos = lazy(() => import('./EmptyCombos.jsx'));
 const ErrorComponent = lazy(() => import('../ui/ErrorComponent.jsx'));
 
@@ -38,7 +39,15 @@ const Combos = () => {
 	};
 
 	if (isLoading) {
-		return <LoadingSpinner />;
+		return (
+			<div className='container my-5'>
+				<div className='row'>
+					{Array.from({ length: 8 }).map((_, index) => (
+						<ProductSkeleton key={index} />
+					))}
+				</div>
+			</div>
+		);
 	}
 	if (isError) {
 		return (

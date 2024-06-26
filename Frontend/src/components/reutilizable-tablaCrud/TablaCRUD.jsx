@@ -261,37 +261,30 @@ const TablaCRUD = ({
 									}
 									if (field.name === 'url') {
 										return (
-											<div key={field.name} className='input-control mb-3 dropzone-area bg-light' {...getRootProps()}>
+											<div key={field.name} className='input-control mb-3' {...getRootProps()}>
 												<input {...getInputProps()} className='form-control' />
-												<div className='input-group-append'>
-													<div className='dropzone-content border w-100 d-flex justify-content-between align-items-center p-2'>
-														{url ? (
-															<>
-																<img
-																	src={url}
-																	alt={imageName}
-																	className='img-thumbnail'
-																	style={{ maxHeight: '200px' }}
-																/>
-																<p className='mb-0'>{imageName}</p>
-															</>
-														) : (
-															<div className='w-100 text-center'>
-																<FontAwesomeIcon icon={faCamera} size='lg' />
-																<p className='mb-0'>Arrastra una imagen aquí</p>
-																<button
-																	type='button'
-																	onClick={(e) => {
-																		e.stopPropagation();
-																		open();
-																	}}
-																	className='btn btn-dark w-100 mt-2'
-																>
-																	Buscar imagen
-																</button>
-															</div>
-														)}
-													</div>
+												<div className='dropzone-content border w-100 d-flex justify-content-center align-items-center p-4 bg-light'>
+													{url ? (
+														<>
+															<img src={url} alt={imageName} className='img-thumbnail' style={{ maxHeight: '200px' }} />
+															<p className='mb-0 ml-2'>{imageName}</p>
+														</>
+													) : (
+														<div className='w-100 text-center'>
+															<FontAwesomeIcon icon={faCamera} size='lg' />
+															<p className='mb-0 mt-2'>Arrastra una imagen aquí</p>
+															<button
+																type='button'
+																onClick={(e) => {
+																	e.stopPropagation();
+																	open();
+																}}
+																className='btn btn-dark w-100 mt-2'
+															>
+																Buscar imagen
+															</button>
+														</div>
+													)}
 												</div>
 											</div>
 										);

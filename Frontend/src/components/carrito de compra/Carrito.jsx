@@ -298,7 +298,7 @@ const Carrito = () => {
 														<div className='row align-items-center'>
 															<div className='col-2'>
 																<button
-																	className='btn btn-secondary'
+																	className='btn btn-danger'
 																	onClick={() => {
 																		if (val.cantidadAdd <= 1) {
 																			removeFromCart(val.uid);

@@ -92,3 +92,18 @@
 .calendar .table tbody td:hover {
 	border-radius: 50%; /* Hacer la celda redonda */
 }
+
+.dropzone-content {
+	padding: 1rem;
+	min-height: 16rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	border: 2px dashed #d4dce6;
+	border-radius: 1rem;
+}
+
+.dropzone-content:hover {
+	background: #f2f7fe;
+}

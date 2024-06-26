@@ -9,6 +9,7 @@ const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx')
 const EmptyProducts = lazy(() => import('./EmptyProducts.jsx'));
 const ErrorComponent = lazy(() => import('../ui/ErrorComponent.jsx'));
 import './styles.css';
+import ProductSkeleton from './ProductSkeleton.jsx';
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -38,7 +39,15 @@ const Productos = () => {
 	};
 
 	if (isLoading) {
-		return <LoadingSpinner />;
+		return (
+			<div className='container my-5'>
+				<div className='row'>
+					{Array.from({ length: 8 }).map((_, index) => (
+						<ProductSkeleton key={index} />
+					))}
+				</div>
+			</div>
+		);
 	}
 
 	if (isError) {
