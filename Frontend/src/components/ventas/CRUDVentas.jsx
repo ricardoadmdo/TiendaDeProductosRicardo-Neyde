@@ -7,6 +7,7 @@ import LoadingSpinner from '../ui/LoadingSpinner.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import AnimatedNumber from '../ui/AnimatedNumber.jsx';
 
 const fetchProductos = async ({ page, searchTerm }) => {
 	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&search=${searchTerm}`);
@@ -258,8 +259,18 @@ const CRUDVentas = () => {
 					<li key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
 						<div>
 							<h5 className='mb-1'>{producto.nombre}</h5>
-							<p className='mb-1'>Cantidad: {producto.cantidad}</p>
-							<p className='mb-1'>Precio Total: ${producto.precio * producto.cantidad}</p>
+							<p className='mb-1'>
+								Cantidad:{' '}
+								<div className='animated-number-container me-1'>
+									<AnimatedNumber value={producto.cantidad} />
+								</div>
+							</p>
+							<p className='mb-1'>
+								Precio Total: $
+								<div className='animated-number-container me-1'>
+									<AnimatedNumber value={producto.precio * producto.cantidad} />
+								</div>
+							</p>
 						</div>
 						<div>
 							<button
@@ -282,8 +293,18 @@ const CRUDVentas = () => {
 				))}
 			</ul>
 			<div className='d-flex justify-content-between align-items-center'>
-				<h5>Total Productos: {formState.totalProductos}</h5>
-				<h5>Precio Total: ${formState.precioTotal}</h5>
+				<h5>
+					Total Productos:
+					<div className='animated-number-container me-1'>
+						<AnimatedNumber value={formState.totalProductos} />
+					</div>
+				</h5>
+				<h5>
+					Precio Total: $
+					<div className='animated-number-container me-1'>
+						<AnimatedNumber value={formState.precioTotal} />
+					</div>
+				</h5>
 			</div>
 			<button className='btn btn-primary mt-3' onClick={validar}>
 				Registrar Venta

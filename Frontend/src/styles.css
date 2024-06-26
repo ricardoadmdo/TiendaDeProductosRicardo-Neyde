@@ -12,3 +12,8 @@ body.no-scroll {
 .card:hover {
 	transform: scale(1.05);
 }
+
+/* Sobrescribe la duración de la animación */
+.fadeIn {
+	animation-duration: 0.1s !important; /* Ajusta este valor para hacer la animación más rápida */
+}
