@@ -75,7 +75,7 @@ const Productos = () => {
 									src={val.url}
 									className='card-img-top img-fluid'
 									alt='Imagen del producto'
-									style={{ objectFit: 'cover', height: '200px' }}
+									style={{ objectFit: 'contain', height: '200px' }}
 								/>
 								<h3 className='card-header'>{val.nombre}</h3>
 								<div className='card-body'>

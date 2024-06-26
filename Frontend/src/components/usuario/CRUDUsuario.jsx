@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { AuthContext } from '../../auth/authContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import LoadingSpinner from '../ui/LoadingSpinner.jsx';
+import TableSkeleton from '../ui/TableSkeleton.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
@@ -165,7 +165,7 @@ const CRUDUsuario = () => {
 	}, [searchTerm]);
 
 	if (isLoading) {
-		return <LoadingSpinner />;
+		return <TableSkeleton />;
 	}
 
 	if (isError) {
@@ -207,7 +207,7 @@ const CRUDUsuario = () => {
 
 	return (
 		<>
-			<Suspense fallback={<LoadingSpinner />}>
+			<Suspense fallback={<TableSkeleton />}>
 				{' '}
 				<TablaCRUD
 					searchTerm={searchTerm}

@@ -47,3 +47,14 @@
 .animated-number-container {
 	display: inline-block; /* Asegura que el contenedor se muestre en línea */
 }
+
+/* TableSkeleton.css */
+.table-skeleton {
+	border-collapse: collapse; /* Colapsar bordes de la tabla para líneas claras */
+}
+
+.table-skeleton th,
+.table-skeleton td {
+	border: 1px solid rgba(0, 0, 0, 0.1); /* Color y grosor de las líneas de las celdas */
+	padding: 10px; /* Añadir padding para espacio alrededor del contenido */
+}

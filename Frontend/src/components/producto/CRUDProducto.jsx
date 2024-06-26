@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
+import TableSkeleton from '../ui/TableSkeleton.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
@@ -46,7 +47,7 @@ const CRUDProducto = () => {
 	};
 
 	if (isLoading) {
-		return <LoadingSpinner />;
+		return <TableSkeleton />;
 	}
 
 	if (isError) {
