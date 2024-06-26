@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../auth/authContext.jsx';
-import LoadingSpinner from '../ui/LoadingSpinner.jsx';
+import TableSkeleton from '../ui/TableSkeleton.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
@@ -231,7 +231,7 @@ const BuscarUsuario = () => {
 				<>
 					<h2 className='text-center mb-4'>Resultados de la Búsqueda</h2>
 					<div className='row'></div>
-					<Suspense fallback={<LoadingSpinner />}>
+					<Suspense fallback={<TableSkeleton />}>
 						<TablaCRUD
 							busqueda={false}
 							data={resultados}

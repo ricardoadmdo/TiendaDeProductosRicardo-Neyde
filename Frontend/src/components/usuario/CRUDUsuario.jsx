@@ -5,6 +5,7 @@ import { AuthContext } from '../../auth/authContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import TableSkeleton from '../ui/TableSkeleton.jsx';
+import ErrorComponent from '../ui/ErrorComponent.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
@@ -34,7 +35,7 @@ const CRUDUsuario = () => {
 		queryClient.invalidateQueries(['usuarios']);
 	};
 
-	const { data, isLoading, isError, error } = useQuery({
+	const { data, isLoading, isError } = useQuery({
 		queryKey: ['usuarios', { page: currentPage, searchTerm: debouncedSearchTerm }],
 		queryFn: () => fetchUsuarios({ page: currentPage, searchTerm: debouncedSearchTerm }),
 		keepPreviousData: true,
@@ -168,7 +169,7 @@ const CRUDUsuario = () => {
 	}
 
 	if (isError) {
-		return <div>Error: {error.message}</div>;
+		return <ErrorComponent />;
 	}
 
 	const validar = (event) => {

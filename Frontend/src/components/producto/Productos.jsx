@@ -7,9 +7,9 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const EmptyProducts = lazy(() => import('./EmptyProducts.jsx'));
-const ErrorComponent = lazy(() => import('../ui/ErrorComponent.jsx'));
 import './styles.css';
 import ProductSkeleton from './ProductSkeleton.jsx';
+import ErrorComponent from '../ui/ErrorComponent.jsx';
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -46,23 +46,11 @@ const Productos = () => {
 	};
 
 	if (isLoading) {
-		return (
-			<div className='container my-5'>
-				<div className='row'>
-					{Array.from({ length: 8 }).map((_, index) => (
-						<ProductSkeleton key={index} />
-					))}
-				</div>
-			</div>
-		);
+		return <ProductSkeleton />;
 	}
 
 	if (isError) {
-		return (
-			<Suspense fallback={<LoadingSpinner />}>
-				<ErrorComponent message={error.message} />;
-			</Suspense>
-		);
+		return <ErrorComponent message={error.message} />;
 	}
 
 	const productosList = productosData?.productos || [];

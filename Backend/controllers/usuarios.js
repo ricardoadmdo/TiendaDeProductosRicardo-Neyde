@@ -160,44 +160,10 @@ const usuariosDelete = async (req, res) => {
 	}
 };
 
-const usuarioChangeName = async (req, res = response) => {
-	const { nombre } = req.body;
-	const { id: usuarioId } = req.params;
-
-	try {
-		const usuario = await Usuario.findById(usuarioId);
-		if (!usuario) {
-			return res.status(400).json({
-				ok: false,
-				msg: 'Usuario no existe por ese id',
-			});
-		}
-		const nuevoUsuario = {
-			nombre,
-		};
-
-		const usuarioActualizado = await Usuario.findByIdAndUpdate(usuarioId, nuevoUsuario, {
-			new: true,
-		});
-
-		res.json({
-			ok: true,
-			usuario: usuarioActualizado,
-		});
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({
-			ok: false,
-			msg: 'Hable con el administrador',
-		});
-	}
-};
-
 module.exports = {
 	usuariosGet,
 	usuariosPut,
 	usuariosPost,
 	usuariosDelete,
-	usuarioChangeName,
 	usuariosBuscar,
 };

@@ -2,9 +2,9 @@ import { lazy, useState, Suspense } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import useFetch from '../../hooks/useFetch';
-import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
 import TableSkeleton from '../ui/TableSkeleton.jsx';
+import ErrorComponent from '../ui/ErrorComponent.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
@@ -32,7 +32,7 @@ const CRUDProducto = () => {
 		queryClient.invalidateQueries(['combos']);
 	};
 
-	const { data: productosData, isLoading, isError, error } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
+	const { data: productosData, isLoading, isError } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
@@ -51,7 +51,7 @@ const CRUDProducto = () => {
 	}
 
 	if (isError) {
-		return <div>Error: {error.message}</div>;
+		return <ErrorComponent />;
 	}
 
 	const productosList = productosData?.productos || [];
@@ -201,7 +201,7 @@ const CRUDProducto = () => {
 
 	return (
 		<>
-			<Suspense fallback={<LoadingSpinner />}>
+			<Suspense fallback={<TableSkeleton />}>
 				{' '}
 				<TablaCRUD
 					busqueda={false}

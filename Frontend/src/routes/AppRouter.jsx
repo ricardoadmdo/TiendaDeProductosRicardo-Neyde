@@ -7,7 +7,6 @@ const Productos = lazy(() => import('../components/producto/Productos'));
 const Carrito = lazy(() => import('../components/carrito de compra/Carrito'));
 const Combos = lazy(() => import('../components/combos/Combos'));
 const Busqueda = lazy(() => import('../components/ui/Busqueda'));
-const Perfil = lazy(() => import('../components/ui/Perfil'));
 const VerificationScreen = lazy(() => import('../components/login/VerificationScreen'));
 const NoEncontrado = lazy(() => import('../components/NoEncontrado.jsx'));
 const Cafeteria = lazy(() => import('../components/cafeteria/Cafeteria.jsx'));
@@ -18,80 +17,198 @@ const BoutiqueMenu = lazy(() => import('../components/Boutique/BoutiqueMenu.jsx'
 const CafBusqueda = lazy(() => import('../components/cafeteria/ui/CafBusqueda.jsx'));
 const CRUDCafeteria = lazy(() => import('../components/cafeteria/CRUDCafeteria.jsx'));
 import BoutiqueLayout from './BoutiqueLayout.jsx';
-import LoadingSpinner from '../components/ui/LoadingSpinner.jsx';
 import MainLayout from './MainLayout';
 import CafeteriaLayout from './CafeteriaLayout';
 import AdminRoute from './AdminRoute';
 import PrivateRoute from './PrivateRoute';
-import DashboardRoutes from './DashboardRoutes';
+import DashboardRoutes from './DashboardRoutes.jsx';
+import ProductSkeleton from '../components/producto/ProductSkeleton.jsx';
+import TableSkeleton from '../components/ui/TableSkeleton.jsx';
+import LoadingSpinner from '../components/ui/LoadingSpinner.jsx';
 
 const AppRouter = () => {
 	return (
 		<BrowserRouter>
-			<Suspense fallback={<LoadingSpinner />}>
-				<Routes>
-					{/* Rutas de la Tienda */}
-					<Route path='/' element={<MainLayout />}>
-						<Route index element={<Bienvenida />} />
-						<Route path='register' element={<RegisterScreen />} />
-						<Route path='login' element={<LoginScreen />} />
-						<Route path='productos' element={<Productos />} />
-						<Route path='carrito' element={<Carrito />} />
-						<Route path='combos' element={<Combos />} />
-						<Route path='busqueda' element={<Busqueda />} />
-						<Route path='perfil' element={<Perfil />} />
-						<Route path='verify-code' element={<VerificationScreen />} />
-						<Route
-							path='dashboard/*'
-							element={
-								<PrivateRoute>
-									<DashboardRoutes />
-								</PrivateRoute>
-							}
-						/>
-						{/* Ruta 404 */}
-						<Route path='*' element={<NoEncontrado />} />
-					</Route>
+			<Routes>
+				{/* Rutas de la Tienda */}
+				<Route path='/' element={<MainLayout />}>
+					<Route
+						index
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<Bienvenida />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='register'
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<RegisterScreen />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='login'
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<LoginScreen />
+							</Suspense>
+						}
+					/>
 
-					{/* Rutas de la Cafeteria */}
-					<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
-						<Route index element={<Cafeteria />} />
-						<Route path='menu' element={<Menu />} />
-						<Route path='cafBusqueda' element={<CafBusqueda />} />
-						<Route
-							path='reporte-ventas'
-							element={
-								<PrivateRoute>
-									<AdminRoute>
-										<ReporteVentas />
-									</AdminRoute>
-								</PrivateRoute>
-							}
-						/>
-						<Route
-							path='gestionar-cafeteria'
-							element={
-								<PrivateRoute>
-									<AdminRoute>
-										<CRUDCafeteria />
-									</AdminRoute>
-								</PrivateRoute>
-							}
-						/>
-						{/* Ruta 404 */}
-						<Route path='*' element={<NoEncontrado />} />
-					</Route>
+					<Route
+						path='productos'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<Productos />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='carrito'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<Carrito />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='combos'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<Combos />
+							</Suspense>
+						}
+					/>
 
-					{/* Rutas de la Boutique */}
-					<Route path='/boutique/*' element={<BoutiqueLayout />}>
-						<Route index element={<Boutique />} />
-						<Route path='boutiqueMenu' element={<BoutiqueMenu />} />
-					</Route>
+					<Route
+						path='busqueda'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<Busqueda />
+							</Suspense>
+						}
+					/>
 
+					<Route
+						path='verify-code'
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<VerificationScreen />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='dashboard/*'
+						element={
+							<PrivateRoute>
+								<DashboardRoutes />
+							</PrivateRoute>
+						}
+					/>
 					{/* Ruta 404 */}
-					<Route path='*' element={<NoEncontrado />} />
-				</Routes>
-			</Suspense>
+					<Route
+						path='*'
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<NoEncontrado />
+							</Suspense>
+						}
+					/>
+				</Route>
+
+				{/* Rutas de la Cafeteria */}
+				<Route path='/cafeteria/*' element={<CafeteriaLayout />}>
+					<Route
+						index
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<Cafeteria />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='menu'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<Menu />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='cafBusqueda'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<CafBusqueda />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='reporte-ventas'
+						element={
+							<PrivateRoute>
+								<AdminRoute>
+									<Suspense fallback={<LoadingSpinner />}>
+										<ReporteVentas />
+									</Suspense>
+								</AdminRoute>
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path='gestionar-cafeteria'
+						element={
+							<PrivateRoute>
+								<AdminRoute>
+									<Suspense fallback={<TableSkeleton />}>
+										<CRUDCafeteria />
+									</Suspense>
+								</AdminRoute>
+							</PrivateRoute>
+						}
+					/>
+					{/* Ruta 404 */}
+					<Route
+						path='*'
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<NoEncontrado />
+							</Suspense>
+						}
+					/>
+				</Route>
+
+				{/* Rutas de la Boutique */}
+				<Route path='/boutique/*' element={<BoutiqueLayout />}>
+					<Route
+						index
+						element={
+							<Suspense fallback={<LoadingSpinner />}>
+								<Boutique />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='boutiqueMenu'
+						element={
+							<Suspense fallback={<ProductSkeleton />}>
+								<BoutiqueMenu />
+							</Suspense>
+						}
+					/>
+				</Route>
+
+				{/* Ruta 404 */}
+				<Route
+					path='*'
+					element={
+						<Suspense fallback={<LoadingSpinner />}>
+							<NoEncontrado />
+						</Suspense>
+					}
+				/>
+			</Routes>
 		</BrowserRouter>
 	);
 };

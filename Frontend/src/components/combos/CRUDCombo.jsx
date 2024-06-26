@@ -2,9 +2,9 @@ import { useState, lazy, Suspense } from 'react';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
 import useFetch from '../../hooks/useFetch';
-import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
 import TableSkeleton from '../ui/TableSkeleton.jsx';
+import ErrorComponent from '../ui/ErrorComponent.jsx';
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 
@@ -33,7 +33,7 @@ const CRUDCombo = () => {
 		queryClient.invalidateQueries(['combos']);
 	};
 
-	const { data: combosData, isLoading, isError, error } = useFetch(['combos', currentPage, 8], fetchCombos, { keepPreviousData: true });
+	const { data: combosData, isLoading, isError } = useFetch(['combos', currentPage, 8], fetchCombos, { keepPreviousData: true });
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
@@ -52,7 +52,7 @@ const CRUDCombo = () => {
 	}
 
 	if (isError) {
-		return <div>Error: {error.message}</div>;
+		return <ErrorComponent />;
 	}
 
 	const combosList = combosData?.combos || [];
@@ -201,7 +201,7 @@ const CRUDCombo = () => {
 
 	return (
 		<>
-			<Suspense fallback={<LoadingSpinner />}>
+			<Suspense fallback={<TableSkeleton />}>
 				<TablaCRUD
 					busqueda={false}
 					data={combosList}

@@ -1,11 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
-import CRUDUsuario from '../components/usuario/CRUDUsuario.jsx';
+import { lazy, Suspense } from 'react';
+import TableSkeleton from '../components/ui/TableSkeleton.jsx';
+import LoadingSpinner from '../components/ui/LoadingSpinner.jsx';
 import AdminRoute from './AdminRoute.jsx';
-import CRUDProducto from '../components/producto/CRUDProducto.jsx';
-import CRUDCombo from '../components/combos/CRUDCombo.jsx';
-// import { Perfil } from '../components/ui/Perfil.jsx';
-import BuscarUsuario from '../components/usuario/BuscarUsuario.jsx';
-import CRUDVentas from '../components/ventas/CRUDVentas.jsx';
+const CRUDUsuario = lazy(() => import('../components/usuario/CRUDUsuario.jsx'));
+const CRUDProducto = lazy(() => import('../components/producto/CRUDProducto.jsx'));
+const CRUDCombo = lazy(() => import('../components/combos/CRUDCombo.jsx'));
+const BuscarUsuario = lazy(() => import('../components/usuario/BuscarUsuario.jsx'));
+const CRUDVentas = lazy(() => import('../components/ventas/CRUDVentas.jsx'));
 
 const DashboardRoutes = () => {
 	return (
@@ -15,7 +17,9 @@ const DashboardRoutes = () => {
 					path='gestionar-usuarios'
 					element={
 						<AdminRoute>
-							<CRUDUsuario />
+							<Suspense fallback={<TableSkeleton />}>
+								<CRUDUsuario />
+							</Suspense>
 						</AdminRoute>
 					}
 				/>
@@ -23,7 +27,9 @@ const DashboardRoutes = () => {
 					path='gestionar-productos'
 					element={
 						<AdminRoute>
-							<CRUDProducto />
+							<Suspense fallback={<TableSkeleton />}>
+								<CRUDProducto />
+							</Suspense>
 						</AdminRoute>
 					}
 				/>
@@ -31,23 +37,20 @@ const DashboardRoutes = () => {
 					path='gestionar-combos'
 					element={
 						<AdminRoute>
-							<CRUDCombo />
+							<Suspense fallback={<TableSkeleton />}>
+								<CRUDCombo />
+							</Suspense>
 						</AdminRoute>
 					}
 				/>
-				{/* <Route
-					path='perfil'
-					element={
-						<AdminRoute>
-							<Perfil />
-						</AdminRoute>
-					}
-				/> */}
+
 				<Route
 					path='gestionar-ventas'
 					element={
 						<AdminRoute>
-							<CRUDVentas />
+							<Suspense fallback={<LoadingSpinner />}>
+								<CRUDVentas />
+							</Suspense>
 						</AdminRoute>
 					}
 				/>
@@ -55,7 +58,9 @@ const DashboardRoutes = () => {
 					path='buscarusuarios'
 					element={
 						<AdminRoute>
-							<BuscarUsuario />
+							<Suspense fallback={<TableSkeleton />}>
+								<BuscarUsuario />
+							</Suspense>
 						</AdminRoute>
 					}
 				/>
