@@ -20,7 +20,7 @@ const fetchProductos = async ({ queryKey }) => {
 
 const Productos = () => {
 	const { usdRate } = useExchangeRates();
-	const [cantidad, setCantidad] = useState(1);
+	const [cantidad, setCantidad] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
 	const { addToCart } = useContext(CartContext);
 
@@ -36,6 +36,13 @@ const Productos = () => {
 		if (currentPage < (productosData?.totalPages || 0)) {
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
+	};
+
+	const handleChangeCantidad = (uid, value) => {
+		setCantidad((prevCantidad) => ({
+			...prevCantidad,
+			[uid]: parseInt(value, 10),
+		}));
 	};
 
 	if (isLoading) {
@@ -95,15 +102,15 @@ const Productos = () => {
 														className='form-control'
 														placeholder='Cantidad'
 														min='1'
-														defaultValue='1'
-														onChange={(e) => setCantidad(parseInt(e.target.value, 10))}
+														value={cantidad[val.uid] || 1}
+														onChange={(e) => handleChangeCantidad(val.uid, e.target.value)}
 													/>
 												</div>
 												<div className='col-6'>
 													<button
 														aria-label='añadir al carrito'
 														className='btn btn-outline-dark w-100 btn-animated'
-														onClick={() => addToCart(val, cantidad)}
+														onClick={() => addToCart(val, cantidad[val.uid] || 1)}
 													>
 														<svg xmlns='http://www.w3.org/2000/svg' width='1.13em' height='1em' viewBox='0 0 576 512'>
 															<path
