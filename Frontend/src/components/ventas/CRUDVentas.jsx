@@ -308,7 +308,7 @@ const CRUDVentas = () => {
 						</div>
 						<div>
 							<button
-								className='btn btn-secondary me-1'
+								className='btn btn-danger me-1'
 								onClick={() => {
 									if (producto.cantidad <= 1) {
 										eliminarProducto(producto.uid);

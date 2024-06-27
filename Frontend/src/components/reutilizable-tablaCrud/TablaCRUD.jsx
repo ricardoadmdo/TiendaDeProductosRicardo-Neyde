@@ -173,7 +173,7 @@ const TablaCRUD = ({
 											<button
 												type='button'
 												onClick={() => handleEdit(item)}
-												className='btn btn-warning me-1'
+												className='btn btn-secondary me-1'
 												data-bs-toggle='modal'
 												data-bs-target='#modal'
 											>

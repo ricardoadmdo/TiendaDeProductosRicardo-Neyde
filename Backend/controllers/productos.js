@@ -74,8 +74,8 @@ const productosPut = async (req, res) => {
 };
 
 const productosPost = async (req, res) => {
-	const { nombre, cantidad, precio, url, cantidadTienda } = req.body;
-	const producto = new Producto({ nombre, cantidad, cantidadTienda, precio, url, estado: true });
+	const { ...resto } = req.body;
+	const producto = new Producto({ resto, estado: true });
 
 	//Guardar en BD
 	await producto.save();

@@ -22,6 +22,9 @@ const CRUDProducto = () => {
 		cantidadTienda: '',
 		precio: '',
 		url: '',
+		precioCosto: '',
+		minimoEnTienda: '',
+		minimoEnAlmacen: '',
 	});
 	const [operationMode, setOperationMode] = useState(1);
 	const [title, setTitle] = useState('');
@@ -64,6 +67,9 @@ const CRUDProducto = () => {
 			cantidadTienda: '',
 			precio: '',
 			url: '',
+			precioCosto: '',
+			minimoEnTienda: '',
+			minimoEnAlmacen: '',
 		});
 	};
 
@@ -154,8 +160,17 @@ const CRUDProducto = () => {
 
 	const validar = (event) => {
 		event.preventDefault();
-		const { nombre, cantidad, precio, url, cantidadTienda } = formState;
-		if (nombre.trim() === '' || cantidad === 0 || precio === 0 || url.trim() === '' || cantidadTienda === 0) {
+		const { nombre, cantidad, precio, url, cantidadTienda, precioCosto, minimoEnTienda, minimoEnAlmacen } = formState;
+		if (
+			nombre.trim() === '' ||
+			cantidad === 0 ||
+			precio === 0 ||
+			url.trim() === '' ||
+			cantidadTienda === 0 ||
+			precioCosto === 0 ||
+			minimoEnTienda === 0 ||
+			minimoEnAlmacen === 0
+		) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Campos Vacíos',
@@ -182,6 +197,9 @@ const CRUDProducto = () => {
 			cantidadTienda: op === 2 ? producto.cantidadTienda : '',
 			precio: op === 2 ? producto.precio : '',
 			url: op === 2 ? producto.url : '',
+			precioCosto: op === 2 ? producto.precioCosto : '',
+			minimoEnTienda: op === 2 ? producto.minimoEnTienda : '',
+			minimoEnAlmacen: op === 2 ? producto.minimoEnAlmacen : '',
 		});
 		setOperationMode(op);
 		setTitle(op === 1 ? 'Registrar Producto' : 'Editar Producto');
@@ -211,8 +229,11 @@ const CRUDProducto = () => {
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Cantidad en Tienda', accessor: 'cantidad' },
 						{ header: 'Cantidad en Almacén', accessor: 'cantidadTienda' },
+						{ header: 'Precio de Costo', accessor: 'precioCosto' },
 						{ header: 'Precio en CUP', accessor: 'precio' },
 						{ header: 'Precio en USD', accessor: 'usd' },
+						{ header: 'Minimo en la Tienda', accessor: 'minimoEnTienda' },
+						{ header: 'Minimo en el Almacen', accessor: 'minimoEnAlmacen' },
 					]}
 					onEdit={(usuario) => openModal(2, usuario)}
 					onDelete={deleteProductos}
@@ -225,7 +246,10 @@ const CRUDProducto = () => {
 						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
 						{ name: 'cantidad', label: 'Cantidad en Tienda', placeholder: 'Ingrese la cantidad', type: 'number' },
 						{ name: 'cantidadTienda', label: 'Cantidad en Almacén', placeholder: 'Ingrese la cantidad', type: 'number' },
+						{ name: 'precioCosto', label: 'Precio de Costo', placeholder: 'Ingrese un precio de costo', type: 'number' },
 						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
+						{ name: 'minimoEnTienda', label: 'Minimo en la Tienda ', placeholder: 'Ingrese un minimo en Tienda', type: 'number' },
+						{ name: 'minimoEnAlmacen', label: 'Minimo en el Almacen', placeholder: 'Ingrese un minimo en Almacen', type: 'number' },
 						{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
 					]}
 					formState={formState}

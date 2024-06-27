@@ -41,6 +41,7 @@ const ReporteVentas = () => {
 
 	const handleSeleccionarDias = (dias) => {
 		setDiasSeleccionados(dias);
+		setCurrentPage(1);
 	};
 
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);

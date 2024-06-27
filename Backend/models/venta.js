@@ -19,6 +19,18 @@ const ProductoSchema = new Schema({
 	estado: {
 		type: Boolean,
 	},
+	precioCosto: {
+		type: Number,
+		required: true,
+	},
+	minimoEnTienda: {
+		type: Number,
+		required: true,
+	},
+	minimoEnAlmacen: {
+		type: Number,
+		required: true,
+	},
 });
 
 const ClienteSchema = new Schema({

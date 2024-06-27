@@ -25,6 +25,18 @@ const ProductoSchema = Schema({
 		type: Boolean,
 		default: true,
 	},
+	precioCosto: {
+		type: Number,
+		required: true,
+	},
+	minimoEnTienda: {
+		type: Number,
+		required: true,
+	},
+	minimoEnAlmacen: {
+		type: Number,
+		required: true,
+	},
 });
 
 ProductoSchema.methods.toJSON = function () {
