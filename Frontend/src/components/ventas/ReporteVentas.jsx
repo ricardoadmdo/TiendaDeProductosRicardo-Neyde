@@ -47,16 +47,22 @@ const ReporteVentas = () => {
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	//Para agregar las ventas por fechas
+	// Para agregar las ventas por fechas y calcular la ganancia
 	const agruparVentasPorFecha = (ventas) => {
 		const groupedVentas = ventas.reduce((groupedVentas, venta) => {
 			const fecha = new Date(venta.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' });
 			if (!groupedVentas[fecha]) {
-				groupedVentas[fecha] = { ventas: [], totalProductos: 0, totalDinero: 0 };
+				groupedVentas[fecha] = { ventas: [], totalProductos: 0, totalDinero: 0, totalGanancia: 0 };
 			}
+			let gananciaVenta = 0;
+			venta.productos.forEach((producto) => {
+				const gananciaProducto = (producto.precio - producto.precioCosto) * producto.cantidad;
+				gananciaVenta += gananciaProducto;
+			});
 			groupedVentas[fecha].ventas.push(venta);
 			groupedVentas[fecha].totalProductos += venta.totalProductos;
 			groupedVentas[fecha].totalDinero += venta.precioTotal;
+			groupedVentas[fecha].totalGanancia += gananciaVenta;
 			return groupedVentas;
 		}, {});
 
@@ -77,14 +83,18 @@ const ReporteVentas = () => {
 			) : (
 				<div className='mt-4 my-2'>
 					{data?.ventas.length > 0 ? (
-						Object.entries(agruparVentasPorFecha(data.ventas)).map(([fecha, { ventas, totalProductos, totalDinero }]) => (
+						Object.entries(agruparVentasPorFecha(data.ventas)).map(([fecha, { ventas, totalProductos, totalDinero, totalGanancia }]) => (
 							<div key={fecha}>
 								<br />
-								<h3 className='text-center'>Ventas del {fecha}:</h3>
+								<h3 className='text-center'>Ventas del dia de hoy: {fecha}</h3>
 								<div className='text-center mb-3'>
+									<h3>Detalles de la venta del dia de hoy</h3>
 									<strong>Total de Productos Vendidos:</strong> {totalProductos} | <strong>Total Recaudado:</strong> $
-									{totalDinero.toFixed(2)} CUP | <strong>Total Recaudado:</strong> ${(totalDinero / usdRate).toFixed(2)} USD
+									{totalDinero.toFixed(2)} CUP | <strong>Total Recaudado:</strong> ${(totalDinero / usdRate).toFixed(2)} USD |{' '}
+									<strong>Ganancia Total:</strong> ${totalGanancia.toFixed(2)} CUP | <strong>Ganancia Total:</strong> $
+									{(totalGanancia / usdRate).toFixed(2)} USD
 								</div>
+								<hr />
 								<div className='table-responsive'>
 									<table className='table table-striped'>
 										<thead>

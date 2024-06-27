@@ -39,6 +39,22 @@ const Calendario = ({ onSeleccionarDias }) => {
 			return updatedSelectedDates;
 		});
 	};
+	const handleToggleMonth = () => {
+		const allDays = eachDayOfInterval({ start, end });
+		const allSelected = allDays.every((day) => selectedDates.some((selectedDay) => isSameDay(selectedDay, day)));
+
+		if (allSelected) {
+			setSelectedDates([]);
+			onSeleccionarDias([]);
+		} else {
+			setSelectedDates(allDays);
+			const fechasFormateadas = allDays.map((dia) => {
+				const localDate = new Date(dia.getTime() - dia.getTimezoneOffset() * 60000);
+				return localDate.toISOString().split('T')[0];
+			});
+			onSeleccionarDias(fechasFormateadas);
+		}
+	};
 
 	return (
 		<div className='calendar-container calendar'>
@@ -92,6 +108,11 @@ const Calendario = ({ onSeleccionarDias }) => {
 							))}
 						</tbody>
 					</table>
+				</div>
+				<div className='d-flex justify-content-center mt-3'>
+					<button className='btn btn-dark' onClick={handleToggleMonth}>
+						{selectedDates.length === days.length ? 'Desmarcar todo el Mes' : 'Seleccionar todo el Mes'}
+					</button>
 				</div>
 			</div>
 		</div>
