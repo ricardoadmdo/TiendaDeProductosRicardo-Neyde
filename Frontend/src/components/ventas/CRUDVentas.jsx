@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import AnimatedNumber from '../ui/AnimatedNumber.jsx';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import useExchangeRates from '../../hooks/useExchangeRates.js';
 
 const fetchProductos = async ({ page, searchTerm }) => {
 	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&search=${searchTerm}`);
@@ -15,6 +17,7 @@ const fetchProductos = async ({ page, searchTerm }) => {
 };
 
 const CRUDVentas = () => {
+	const { usdRate } = useExchangeRates();
 	const [formState, setFormState] = useState(() => {
 		const savedFormState = localStorage.getItem('formState');
 		return savedFormState
@@ -225,25 +228,56 @@ const CRUDVentas = () => {
 				<div className='alert alert-danger'>Error: {error.message}</div>
 			) : (
 				<>
-					<div className='list-group mb-4'>
-						{data?.productos.map((producto) => (
-							<div key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
-								<div>
-									<h5 className='mb-1'>{producto.nombre}</h5>
-									<p className='mb-1'>Precio: ${producto.precio}</p>
-								</div>
-								<button className='btn btn-success' onClick={() => openModal(producto)}>
-									Agregar{' '}
-									<svg xmlns='http://www.w3.org/2000/svg' width='25px' height='25px' viewBox='0 0 24 24'>
-										<path
-											fill='currentColor'
-											d='M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4zm1 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8'
+					<div className='text-center mb-4'>
+						<div className='row'>
+							{data?.productos.map((producto) => (
+								<div key={producto.uid} className='col-sm-6 col-md-4 col-lg-3 mb-3'>
+									<div className='card h-100 shadow-sm'>
+										<LazyLoadImage
+											threshold={10}
+											effect='blur'
+											src={producto.url}
+											className='card-img-top img-fluid'
+											alt={`Imagen del producto: ${producto.nombre}`}
+											style={{ objectFit: 'contain', height: '200px' }}
 										/>
-									</svg>
-								</button>
-							</div>
-						))}
+										<div className='card-header'>
+											<h5 className='card-title'>{producto.nombre}</h5>
+										</div>
+										<div className='card-body'>
+											<div className='d-flex justify-content-between'>
+												<p className='card-text mb-0'>
+													<strong>${producto.precio} CUP</strong>
+												</p>
+												<p className='card-text mb-0'>
+													<strong>${usdRate ? (producto.precio / usdRate).toFixed(2) : 'N/A'} USD</strong>
+												</p>
+											</div>
+											<hr />
+											<button
+												className='btn btn-success w-100'
+												onClick={() => openModal(producto)}
+												aria-label={`Agregar ${producto.nombre}`}
+											>
+												Agregar
+												<svg
+													xmlns='http://www.w3.org/2000/svg'
+													width='25px'
+													height='25px'
+													viewBox='0 0 24 24'
+													fill='currentColor'
+													className='ml-2'
+												>
+													<path d='M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4zm1 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8' />
+												</svg>
+											</button>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
 					</div>
+
 					<Pagination
 						currentPage={currentPage}
 						totalPages={data?.totalPages || 0}

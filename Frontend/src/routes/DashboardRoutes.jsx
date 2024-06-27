@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import TableSkeleton from '../components/ui/TableSkeleton.jsx';
-import LoadingSpinner from '../components/ui/LoadingSpinner.jsx';
 import AdminRoute from './AdminRoute.jsx';
+import ProductSkeleton from '../components/producto/ProductSkeleton.jsx';
 const CRUDUsuario = lazy(() => import('../components/usuario/CRUDUsuario.jsx'));
 const CRUDProducto = lazy(() => import('../components/producto/CRUDProducto.jsx'));
 const CRUDCombo = lazy(() => import('../components/combos/CRUDCombo.jsx'));
@@ -48,7 +48,7 @@ const DashboardRoutes = () => {
 					path='gestionar-ventas'
 					element={
 						<AdminRoute>
-							<Suspense fallback={<LoadingSpinner />}>
+							<Suspense fallback={<ProductSkeleton />}>
 								<CRUDVentas />
 							</Suspense>
 						</AdminRoute>
