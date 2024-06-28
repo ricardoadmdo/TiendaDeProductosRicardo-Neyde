@@ -7,6 +7,7 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import Categorias from './Categorias';
 import EmptyProducts from '../producto/EmptyProducts';
+import CustomToast from '../ui/CustomToast';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 
 const fetchCafeteriaProductos = async ({ queryKey }) => {
@@ -19,7 +20,7 @@ const Menu = () => {
 	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
-	const { addToCart } = useContext(CartContext);
+	const { addToCart, setShowToast, showToast } = useContext(CartContext);
 	const [selectedCategory, setSelectedCategory] = useState(null);
 
 	const {
@@ -146,6 +147,7 @@ const Menu = () => {
 					handleNextPage={handleNextPage}
 				/>
 			</Suspense>
+			<CustomToast showToast={showToast} setShowToast={setShowToast} message='Producto agregado' position='bottomCenter' />
 		</div>
 	);
 };

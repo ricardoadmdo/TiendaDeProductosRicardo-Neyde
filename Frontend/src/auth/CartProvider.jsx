@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+	const [showToast, setShowToast] = useState(false);
 	const [cart, setCart] = useState(() => {
 		const localCart = localStorage.getItem('cart');
 		return localCart ? JSON.parse(localCart) : [];
@@ -43,13 +44,18 @@ export const CartProvider = ({ children }) => {
 		} else {
 			setCart([...cart, { ...productoToAdd, cantidadAdd: Number(cantidadAdd) }]);
 		}
+		setShowToast(true);
 	};
 
 	useEffect(() => {
 		localStorage.setItem('cart', JSON.stringify(cart));
 	}, [cart]);
 
-	return <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>{children}</CartContext.Provider>;
+	return (
+		<CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity, setShowToast, showToast }}>
+			{children}
+		</CartContext.Provider>
+	);
 };
 
 CartProvider.propTypes = {

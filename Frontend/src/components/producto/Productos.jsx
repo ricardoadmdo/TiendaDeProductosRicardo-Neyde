@@ -10,6 +10,7 @@ const EmptyProducts = lazy(() => import('./EmptyProducts.jsx'));
 import './styles.css';
 import ProductSkeleton from './ProductSkeleton.jsx';
 import ErrorComponent from '../ui/ErrorComponent.jsx';
+import CustomToast from '../ui/CustomToast.jsx';
 
 const fetchProductos = async ({ queryKey }) => {
 	const [, page, limit] = queryKey;
@@ -22,7 +23,7 @@ const Productos = () => {
 	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
-	const { addToCart } = useContext(CartContext);
+	const { addToCart, showToast, setShowToast } = useContext(CartContext);
 
 	const { data: productosData, isLoading, isError, error } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
 
@@ -135,6 +136,7 @@ const Productos = () => {
 					handleNextPage={handleNextPage}
 				/>
 			</Suspense>
+			<CustomToast showToast={showToast} setShowToast={setShowToast} message='Producto agregado' position='bottomCenter' />
 		</div>
 	);
 };

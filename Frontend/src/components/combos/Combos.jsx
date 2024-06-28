@@ -9,6 +9,7 @@ import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import ProductSkeleton from '../producto/ProductSkeleton.jsx';
+import CustomToast from '../ui/CustomToast.jsx';
 const EmptyCombos = lazy(() => import('./EmptyCombos.jsx'));
 const ErrorComponent = lazy(() => import('../ui/ErrorComponent.jsx'));
 
@@ -22,7 +23,7 @@ const Combos = () => {
 	const { usdRate } = useExchangeRates();
 	const [cantidad, setCantidad] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
-	const { addToCart } = useContext(CartContext);
+	const { addToCart, showToast, setShowToast } = useContext(CartContext);
 
 	const { data: combosData, isLoading, isError, error } = useFetch(['combos', currentPage, 8], fetchCombos, { keepPreviousData: true });
 
@@ -142,6 +143,7 @@ const Combos = () => {
 					handleNextPage={handleNextPage}
 				/>
 			</Suspense>
+			<CustomToast showToast={showToast} setShowToast={setShowToast} message='Combo agregado' position='bottomCenter' />
 		</div>
 	);
 };

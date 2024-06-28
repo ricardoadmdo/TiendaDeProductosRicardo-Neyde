@@ -248,7 +248,7 @@ const CRUDVentas = () => {
 			<form onSubmit={handleSearchSubmit} className='mb-4'>
 				<div className='input-group'>
 					<input type='text' className='form-control' placeholder='Buscar producto' value={searchTerm} onChange={handleSearchChange} />
-					<button className='btn btn-primary' type='submit'>
+					<button className='btn' style={{ backgroundColor: '#7066e0', color: 'white' }} type='submit'>
 						Buscar
 					</button>
 				</div>
@@ -320,58 +320,66 @@ const CRUDVentas = () => {
 			<div className='mt-5'>
 				<h4>Productos en la venta</h4>
 				<ul className='list-group'>
-					<div className='mt-3'>
-						<h5>
-							Total de productos:
-							<div className='animated-number-container me-1'>
+					<div className='mt-3 text-center'>
+						<div>
+							Total de productos:{' '}
+							<strong className='animated-number-container me-1'>
 								<AnimatedNumber value={formState.totalProductos} />
-							</div>
-						</h5>
-						<h5>
-							Precio total: $
-							<div className='animated-number-container me-1'>
+							</strong>
+						</div>
+						<div>
+							Precio total: <strong>$</strong>
+							<strong className='animated-number-container me-1'>
 								<AnimatedNumber value={formState.precioTotal} />
-							</div>
-							CUP
-						</h5>
-						<h5>
-							Precio total en USD: $
+							</strong>
+							<strong>CUP</strong>
+						</div>
+						<div>
+							Precio total en USD: <strong>$</strong>
 							{usdRate ? (
-								<div className='animated-number-container me-1'>
+								<strong className='animated-number-container me-1'>
 									<AnimatedNumber value={(formState.precioTotal / usdRate).toFixed(2)} />
-								</div>
+								</strong>
 							) : (
 								'N/A'
 							)}{' '}
-							USD
-						</h5>
+							<strong>USD</strong>
+						</div>
 					</div>
+
 					{formState.productos.map((producto) => (
 						<li key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
 							<div>
-								<span className='badge bg-primary rounded-pill'>{producto.cantidad}</span> {producto.nombre} - ${producto.precio}
+								<span className='badge bg-success rounded-pill'>{producto.cantidad}</span> {producto.nombre} - ${producto.precio}
 							</div>
 							<div>
-								<button className='btn btn-sm btn-secondary mx-1' onClick={() => aumentarCantidad(producto.uid)}>
+								<button className='btn btn-secondary me-1' onClick={() => aumentarCantidad(producto.uid)}>
 									<FontAwesomeIcon icon={faPlus} />
 								</button>
-								<button className='btn btn-sm btn-secondary mx-1' onClick={() => disminuirCantidad(producto.uid)}>
-									<FontAwesomeIcon icon={faMinus} />
-								</button>
-								<button className='btn btn-sm btn-danger mx-1' onClick={() => eliminarProducto(producto.uid)}>
-									<FontAwesomeIcon icon={faTrashAlt} />
+
+								<button
+									className='btn btn-danger'
+									onClick={() => {
+										if (producto.cantidad <= 1) {
+											eliminarProducto(producto.uid);
+										} else {
+											disminuirCantidad(producto.uid);
+										}
+									}}
+								>
+									{producto.cantidad <= 1 ? <FontAwesomeIcon icon={faTrashAlt} /> : <FontAwesomeIcon icon={faMinus} />}
 								</button>
 							</div>
 						</li>
 					))}
 				</ul>
 
-				<div className='mt-4'>
-					<button className='btn btn-primary' onClick={validar}>
-						Registrar Venta
-					</button>
-					<button className='btn btn-secondary ml-2' onClick={limpiarCampos}>
+				<div className='mt-4 d-flex justify-content-end'>
+					<button className='btn btn-secondary ml-2 me-1' onClick={limpiarCampos}>
 						Limpiar
+					</button>
+					<button className='btn btn-success' onClick={validar}>
+						Registrar Venta
 					</button>
 				</div>
 			</div>
