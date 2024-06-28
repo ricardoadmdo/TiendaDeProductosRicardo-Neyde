@@ -51,28 +51,15 @@ const obtenerVentas = async (req, res) => {
 
 const crearVenta = async (req, res) => {
 	try {
-		const { fecha, precioTotal, totalProductos, productos, tipoPago, cliente } = req.body;
+		const { ...datos } = req.body;
 
 		// Verifica que los campos requeridos estén presentes
-		if (!fecha || !precioTotal || !totalProductos || !productos || !tipoPago) {
+		if (!datos) {
 			return res.status(400).json({ message: 'Campos requeridos faltantes' });
 		}
 
-		// Verifica que la fecha sea válida
-		const fechaValida = new Date(fecha);
-		if (isNaN(fechaValida.getTime())) {
-			return res.status(400).json({ message: 'Fecha inválida' });
-		}
-
 		// Crear un nuevo objeto Venta con los datos recibidos
-		const nuevaVenta = new Venta({
-			fecha: fechaValida,
-			precioTotal,
-			totalProductos,
-			productos,
-			tipoPago,
-			cliente,
-		});
+		const nuevaVenta = new Venta(datos);
 
 		// Guardar la nueva venta en la base de datos
 		await nuevaVenta.save();

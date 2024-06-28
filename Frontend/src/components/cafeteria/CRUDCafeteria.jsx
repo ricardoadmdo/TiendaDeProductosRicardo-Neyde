@@ -205,7 +205,6 @@ const CRUDCafeteria = () => {
 					data={productosList}
 					onAdd={() => openModal(1)}
 					columns={[
-						{ header: 'ID', accessor: 'uid' },
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Cantidad', accessor: 'cantidad' },
 						{ header: 'Precio', accessor: 'precio' },

@@ -25,7 +25,14 @@ const AnimatedNumber = ({ value }) => {
 		};
 	}, [value]);
 
-	return <div className={`animated-number ${animationClass}`}>{Math.floor(animatedValue)}</div>;
+	let formattedValue = animatedValue; // Inicialmente, mantén el valor como está
+
+	// Verificar si animatedValue es un número antes de formatearlo
+	if (typeof animatedValue === 'number') {
+		formattedValue = animatedValue.toFixed(2); // Redondear a dos decimales y convertir en string
+	}
+
+	return <div className={`animated-number ${animationClass}`}>{formattedValue}</div>;
 };
 
 AnimatedNumber.propTypes = {

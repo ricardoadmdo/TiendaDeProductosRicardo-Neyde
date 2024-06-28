@@ -16,6 +16,11 @@ const fetchProductos = async ({ page, searchTerm }) => {
 	return response.data;
 };
 
+const fetchCafeteriaProductos = async ({ page, searchTerm }) => {
+	const response = await Axios.get(`http://localhost:3001/api/cafeteria?page=${page}&search=${searchTerm}`);
+	return response.data;
+};
+
 const CRUDVentas = () => {
 	const { usdRate } = useExchangeRates();
 	const [formState, setFormState] = useState(() => {
@@ -44,11 +49,31 @@ const CRUDVentas = () => {
 		queryClient.invalidateQueries(['productos']);
 	};
 
-	const { data, isLoading, isError, error } = useQuery({
+	const {
+		data: productosData,
+		isLoading: isLoadingProductos,
+		isError: isErrorProductos,
+		error: errorProductos,
+	} = useQuery({
 		queryKey: ['productos', { page: currentPage, searchTerm: debouncedSearchTerm }],
 		queryFn: () => fetchProductos({ page: currentPage, searchTerm: debouncedSearchTerm }),
 		keepPreviousData: true,
 	});
+
+	const {
+		data: cafeteriaData,
+		isLoading: isLoadingCafeteria,
+		isError: isErrorCafeteria,
+		error: errorCafeteria,
+	} = useQuery({
+		queryKey: ['cafeteria', { page: currentPage, searchTerm: debouncedSearchTerm }],
+		queryFn: () => fetchCafeteriaProductos({ page: currentPage, searchTerm: debouncedSearchTerm }),
+		keepPreviousData: true,
+	});
+
+	const productos = productosData?.productos || [];
+	const cafeteriaProductos = cafeteriaData?.productos || [];
+	const allProductos = [...productos, ...cafeteriaProductos];
 
 	const ventaMutation = useMutation({
 		mutationFn: (newVenta) => Axios.post('http://localhost:3001/api/venta', newVenta),
@@ -81,7 +106,7 @@ const CRUDVentas = () => {
 
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 
-	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
+	const handleNextPage = () => currentPage < (productosData?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
 	const limpiarCampos = () => {
 		setFormState({
@@ -117,25 +142,18 @@ const CRUDVentas = () => {
 
 	const agregarProducto = (producto, cantidad) => {
 		setFormState((prevState) => {
-			// Hacer una copia del array de productos
 			const nuevosProductos = [...prevState.productos];
-
-			// Buscar si el producto ya está en la lista
 			const index = nuevosProductos.findIndex((p) => p.uid === producto.uid);
 
 			if (index !== -1) {
-				// Si el producto ya existe, actualizar su cantidad
 				nuevosProductos[index].cantidad += cantidad;
 			} else {
-				// Si el producto no existe, agregarlo al array
 				nuevosProductos.push({ ...producto, cantidad });
 			}
 
-			// Calcular el total de productos y el precio total
 			const totalProductos = nuevosProductos.reduce((acc, p) => acc + p.cantidad, 0);
 			const precioTotal = nuevosProductos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
 
-			// Devolver el nuevo estado
 			return {
 				...prevState,
 				productos: nuevosProductos,
@@ -197,12 +215,25 @@ const CRUDVentas = () => {
 		const { productos } = formState;
 
 		if (productos.length === 0) {
-			Swal.fire({ icon: 'error', title: 'No hay productos', text: 'Debe agregar al menos un producto a la venta' });
+			Swal.fire({
+				icon: 'error',
+				title: 'No hay productos',
+				text: 'Debe agregar al menos un producto a la venta',
+			});
 			return;
 		}
 
+		// Asegurarse de que cada producto tenga los campos requeridos
+		const productosValidados = productos.map((producto) => ({
+			...producto,
+			minimoEnAlmacen: producto.minimoEnAlmacen || 0,
+			minimoEnTienda: producto.minimoEnTienda || 0,
+			precioCosto: producto.precioCosto || 0,
+			// Asegúrate de agregar todos los campos necesarios según tu modelo
+		}));
+
 		ventaMutation.mutate({
-			productos,
+			productos: productosValidados,
 			totalProductos: formState.totalProductos,
 			precioTotal: formState.precioTotal,
 			fecha: new Date(),
@@ -222,15 +253,15 @@ const CRUDVentas = () => {
 					</button>
 				</div>
 			</form>
-			{isLoading ? (
+			{isLoadingProductos || isLoadingCafeteria ? (
 				<LoadingSpinner />
-			) : isError ? (
-				<div className='alert alert-danger'>Error: {error.message}</div>
+			) : isErrorProductos || isErrorCafeteria ? (
+				<div className='alert alert-danger'>Error: {errorProductos?.message || errorCafeteria?.message}</div>
 			) : (
 				<>
 					<div className='text-center mb-4'>
 						<div className='row'>
-							{data?.productos.map((producto) => (
+							{allProductos.map((producto) => (
 								<div key={producto.uid} className='col-sm-6 col-md-4 col-lg-3 mb-3'>
 									<div className='card h-100 shadow-sm'>
 										<LazyLoadImage
@@ -280,69 +311,70 @@ const CRUDVentas = () => {
 
 					<Pagination
 						currentPage={currentPage}
-						totalPages={data?.totalPages || 0}
+						totalPages={productosData?.totalPages || 0}
 						handlePreviousPage={handlePreviousPage}
 						handleNextPage={handleNextPage}
 					/>
 				</>
 			)}
-			<hr />
-			<h4>Detalles de la Venta</h4>
-			<ul className='list-group mb-4'>
-				{formState.productos.map((producto) => (
-					<li key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
-						<div>
-							<h5 className='mb-1'>{producto.nombre}</h5>
-							<p className='mb-1'>
-								Cantidad:{' '}
+			<div className='mt-5'>
+				<h4>Productos en la venta</h4>
+				<ul className='list-group'>
+					<div className='mt-3'>
+						<h5>
+							Total de productos:
+							<div className='animated-number-container me-1'>
+								<AnimatedNumber value={formState.totalProductos} />
+							</div>
+						</h5>
+						<h5>
+							Precio total: $
+							<div className='animated-number-container me-1'>
+								<AnimatedNumber value={formState.precioTotal} />
+							</div>
+							CUP
+						</h5>
+						<h5>
+							Precio total en USD: $
+							{usdRate ? (
 								<div className='animated-number-container me-1'>
-									<AnimatedNumber value={producto.cantidad} />
+									<AnimatedNumber value={(formState.precioTotal / usdRate).toFixed(2)} />
 								</div>
-							</p>
-							<p className='mb-1'>
-								Precio Total: $
-								<div className='animated-number-container me-1'>
-									<AnimatedNumber value={producto.precio * producto.cantidad} />
-								</div>
-							</p>
-						</div>
-						<div>
-							<button
-								className='btn btn-danger me-1'
-								onClick={() => {
-									if (producto.cantidad <= 1) {
-										eliminarProducto(producto.uid);
-									} else {
-										disminuirCantidad(producto.uid);
-									}
-								}}
-							>
-								{producto.cantidad <= 1 ? <FontAwesomeIcon icon={faTrashAlt} /> : <FontAwesomeIcon icon={faMinus} />}
-							</button>
-							<button className='btn btn-secondary' onClick={() => aumentarCantidad(producto.uid)}>
-								<FontAwesomeIcon icon={faPlus} />
-							</button>
-						</div>
-					</li>
-				))}
-			</ul>
-			<div className='d-flex justify-content-between align-items-center'>
-				<h5>
-					Total Productos:
-					<div className='animated-number-container me-1'>
-						<AnimatedNumber value={formState.totalProductos} />
+							) : (
+								'N/A'
+							)}{' '}
+							USD
+						</h5>
 					</div>
-				</h5>
-				<h5>
-					Precio Total: $
-					<div className='animated-number-container me-1'>
-						<AnimatedNumber value={formState.precioTotal} />
-					</div>
-				</h5>
+					{formState.productos.map((producto) => (
+						<li key={producto.uid} className='list-group-item d-flex justify-content-between align-items-center'>
+							<div>
+								<span className='badge bg-primary rounded-pill'>{producto.cantidad}</span> {producto.nombre} - ${producto.precio}
+							</div>
+							<div>
+								<button className='btn btn-sm btn-secondary mx-1' onClick={() => aumentarCantidad(producto.uid)}>
+									<FontAwesomeIcon icon={faPlus} />
+								</button>
+								<button className='btn btn-sm btn-secondary mx-1' onClick={() => disminuirCantidad(producto.uid)}>
+									<FontAwesomeIcon icon={faMinus} />
+								</button>
+								<button className='btn btn-sm btn-danger mx-1' onClick={() => eliminarProducto(producto.uid)}>
+									<FontAwesomeIcon icon={faTrashAlt} />
+								</button>
+							</div>
+						</li>
+					))}
+				</ul>
+
+				<div className='mt-4'>
+					<button className='btn btn-primary' onClick={validar}>
+						Registrar Venta
+					</button>
+					<button className='btn btn-secondary ml-2' onClick={limpiarCampos}>
+						Limpiar
+					</button>
+				</div>
 			</div>
-			<button className='btn btn-primary mt-3' onClick={validar}>
-				Registrar Venta
-			</button>
 		</div>
 	);
 };

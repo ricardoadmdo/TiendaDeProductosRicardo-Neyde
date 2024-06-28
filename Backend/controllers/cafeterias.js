@@ -58,8 +58,8 @@ const cafeteriaPut = async (req, res) => {
 };
 
 const cafeteriaPost = async (req, res) => {
-	const { nombre, cantidad, precio, url, categoria } = req.body;
-	const producto = new Cafeteria({ nombre, cantidad, precio, url, estado: true, categoria });
+	const { ...datos } = req.body;
+	const producto = new Cafeteria(datos);
 
 	await producto.save();
 

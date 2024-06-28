@@ -5,6 +5,10 @@ const CafeteriaSchema = Schema({
 		type: String,
 		required: [true, 'El nombre es obligatorio'],
 	},
+	cantidadTienda: {
+		type: Number,
+		required: true,
+	},
 	cantidad: {
 		type: Number,
 		required: true,
@@ -23,6 +27,18 @@ const CafeteriaSchema = Schema({
 	},
 	categoria: {
 		type: String,
+		required: true,
+	},
+	precioCosto: {
+		type: Number,
+		required: true,
+	},
+	minimoEnTienda: {
+		type: Number,
+		required: true,
+	},
+	minimoEnAlmacen: {
+		type: Number,
 		required: true,
 	},
 });

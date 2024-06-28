@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const cafeteria = require('./cafeteria');
 
 const ProductoSchema = new Schema({
 	nombre: {
