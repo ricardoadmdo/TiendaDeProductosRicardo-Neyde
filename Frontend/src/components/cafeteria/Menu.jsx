@@ -3,11 +3,12 @@ import { CartContext } from '../../auth/CartProvider';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Axios from 'axios';
 import useFetch from '../../hooks/useFetch';
-import LoadingSpinner from '../ui/LoadingSpinner';
+import ProductSkeleton from '../producto/ProductSkeleton';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import Categorias from './Categorias';
 import EmptyProducts from '../producto/EmptyProducts';
 import CustomToast from '../ui/CustomToast';
+import LoadingSpinner from '../ui/LoadingSpinner';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 
 const fetchCafeteriaProductos = async ({ queryKey }) => {
@@ -43,7 +44,7 @@ const Menu = () => {
 	};
 
 	if (isLoading) {
-		return <LoadingSpinner />;
+		return <ProductSkeleton />;
 	}
 
 	if (isError) {

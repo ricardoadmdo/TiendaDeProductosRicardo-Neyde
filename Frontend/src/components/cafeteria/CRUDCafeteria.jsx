@@ -5,6 +5,7 @@ import useFetch from '../../hooks/useFetch';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
 import Categorias from './Categorias.jsx';
+import ErrorComponent from '../ui/ErrorComponent.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
@@ -18,10 +19,14 @@ const CRUDCafeteria = () => {
 	const [id, setId] = useState('');
 	const [formState, setFormState] = useState({
 		nombre: '',
+		cantidadTienda: '',
 		cantidad: '',
 		precio: '',
 		url: '',
 		categoria: '',
+		precioCosto: '',
+		minimoEnTienda: '',
+		minimoEnAlmacen: '',
 	});
 	const [operationMode, setOperationMode] = useState(1);
 	const [title, setTitle] = useState('');
@@ -51,7 +56,7 @@ const CRUDCafeteria = () => {
 	}
 
 	if (isError) {
-		return <div>Error: {error.message}</div>;
+		return <ErrorComponent message={error.message} />;
 	}
 
 	const productosList = productosData?.productos || [];
@@ -61,9 +66,13 @@ const CRUDCafeteria = () => {
 		setFormState({
 			nombre: '',
 			cantidad: '',
+			cantidadTienda: '',
 			precio: '',
 			url: '',
 			categoria: '',
+			precioCosto: '',
+			minimoEnTienda: '',
+			minimoEnAlmacen: '',
 		});
 	};
 
@@ -154,8 +163,18 @@ const CRUDCafeteria = () => {
 
 	const validar = (event) => {
 		event.preventDefault();
-		const { nombre, cantidad, precio, url, categoria } = formState;
-		if (nombre.trim() === '' || cantidad === 0 || precio === 0 || url.trim() === '' || categoria.trim() === '') {
+		const { nombre, cantidad, cantidadTienda, precio, url, categoria, precioCosto, minimoEnTienda, minimoEnAlmacen } = formState;
+		if (
+			nombre.trim() === '' ||
+			cantidad === 0 ||
+			precio === 0 ||
+			url.trim() === '' ||
+			categoria.trim() === '' ||
+			precioCosto === 0 ||
+			minimoEnTienda === 0 ||
+			minimoEnAlmacen === 0 ||
+			cantidadTienda === 0
+		) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Campos Vacíos',
@@ -179,9 +198,13 @@ const CRUDCafeteria = () => {
 		setFormState({
 			nombre: op === 2 ? producto.nombre : '',
 			cantidad: op === 2 ? producto.cantidad : '',
+			cantidadTienda: op === 2 ? producto.cantidadTienda : '',
 			precio: op === 2 ? producto.precio : '',
 			url: op === 2 ? producto.url : '',
 			categoria: op === 2 ? producto.categoria : '',
+			precioCosto: op === 2 ? producto.precioCosto : '',
+			minimoEnTienda: op === 2 ? producto.minimoEnTienda : '',
+			minimoEnAlmacen: op === 2 ? producto.minimoEnAlmacen : '',
 		});
 		setOperationMode(op);
 		setTitle(op === 1 ? 'Registrar Producto' : 'Editar Producto');
@@ -206,8 +229,12 @@ const CRUDCafeteria = () => {
 					onAdd={() => openModal(1)}
 					columns={[
 						{ header: 'Nombre', accessor: 'nombre' },
-						{ header: 'Cantidad', accessor: 'cantidad' },
+						{ header: 'Cantidad en Tienda', accessor: 'cantidadTienda' },
+						{ header: 'Cantidad en Almacen', accessor: 'cantidad' },
 						{ header: 'Precio', accessor: 'precio' },
+						{ header: 'Precio de Costo', accessor: 'precioCosto' },
+						{ header: 'Minimo en la Tienda', accessor: 'minimoEnTienda' },
+						{ header: 'Minimo en el Almacen', accessor: 'minimoEnAlmacen' },
 						{ header: 'Categoría', accessor: 'categoria' },
 					]}
 					onEdit={(usuario) => openModal(2, usuario)}
@@ -219,8 +246,12 @@ const CRUDCafeteria = () => {
 					setOperationMode={setOperationMode}
 					formFields={[
 						{ name: 'nombre', label: 'Nombre', placeholder: 'Ingrese un nombre', type: 'text' },
-						{ name: 'cantidad', label: 'Cantidad', placeholder: 'Ingrese la cantidad', type: 'number' },
-						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese un precio', type: 'number' },
+						{ name: 'cantidadTienda', label: 'Cantidad en la Tienda', placeholder: 'Ingrese la cantidad en la tienda', type: 'number' },
+						{ name: 'cantidad', label: 'Cantidad en el Almacen', placeholder: 'Ingrese la cantidad del almacen', type: 'number' },
+						{ name: 'precio', label: 'Precio', placeholder: 'Ingrese el precio de venta', type: 'number' },
+						{ name: 'precioCosto', label: 'Precio de Costo', placeholder: 'Ingrese el precio de costo', type: 'number' },
+						{ name: 'minimoEnTienda', label: 'Minimo en la Tienda', placeholder: 'Ingrese el minimo en la tienda', type: 'number' },
+						{ name: 'minimoEnAlmacen', label: 'Minimo en el Almacen', placeholder: 'Ingrese el minimo en el almacen', type: 'number' },
 						{ name: 'url', label: 'Url', placeholder: 'Ingrese una url', type: 'text' },
 						{ name: 'categoria', label: 'Categoría', placeholder: 'Seleccione una categoría', type: 'select', options: Categorias },
 					]}
