@@ -22,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 		<GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
 			<QueryClientProvider client={client}>
 				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
+
 				<App />
 			</QueryClientProvider>
 		</GoogleOAuthProvider>

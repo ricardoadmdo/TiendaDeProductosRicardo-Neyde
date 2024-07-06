@@ -39,6 +39,7 @@ const Carrito = () => {
 				nombre: item.nombre,
 				cantidad: item.cantidadAdd,
 				precio: item.precio,
+				precioCosto: item.precioCosto,
 				url: item.url,
 			})),
 			totalProductos: cart.reduce((acc, item) => acc + item.cantidadAdd, 0),
@@ -52,7 +53,7 @@ const Carrito = () => {
 				reparto: recipient.reparto,
 				nota: recipient.nota,
 			},
-			tipoPago: tipoPago, // Agregar el tipo de pago
+			tipoPago: tipoPago,
 		};
 
 		return ventaMutation.mutateAsync(venta);
@@ -129,15 +130,7 @@ const Carrito = () => {
 			return;
 		}
 
-		if (
-			!recipient.name ||
-			!recipient.mobile ||
-			!recipient.address ||
-			!recipient.municipio ||
-			!recipient.reparto ||
-			!recipient.nota ||
-			!recipient.termsAccepted
-		) {
+		if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.municipio || !recipient.reparto || !recipient.termsAccepted) {
 			Swal.fire({
 				title: 'Formulario Incompleto',
 				text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',
@@ -183,15 +176,7 @@ const Carrito = () => {
 			return;
 		}
 
-		if (
-			!recipient.name ||
-			!recipient.mobile ||
-			!recipient.address ||
-			!recipient.municipio ||
-			!recipient.reparto ||
-			!recipient.nota ||
-			!recipient.termsAccepted
-		) {
+		if (!recipient.name || !recipient.mobile || !recipient.address || !recipient.municipio || !recipient.reparto || !recipient.termsAccepted) {
 			Swal.fire({
 				title: 'Formulario Incompleto',
 				text: 'Por favor, completa todos los campos y acepta los términos y condiciones.',

@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const cafeteria = require('./cafeteria');
 
 const ProductoSchema = new Schema({
 	nombre: {
@@ -21,14 +20,6 @@ const ProductoSchema = new Schema({
 		type: Boolean,
 	},
 	precioCosto: {
-		type: Number,
-		required: true,
-	},
-	minimoEnTienda: {
-		type: Number,
-		required: true,
-	},
-	minimoEnAlmacen: {
 		type: Number,
 		required: true,
 	},

@@ -39,24 +39,3 @@ body.no-scroll {
 	text-align: center;
 	padding: 10px;
 }
-
-/* Ocultar parcialmente la barra de desplazamiento */
-::-webkit-scrollbar {
-	width: 8px; /* Cambia el ancho de la barra de desplazamiento */
-}
-
-/* Fondo de la barra de desplazamiento */
-::-webkit-scrollbar-track {
-	background: #f1f1f1; /* Color del fondo de la pista */
-}
-
-/* Barra de desplazamiento */
-::-webkit-scrollbar-thumb {
-	background: #888; /* Color de la barra de desplazamiento */
-	border-radius: 10px; /* Bordes redondeados */
-}
-
-/* Barra de desplazamiento al pasar el ratón */
-::-webkit-scrollbar-thumb:hover {
-	background: #555; /* Color de la barra de desplazamiento al pasar el ratón */
-}

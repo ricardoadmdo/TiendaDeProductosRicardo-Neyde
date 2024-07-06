@@ -3,7 +3,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const Boutique = () => {
 	return (
-		<div className='bienvenida-container mt-5 animate__animated animate__fadeIn'>
+		<div className='bienvenida container mt-5 animate__animated animate__fadeIn'>
 			<h1 className='text-center mb-4'>¡Bienvenidos a nuestra Boutique de Ropa!</h1>
 			<p className='text-center'>Descubre las últimas tendencias en moda y estilo.</p>
 
