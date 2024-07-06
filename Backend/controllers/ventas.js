@@ -1,5 +1,7 @@
 const { response, request } = require('express');
 const Venta = require('../models/venta');
+const Producto = require('../models/producto');
+const Cafeteria = require('../models/cafeteria');
 
 const obtenerVentas = async (req, res) => {
 	try {
@@ -51,20 +53,30 @@ const obtenerVentas = async (req, res) => {
 
 const crearVenta = async (req, res) => {
 	try {
-		const { ...datos } = req.body;
+		const { productos, ...datos } = req.body;
 
 		// Verifica que los campos requeridos estén presentes
-		if (!datos) {
+		if (!datos || !productos || productos.length === 0) {
 			return res.status(400).json({ message: 'Campos requeridos faltantes' });
 		}
 
 		// Crear un nuevo objeto Venta con los datos recibidos
-		const nuevaVenta = new Venta(datos);
+		const nuevaVenta = new Venta({ ...datos, productos });
 
 		// Guardar la nueva venta en la base de datos
 		await nuevaVenta.save();
+		// Actualizar cantidades de productos
+		for (let producto of productos) {
+			if (producto.categoria) {
+				// Producto de la cafetería
+				await Cafeteria.findByIdAndUpdate(producto.uid, { $inc: { cantidad: -producto.cantidad } });
+			} else {
+				// Producto de la tienda
+				await Producto.findByIdAndUpdate(producto.uid, { $inc: { cantidad: -producto.cantidad } });
+			}
+		}
 
-		res.status(201).json(nuevaVenta); // Responder con la venta creada
+		res.status(201).json(nuevaVenta);
 	} catch (error) {
 		console.error('Error al crear venta:', error.message);
 		res.status(500).json({ message: 'Error al crear venta' });

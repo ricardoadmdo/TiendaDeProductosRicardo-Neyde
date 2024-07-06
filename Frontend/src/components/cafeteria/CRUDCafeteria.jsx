@@ -229,8 +229,8 @@ const CRUDCafeteria = () => {
 					onAdd={() => openModal(1)}
 					columns={[
 						{ header: 'Nombre', accessor: 'nombre' },
-						{ header: 'Cantidad en Tienda', accessor: 'cantidadTienda' },
-						{ header: 'Cantidad en Almacen', accessor: 'cantidad' },
+						{ header: 'Cantidad en Tienda', accessor: 'cantidad' },
+						{ header: 'Cantidad en Almacen', accessor: 'cantidadTienda' },
 						{ header: 'Precio', accessor: 'precio' },
 						{ header: 'Precio de Costo', accessor: 'precioCosto' },
 						{ header: 'Minimo en la Tienda', accessor: 'minimoEnTienda' },
