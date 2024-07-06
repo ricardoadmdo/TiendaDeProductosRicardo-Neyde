@@ -1,16 +1,15 @@
-import { lazy, useState, Suspense } from 'react';
+import { lazy, useState, Suspense, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Swal from 'sweetalert2';
-import useFetch from '../../hooks/useFetch';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TableSkeleton from '../ui/TableSkeleton.jsx';
 import ErrorComponent from '../ui/ErrorComponent.jsx';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination.jsx'));
 const TablaCRUD = lazy(() => import('../reutilizable-tablaCrud/TablaCRUD.jsx'));
 
-const fetchProductos = async ({ queryKey }) => {
-	const [, page, limit] = queryKey;
-	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&limit=${limit}`);
+const fetchProductos = async ({ page, searchTerm }) => {
+	const response = await Axios.get(`http://localhost:3001/api/product?page=${page}&search=${searchTerm}`);
 	return response.data;
 };
 
@@ -29,13 +28,24 @@ const CRUDProducto = () => {
 	const [operationMode, setOperationMode] = useState(1);
 	const [title, setTitle] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+	const navigate = useNavigate();
 
 	const queryClient = useQueryClient();
 	const refetchProductos = () => {
 		queryClient.invalidateQueries(['combos']);
 	};
 
-	const { data: productosData, isLoading, isError } = useFetch(['productos', currentPage, 8], fetchProductos, { keepPreviousData: true });
+	const {
+		data: productosData,
+		isLoading,
+		isError,
+	} = useQuery({
+		queryKey: ['productos', { page: currentPage, searchTerm: debouncedSearchTerm }],
+		queryFn: () => fetchProductos({ page: currentPage, searchTerm: debouncedSearchTerm }),
+		keepPreviousData: true,
+	});
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
@@ -48,6 +58,15 @@ const CRUDProducto = () => {
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	};
+	// Debounce logic
+	useEffect(() => {
+		const timerId = setTimeout(() => {
+			setDebouncedSearchTerm(searchTerm);
+		}, 4000); // 4 segundos de retraso
+		return () => {
+			clearTimeout(timerId); // Limpiar el temporizador en cada cambio de término de búsqueda
+		};
+	}, [searchTerm]);
 
 	if (isLoading) {
 		return <TableSkeleton />;
@@ -217,12 +236,22 @@ const CRUDProducto = () => {
 		}, 500);
 	};
 
+	const handleSearchChange = (e) => setSearchTerm(e.target.value);
+
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		navigate(`/dashboard/buscarproductos?query=${searchTerm}`);
+	};
+
 	return (
 		<>
 			<Suspense fallback={<TableSkeleton />}>
-				{' '}
 				<TablaCRUD
-					busqueda={false}
+					searchTerm={searchTerm}
+					handleSearchChange={handleSearchChange}
+					handleSearchSubmit={handleSearchSubmit}
+					titleBuscar={'Buscar producto...'}
+					busqueda={true}
 					data={productosList}
 					onAdd={() => openModal(1)}
 					columns={[
@@ -235,7 +264,7 @@ const CRUDProducto = () => {
 						{ header: 'Minimo en la Tienda', accessor: 'minimoEnTienda' },
 						{ header: 'Minimo en el Almacen', accessor: 'minimoEnAlmacen' },
 					]}
-					onEdit={(usuario) => openModal(2, usuario)}
+					onEdit={(producto) => openModal(2, producto)}
 					onDelete={deleteProductos}
 					title={title}
 					modalTitle='Añadir nuevo Producto'

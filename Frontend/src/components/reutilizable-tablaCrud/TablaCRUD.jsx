@@ -27,6 +27,7 @@ const TablaCRUD = ({
 	formFields,
 	formState,
 	setFormState,
+	titleBuscar,
 }) => {
 	const { usdRate } = useExchangeRates();
 	const [uploading, setUploading] = useState(false);
@@ -118,7 +119,7 @@ const TablaCRUD = ({
 							type='search'
 							name='searchInput'
 							className='form-control'
-							placeholder='Buscar un usuario...'
+							placeholder={titleBuscar}
 							aria-label='Buscar'
 							value={searchTerm}
 							onChange={handleSearchChange}
@@ -357,6 +358,7 @@ TablaCRUD.propTypes = {
 	handleSearchChange: PropTypes.func,
 	handleSearchSubmit: PropTypes.func,
 	url: PropTypes.func,
+	titleBuscar: PropTypes.string,
 };
 
 export default TablaCRUD;

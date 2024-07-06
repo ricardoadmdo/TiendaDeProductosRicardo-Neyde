@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import TableSkeleton from '../components/ui/TableSkeleton.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProductSkeleton from '../components/producto/ProductSkeleton.jsx';
+const BuscarProducto = lazy(() => import('../components/producto/BuscarProducto.jsx'));
 const CRUDUsuario = lazy(() => import('../components/usuario/CRUDUsuario.jsx'));
 const CRUDProducto = lazy(() => import('../components/producto/CRUDProducto.jsx'));
 const CRUDCombo = lazy(() => import('../components/combos/CRUDCombo.jsx'));
@@ -60,6 +61,16 @@ const DashboardRoutes = () => {
 						<AdminRoute>
 							<Suspense fallback={<TableSkeleton />}>
 								<BuscarUsuario />
+							</Suspense>
+						</AdminRoute>
+					}
+				/>
+				<Route
+					path='buscarproductos'
+					element={
+						<AdminRoute>
+							<Suspense fallback={<TableSkeleton />}>
+								<BuscarProducto />
 							</Suspense>
 						</AdminRoute>
 					}

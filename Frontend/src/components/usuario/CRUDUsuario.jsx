@@ -207,11 +207,11 @@ const CRUDUsuario = () => {
 	return (
 		<>
 			<Suspense fallback={<TableSkeleton />}>
-				{' '}
 				<TablaCRUD
 					searchTerm={searchTerm}
 					handleSearchChange={handleSearchChange}
 					handleSearchSubmit={handleSearchSubmit}
+					titleBuscar={'Buscar usuario...'}
 					busqueda={true}
 					data={data?.usuarios || []}
 					onAdd={() => openModal(1)}
