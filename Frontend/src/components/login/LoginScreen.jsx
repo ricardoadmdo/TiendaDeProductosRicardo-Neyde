@@ -150,7 +150,7 @@ const LoginScreen = () => {
 		<div
 			className=' container-fluid d-flex justify-content-center align-items-center vh-100 '
 			style={{
-				backgroundImage: `url(https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg)`,
+				backgroundImage: `url(https://res.cloudinary.com/dber1pxea/image/upload/v1718041412/i0agcr3wwtibxdhwgoo6.jpg)`,
 				backgroundSize: 'cover',
 				backgroundPosition: 'center center',
 			}}

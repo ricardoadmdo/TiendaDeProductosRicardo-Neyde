@@ -1,7 +1,5 @@
 import { useState, useContext, lazy, Suspense } from 'react';
 import { CartContext } from '../../auth/CartProvider';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Axios from 'axios';
 import Pagination from '../reutilizable-tablaCrud/Pagination';
@@ -110,7 +108,7 @@ const Combos = () => {
 												<div className='col-6'>
 													<button
 														aria-label='añadir al carrito'
-														className='btn btn-success w-100 btn-animated'
+														className='btn btn-outline-success w-100 btn-animated'
 														onClick={() => addToCart(val, cantidad[val.uid] || 1)}
 													>
 														<svg xmlns='http://www.w3.org/2000/svg' width='1.13em' height='1em' viewBox='0 0 576 512'>

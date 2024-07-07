@@ -49,7 +49,7 @@ const Bienvenida = () => {
 				<Carousel.Item>
 					<img
 						className='d-block w-100'
-						src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/dtybbo5xcuw8m4ur1tib.jpg'
+						src='https://res.cloudinary.com/dber1pxea/image/upload/v1720390484/ecwmvqfwy0f7ydpsndlh.jpg'
 						alt='Second slide'
 					/>
 					<Carousel.Caption>
@@ -65,7 +65,7 @@ const Bienvenida = () => {
 				<Carousel.Item>
 					<img
 						className='d-block w-100'
-						src='https://res.cloudinary.com/dber1pxea/image/upload/v1716711600/kkplmrpcfpfftbg1lbby.jpg'
+						src='https://res.cloudinary.com/dber1pxea/image/upload/v1720390483/dfmzmyph4ecjmnhb1nfd.jpg'
 						alt='Third slide'
 					/>
 					<Carousel.Caption>
