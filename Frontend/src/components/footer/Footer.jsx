@@ -28,7 +28,6 @@ const Footer = () => {
 		<footer className='dark101720 footer-margin text-center text-white py-4'>
 			<div className='container'>
 				<h2>Contacto</h2>
-				<p>Conéctate con nosotros:</p>
 				<div className='d-flex justify-content-center mb-4'>
 					<a
 						style={{ color: '#00FF00' }}

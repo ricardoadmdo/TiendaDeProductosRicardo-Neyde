@@ -86,9 +86,8 @@ const ReporteVentas = () => {
 						Object.entries(agruparVentasPorFecha(data.ventas)).map(([fecha, { ventas, totalProductos, totalDinero, totalGanancia }]) => (
 							<div key={fecha}>
 								<br />
-								<h3 className='text-center'>Ventas del dia de hoy: {fecha}</h3>
+								<h3 className='text-center'>Ventas del {fecha}</h3>
 								<div className='text-center mb-3'>
-									<h3>Detalles de la venta del dia de hoy</h3>
 									<strong>Total de Productos Vendidos:</strong> {totalProductos} | <strong>Total Recaudado:</strong> $
 									{totalDinero.toFixed(2)} CUP | <strong>Total Recaudado:</strong> ${(totalDinero / usdRate).toFixed(2)} USD |{' '}
 									<strong>Ganancia Total:</strong> ${totalGanancia.toFixed(2)} CUP | <strong>Ganancia Total:</strong> $
