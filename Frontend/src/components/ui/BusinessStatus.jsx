@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 
 const BusinessStatus = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -12,14 +14,11 @@ const BusinessStatus = () => {
 
 			let open = false;
 
-			// Lunes a Viernes: 9:00 AM - 8:00 PM
 			if (day >= 1 && day <= 5) {
 				if ((hour > 9 || (hour === 9 && minutes >= 0)) && (hour < 20 || (hour === 20 && minutes === 0))) {
 					open = true;
 				}
-			}
-			// Sábado: 10:00 AM - 6:00 PM
-			else if (day === 6) {
+			} else if (day === 6) {
 				if ((hour > 10 || (hour === 10 && minutes >= 0)) && (hour < 18 || (hour === 18 && minutes === 0))) {
 					open = true;
 				}
@@ -30,17 +29,36 @@ const BusinessStatus = () => {
 
 		checkBusinessStatus();
 
-		const intervalId = setInterval(checkBusinessStatus, 60000); // Verifica cada minuto
+		const intervalId = setInterval(checkBusinessStatus, 60000);
 
-		return () => clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
+		return () => clearInterval(intervalId);
 	}, []);
+
+	const iconColor = isOpen ? 'green' : 'red';
 
 	return (
 		<div
 			className='card text-center animate__animated animate__bounceIn'
-			style={{ border: '1px solid #333', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', margin: '20px auto', maxWidth: '400px' }}
+			style={{
+				border: '1px solid #333',
+				boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+				margin: '20px auto',
+				maxWidth: '400px',
+				backgroundColor: '#343a40',
+				color: 'white',
+			}}
 		>
-			<div className='card-header' style={{ backgroundColor: isOpen ? '#d4edda' : '#f8d7da', color: isOpen ? '#155724' : '#721c24' }}>
+			<div
+				className='card-header'
+				style={{
+					backgroundColor: isOpen ? '#28a745' : '#dc3545',
+					color: 'white',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<FontAwesomeIcon icon={faClock} size='lg' style={{ color: iconColor, marginRight: '10px' }} />
 				{isOpen ? 'Abierto' : 'Cerrado'}
 			</div>
 			<div className='card-body'>
@@ -55,7 +73,7 @@ const BusinessStatus = () => {
 							marginRight: '10px',
 						}}
 					></span>
-					{isOpen ? 'Estamos Abiertos!' : 'Estamos Cerrados '}
+					{isOpen ? 'Estamos Abiertos!' : 'Estamos Cerrados'}
 				</h5>
 				<p>Hoy ({new Date().toLocaleDateString('es-ES', { weekday: 'long' })})</p>
 				<p className='card-text'>

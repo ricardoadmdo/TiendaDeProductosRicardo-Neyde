@@ -17,23 +17,6 @@
 	}
 }
 
-/* styles.css */
-.dark101720 {
-	background-color: #171717; /* Fondo oscuro */
-}
-
-.dark101720 .offcanvas-header,
-.dark101720 .offcanvas-body,
-.dark101720 .navbar-nav .nav-link,
-.dark101720 .dropdown-menu,
-.dark101720 .dropdown-item {
-	background-color: #171717; /* Fondo oscuro */
-}
-
-.dark101720 .btn-close {
-	filter: invert(1); /* Asegura que el botón de cierre sea visible en fondos oscuros */
-}
-
 .offcanvas-end {
 	width: 75%; /* Ancho del offcanvas */
 }
