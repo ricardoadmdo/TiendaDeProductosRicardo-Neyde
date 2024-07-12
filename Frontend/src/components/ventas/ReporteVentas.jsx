@@ -88,10 +88,10 @@ const ReporteVentas = () => {
 								<br />
 								<h3 className='text-center'>Ventas del {fecha}</h3>
 								<div className='text-center mb-3'>
-									<strong>Total de Productos Vendidos:</strong> {totalProductos} | <strong>Total Recaudado:</strong> $
-									{totalDinero.toFixed(2)} CUP | <strong>Total Recaudado:</strong> ${(totalDinero / usdRate).toFixed(2)} USD |{' '}
-									<strong>Ganancia Total:</strong> ${totalGanancia.toFixed(2)} CUP | <strong>Ganancia Total:</strong> $
-									{(totalGanancia / usdRate).toFixed(2)} USD
+									<strong>Total de Productos Vendidos: </strong>
+									{totalProductos} | <strong>Total Recaudado:</strong> ${totalDinero.toFixed(2)} CUP |{' '}
+									<strong>Total Recaudado: </strong>${(totalDinero / usdRate).toFixed(2)} USD | <strong>Ganancia Total: </strong> $
+									{totalGanancia.toFixed(2)} CUP | <strong>Ganancia Total:</strong> ${(totalGanancia / usdRate).toFixed(2)} USD
 								</div>
 								<hr />
 								<div className='table-responsive'>
@@ -148,7 +148,7 @@ const ReporteVentas = () => {
 																<br />
 																Teléfono: {venta.cliente.telefono}
 																<br />
-																Dirección: {venta.cliente.direccion}, {venta.cliente.municipio},{' '}
+																Dirección: {venta.cliente.direccion}, {venta.cliente.municipio},
 																{venta.cliente.reparto}
 															</>
 														) : (

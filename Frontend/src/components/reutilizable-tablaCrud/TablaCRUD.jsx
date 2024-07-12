@@ -163,6 +163,8 @@ const TablaCRUD = ({
 														: 'Inactivo'
 													: column.accessor === 'precio'
 													? `$${item[column.accessor]}`
+													: column.accessor === 'precioCosto'
+													? `$${item[column.accessor]}`
 													: column.accessor === 'usd'
 													? usdRate
 														? `${(item['precio'] / usdRate).toFixed(2)}$ USD`
