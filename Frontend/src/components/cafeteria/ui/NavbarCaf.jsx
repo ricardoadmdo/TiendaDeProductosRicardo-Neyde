@@ -61,7 +61,6 @@ const NavbarCaf = () => {
 					<div className='offcanvas-body'>
 						<ul className='navbar-nav'>
 							<div className='navbar-nav' style={{ border: '3px solid' }}>
-								{' '}
 								<NavLink className='nav-link' to='/'>
 									<FontAwesomeIcon icon={faShop} />
 									Tienda

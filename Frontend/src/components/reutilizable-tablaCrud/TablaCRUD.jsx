@@ -10,6 +10,7 @@ const cloudName = import.meta.env.VITE_CLOUDNAME;
 const uploadPreset = import.meta.env.VITE_UPLOADPRESET;
 
 const TablaCRUD = ({
+	filtro,
 	searchTerm,
 	handleSearchChange,
 	handleSearchSubmit,
@@ -33,6 +34,7 @@ const TablaCRUD = ({
 	const [uploading, setUploading] = useState(false);
 	const [url, setUrl] = useState('');
 	const [imageName, setImageName] = useState('');
+	const [filterState, setFilterState] = useState('');
 	const limpiarImagen = () => {
 		setUrl('');
 	};
@@ -141,6 +143,24 @@ const TablaCRUD = ({
 				</div>
 			)}
 
+			{filtro && (
+				<div className='position-relative d-inline-block'>
+					{/* Filtro por estado Activo/Inactivo */}
+					<div className='ms-3'>
+						<select
+							className='form-select ms-3'
+							value={filterState}
+							onChange={(e) => setFilterState(e.target.value)}
+							style={{ width: '200px' }}
+						>
+							<option value=''>Todos</option>
+							<option value='Activo'>Activo</option>
+							<option value='Inactivo'>Inactivo</option>
+						</select>
+					</div>
+				</div>
+			)}
+
 			<div className='row mt-3 animate__animated animate__fadeIn'>
 				<div className='card-body'>
 					<div className='table-responsive'>
@@ -150,44 +170,54 @@ const TablaCRUD = ({
 									{columns.map((column, index) => (
 										<th key={index}>{column.header}</th>
 									))}
+									<th>Acciones</th>
 								</tr>
 							</thead>
 							<tbody className='table-group-divider'>
-								{data.map((item) => (
-									<tr key={item.uid}>
-										{columns.map((column) => (
-											<td key={column.accessor}>
-												{column.accessor === 'estado'
-													? item[column.accessor]
-														? 'Activo'
-														: 'Inactivo'
-													: column.accessor === 'precio'
-													? `$${item[column.accessor]}`
-													: column.accessor === 'precioCosto'
-													? `$${item[column.accessor]}`
-													: column.accessor === 'usd'
-													? usdRate
-														? `${(item['precio'] / usdRate).toFixed(2)}$ USD`
-														: 'N/A'
-													: item[column.accessor]}
+								{data
+									.filter((item) => {
+										if (filterState === '') return true; // Mostrar todos si no hay filtro
+										return filterState === 'Activo' ? item.estado : !item.estado;
+									})
+									.map((item) => (
+										<tr key={item.uid}>
+											{columns.map((column) => (
+												<td key={column.accessor}>
+													{column.accessor === 'estado' ? (
+														<span className={item[column.accessor] ? 'text-success' : 'text-danger'}>
+															{item[column.accessor] ? 'Activo' : 'Inactivo'}
+														</span>
+													) : column.accessor === 'precio' ? (
+														`$${item[column.accessor]}`
+													) : column.accessor === 'precioCosto' ? (
+														`$${item[column.accessor]}`
+													) : column.accessor === 'usd' ? (
+														usdRate ? (
+															`${(item['precio'] / usdRate).toFixed(2)}$ USD`
+														) : (
+															'N/A'
+														)
+													) : (
+														item[column.accessor]
+													)}
+												</td>
+											))}
+											<td>
+												<button
+													type='button'
+													onClick={() => handleEdit(item)}
+													className='btn btn-secondary me-1'
+													data-bs-toggle='modal'
+													data-bs-target='#modal'
+												>
+													<FontAwesomeIcon icon={faEdit} /> Editar
+												</button>
+												<button type='button' onClick={() => handleDelete(item)} className='btn btn-danger'>
+													<FontAwesomeIcon icon={faTrashAlt} /> Eliminar
+												</button>
 											</td>
-										))}
-										<td>
-											<button
-												type='button'
-												onClick={() => handleEdit(item)}
-												className='btn btn-secondary me-1'
-												data-bs-toggle='modal'
-												data-bs-target='#modal'
-											>
-												<FontAwesomeIcon icon={faEdit} /> Editar
-											</button>
-											<button type='button' onClick={() => handleDelete(item)} className='btn btn-danger'>
-												<FontAwesomeIcon icon={faTrashAlt} /> Eliminar
-											</button>
-										</td>
-									</tr>
-								))}
+										</tr>
+									))}
 							</tbody>
 						</table>
 					</div>
@@ -356,6 +386,7 @@ TablaCRUD.propTypes = {
 	}),
 	setFormState: PropTypes.func.isRequired,
 	busqueda: PropTypes.bool.isRequired,
+	filtro: PropTypes.bool.isRequired,
 	searchTerm: PropTypes.string,
 	handleSearchChange: PropTypes.func,
 	handleSearchSubmit: PropTypes.func,

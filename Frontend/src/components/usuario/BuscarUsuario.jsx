@@ -30,6 +30,7 @@ const BuscarUsuario = () => {
 			password: '',
 			correo: '',
 			rol: 'USER_ROLE',
+			estado: false,
 		});
 	};
 
@@ -240,6 +241,7 @@ const BuscarUsuario = () => {
 								{ header: 'Nombre', accessor: 'nombre' },
 								{ header: 'Correo Electrónico', accessor: 'correo' },
 								{ header: 'Rol', accessor: 'rol' },
+								{ header: 'Estado', accessor: 'estado' },
 							]}
 							onEdit={(usuario) => openModal(2, usuario)}
 							onDelete={deleteUser}
@@ -259,6 +261,15 @@ const BuscarUsuario = () => {
 									options: [
 										{ value: 'USER_ROLE', label: 'USER_ROLE' },
 										{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
+									],
+								},
+								{
+									name: 'estado',
+									label: 'Estado',
+									type: 'select',
+									options: [
+										{ value: true, label: 'Activo' },
+										{ value: false, label: 'Inactivo' },
 									],
 								},
 							]}

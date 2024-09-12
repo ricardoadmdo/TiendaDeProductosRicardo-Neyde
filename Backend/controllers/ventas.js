@@ -2,7 +2,7 @@ const { response, request } = require('express');
 const Venta = require('../models/venta');
 const Producto = require('../models/producto');
 const Cafeteria = require('../models/cafeteria');
-
+ 
 const obtenerVentas = async (req, res) => {
 	try {
 		const { limit = 8, page = 1, fechas } = req.query;

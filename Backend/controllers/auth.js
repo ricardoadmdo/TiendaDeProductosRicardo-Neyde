@@ -38,7 +38,7 @@ const googleLogin = async (req = request, res = response) => {
 				nombre: profile.name,
 				correo: profile.email,
 				rol: 'USER_ROLE',
-				estado: false,
+				estado: true,
 				password: 'TEMPORAL',
 				google: true,
 			});
@@ -67,7 +67,7 @@ const googleLogin = async (req = request, res = response) => {
 			token,
 		});
 	} catch (error) {
-		console.error('Error during Google login:', error);
+		console.error('Error during Google login:', error.response?.data || error.message);
 		res.status(500).json({
 			msg: 'Error during Google login',
 			error: error.message,

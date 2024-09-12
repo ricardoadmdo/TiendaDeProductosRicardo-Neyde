@@ -21,6 +21,7 @@ const CRUDUsuario = () => {
 		password: '',
 		correo: '',
 		rol: 'USER_ROLE',
+		estado: false,
 	});
 	const navigate = useNavigate();
 	const [operationMode, setOperationMode] = useState(1);
@@ -152,7 +153,7 @@ const CRUDUsuario = () => {
 
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE' });
+	const limpiarCampos = () => setFormState({ nombre: '', password: '', correo: '', rol: 'USER_ROLE', estado: '' });
 
 	// Debounce logic
 	useEffect(() => {
@@ -174,8 +175,8 @@ const CRUDUsuario = () => {
 
 	const validar = (event) => {
 		event.preventDefault();
-		const { nombre, correo, password, rol } = formState;
-		if (nombre.trim() === '' || correo.trim() === '' || rol === '') {
+		const { nombre, correo, password, rol, estado } = formState;
+		if (nombre.trim() === '' || correo.trim() === '' || rol === '' || estado === '') {
 			Swal.fire({ icon: 'error', title: 'Campos Vacíos', text: 'Todos los campos son obligatorios' });
 			return;
 		}
@@ -197,6 +198,7 @@ const CRUDUsuario = () => {
 			password: '',
 			correo: op === 2 ? usuario.correo : '',
 			rol: op === 2 ? usuario.rol : 'USER_ROLE',
+			estado: op === 2 ? usuario.estado : '',
 		});
 		setOperationMode(op);
 		setTitle(op === 1 ? 'Registrar Usuario' : 'Editar Usuario');
@@ -208,6 +210,7 @@ const CRUDUsuario = () => {
 		<>
 			<Suspense fallback={<TableSkeleton />}>
 				<TablaCRUD
+					filtro={true}
 					searchTerm={searchTerm}
 					handleSearchChange={handleSearchChange}
 					handleSearchSubmit={handleSearchSubmit}
@@ -219,6 +222,7 @@ const CRUDUsuario = () => {
 						{ header: 'Nombre', accessor: 'nombre' },
 						{ header: 'Correo Electrónico', accessor: 'correo' },
 						{ header: 'Rol', accessor: 'rol' },
+						{ header: 'Estado', accessor: 'estado' },
 					]}
 					onEdit={(usuario) => openModal(2, usuario)}
 					onDelete={(usuario) => deleteUserWithConfirmation(usuario)}
@@ -239,6 +243,15 @@ const CRUDUsuario = () => {
 								{ value: 'USER_ROLE', label: 'USER_ROLE' },
 								{ value: 'ADMIN_ROLE', label: 'ADMIN_ROLE' },
 								{ value: 'GESTOR_VENTAS', label: 'GESTOR_VENTAS' },
+							],
+						},
+						{
+							name: 'estado',
+							label: 'Estado',
+							type: 'select',
+							options: [
+								{ value: true, label: 'Activo' },
+								{ value: false, label: 'Inactivo' },
 							],
 						},
 					]}
