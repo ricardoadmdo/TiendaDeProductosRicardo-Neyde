@@ -12,11 +12,8 @@ const NoEncontrado = lazy(() => import('../components/NoEncontrado.jsx'));
 const Cafeteria = lazy(() => import('../components/cafeteria/Cafeteria.jsx'));
 const ReporteVentas = lazy(() => import('../components/ventas/ReporteVentas.jsx'));
 const Menu = lazy(() => import('../components/cafeteria/Menu.jsx'));
-const Boutique = lazy(() => import('../components/Boutique/Boutique.jsx'));
-const BoutiqueMenu = lazy(() => import('../components/Boutique/BoutiqueMenu.jsx'));
 const CafBusqueda = lazy(() => import('../components/cafeteria/ui/CafBusqueda.jsx'));
 const CRUDCafeteria = lazy(() => import('../components/cafeteria/CRUDCafeteria.jsx'));
-import BoutiqueLayout from './BoutiqueLayout.jsx';
 import MainLayout from './MainLayout';
 import CafeteriaLayout from './CafeteriaLayout';
 import AdminRoute from './AdminRoute';
@@ -178,36 +175,6 @@ const AppRouter = () => {
 						}
 					/>
 				</Route>
-
-				{/* Rutas de la Boutique */}
-				<Route path='/boutique/*' element={<BoutiqueLayout />}>
-					<Route
-						index
-						element={
-							<Suspense fallback={<LoadingSpinner />}>
-								<Boutique />
-							</Suspense>
-						}
-					/>
-					<Route
-						path='boutiqueMenu'
-						element={
-							<Suspense fallback={<ProductSkeleton />}>
-								<BoutiqueMenu />
-							</Suspense>
-						}
-					/>
-				</Route>
-
-				{/* Ruta 404 */}
-				<Route
-					path='*'
-					element={
-						<Suspense fallback={<LoadingSpinner />}>
-							<NoEncontrado />
-						</Suspense>
-					}
-				/>
 			</Routes>
 		</BrowserRouter>
 	);

@@ -3,7 +3,6 @@ import { lazy, Suspense, useState } from 'react';
 import { Carousel, Modal, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import LoadingSpinner from './LoadingSpinner';
 import './Bienvenida.css';
 
 const BusinessStatus = lazy(() => import('./BusinessStatus'));
@@ -39,9 +38,6 @@ const Bienvenida = () => {
 							</Link>
 							<Link to='/cafeteria' className='btn btn-light mx-2'>
 								Ir a la Cafetería
-							</Link>
-							<Link to='/boutique' className='btn btn-light mx-2'>
-								Ir a la Boutique
 							</Link>
 						</div>
 					</Carousel.Caption>
@@ -90,22 +86,6 @@ const Bienvenida = () => {
 						<div className='caption-buttons'>
 							<Link to='/cafeteria' className='btn btn-light mx-2'>
 								Ir a la Cafetería
-							</Link>
-						</div>
-					</Carousel.Caption>
-				</Carousel.Item>
-				<Carousel.Item>
-					<img
-						className='d-block w-100'
-						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718562608/nmmdqyfs1dy7yihak0ca.jpg'
-						alt='Fifth slide'
-					/>
-					<Carousel.Caption>
-						<h2>Llévate la tela de mejor calidad en Ricardo & Neyde Boutique.</h2>
-						<h1>Visita nuestra Boutique</h1>
-						<div className='caption-buttons'>
-							<Link to='/boutique' className='btn btn-light mx-2'>
-								Ir a la Boutique
 							</Link>
 						</div>
 					</Carousel.Caption>

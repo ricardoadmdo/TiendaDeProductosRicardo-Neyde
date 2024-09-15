@@ -242,6 +242,9 @@ const LoginScreen = () => {
 						<NavLink to='/register' className='text-primary mt-3'>
 							¿No tienes una cuenta? Regístrate aquí
 						</NavLink>
+						<NavLink to='/register' className='text-primary mt-3'>
+							¿Has olvidado tu contraseña?
+						</NavLink>
 					</>
 				)}
 			</div>

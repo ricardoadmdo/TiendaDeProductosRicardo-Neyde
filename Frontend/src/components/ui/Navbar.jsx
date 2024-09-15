@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../auth/authContext';
 import { CartContext } from '../../auth/CartProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faStore, faCog, faShirt, faShop } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faStore, faCog, faShop } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../../public/logo.png';
 import { types } from '../../types/types';
 import { googleLogout } from '@react-oauth/google';
@@ -78,12 +78,6 @@ const Navbar = () => {
 									<NavLink className='nav-link' to='/cafeteria'>
 										<FontAwesomeIcon icon={faStore} />
 										<span>Cafetería</span>
-									</NavLink>
-								</li>
-								<li className='nav-item position-relative'>
-									<NavLink className='nav-link' to='/boutique'>
-										<FontAwesomeIcon icon={faShirt} />
-										<span>Boutique</span>
 									</NavLink>
 								</li>
 							</div>
@@ -169,7 +163,7 @@ const Navbar = () => {
 										</li>
 										<li>
 											<NavLink className='dropdown-item' to='/dashboard/gestionar-ventas'>
-												Gestionar Ventas
+												Registrar Venta
 											</NavLink>
 										</li>
 									</ul>

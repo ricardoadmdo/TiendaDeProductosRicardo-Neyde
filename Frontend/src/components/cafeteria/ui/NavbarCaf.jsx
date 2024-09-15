@@ -5,7 +5,7 @@ import { AuthContext } from '../../../auth/authContext.jsx';
 import { types } from '../../../types/types.jsx';
 import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faStore, faCog, faShop, faShirt, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faStore, faCog, faShop, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
@@ -69,12 +69,6 @@ const NavbarCaf = () => {
 									<NavLink className='nav-link' to='/cafeteria'>
 										<FontAwesomeIcon icon={faStore} />
 										Cafetería
-									</NavLink>
-								</li>
-								<li className='nav-item position-relative'>
-									<NavLink className='nav-link' to='/boutique'>
-										<FontAwesomeIcon icon={faShirt} />
-										<span>Boutique</span>
 									</NavLink>
 								</li>
 							</div>
