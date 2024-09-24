@@ -282,6 +282,87 @@ const codeVerification = async (req, res) => {
 	}
 };
 
+const changePassword = async (req, res) => {
+	const { correo, newPassword } = req.body;
+
+	try {
+		// Validar que se reciban los parámetros
+		if (!correo || !newPassword) {
+			return res.status(400).json({ msg: 'Todos los campos son obligatorios' });
+		}
+
+		// Buscar al usuario por correo
+		const usuarioExistente = await Usuario.findOne({ correo });
+		if (!usuarioExistente) {
+			return res.status(404).json({ msg: 'Usuario no encontrado' });
+		}
+
+		// Hashear la nueva contraseña
+		const salt = await bcryptjs.genSalt(10);
+		const passwordHash = await bcryptjs.hash(newPassword, salt);
+
+		// Actualizar la contraseña del usuario
+		usuarioExistente.password = passwordHash;
+		await usuarioExistente.save();
+
+		return res.status(200).json({
+			ok: true,
+			msg: 'Contraseña actualizada con éxito',
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			ok: false,
+			msg: error,
+		});
+	}
+};
+
+const changeUserName = async (req, res) => {
+	const { correo, nombre } = req.body;
+
+	try {
+		// Validar que se reciban los parámetros
+		if (!correo || !nombre) {
+			return res.status(400).json({ msg: 'Todos los campos son obligatorios' });
+		}
+
+		// Buscar al usuario por correo
+		const usuarioExistente = await Usuario.findOne({ correo });
+		if (!usuarioExistente) {
+			return res.status(404).json({ msg: 'Usuario no encontrado' });
+		}
+
+		// Actualizar la contraseña del usuario
+		usuarioExistente.nombre = nombre;
+		await usuarioExistente.save();
+
+		return res.status(200).json({
+			ok: true,
+			msg: 'Nombre actualizado con éxito',
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			ok: false,
+			msg: error,
+		});
+	}
+};
+
+const resetPassword = async (req, res) => {
+	const { correo } = req.body;
+
+	try {
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			ok: false,
+			msg: error,
+		});
+	}
+};
+
 module.exports = {
 	login,
 	register,
@@ -289,4 +370,7 @@ module.exports = {
 	createPassword,
 	emailVerification,
 	codeVerification,
+	changePassword,
+	resetPassword,
+	changeUserName,
 };

@@ -1,6 +1,16 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { login, register, googleLogin, createPassword, emailVerification, codeVerification } = require('../controllers/auth');
+const {
+	login,
+	register,
+	googleLogin,
+	createPassword,
+	emailVerification,
+	codeVerification,
+	changePassword,
+	resetPassword,
+	changeUserName,
+} = require('../controllers/auth');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router();
@@ -23,5 +33,14 @@ router.post('/verify/:email', emailVerification);
 
 // Ruta para verificar el código de verificación
 router.post('/verify', codeVerification);
+
+// Ruta para cambiar la contraseña del usuario
+router.put('/changePassword', changePassword);
+
+// Ruta para restablecer la contraseña olvidada de un usuario a través de correo electrónico
+router.put('/resetPassword', resetPassword);
+
+//Ruta para cambiar el nombre del usuario
+router.put('/changeUserName', changeUserName);
 
 module.exports = router;
