@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../auth/authContext';
 import { CartContext } from '../../auth/CartProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faStore, faCog, faShop } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faUtensils, faHamburger, faStore, faCog, faShop, faUserAlt } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../../public/logo.png';
 import { types } from '../../types/types';
 import { googleLogout } from '@react-oauth/google';
@@ -171,6 +171,11 @@ const Navbar = () => {
 							)}
 							{user.logged ? (
 								<>
+									<NavLink to='/userprofile' className='nav-link'>
+										<FontAwesomeIcon icon={faUserAlt} />
+										<span>Perfil</span>
+									</NavLink>
+
 									<li className='nav-item'>
 										<button className='nav-link' onClick={handleLogout}>
 											<FontAwesomeIcon icon={faSignOutAlt} />

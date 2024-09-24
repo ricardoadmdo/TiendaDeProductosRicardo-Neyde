@@ -6,6 +6,7 @@ export const authReducer = (state = {}, action) => {
 			return {
 				nombre: action.payload.nombre,
 				rol: action.payload.rol,
+				correo: action.payload.correo,
 				logged: true,
 			};
 

@@ -14,6 +14,7 @@ const ReporteVentas = lazy(() => import('../components/ventas/ReporteVentas.jsx'
 const Menu = lazy(() => import('../components/cafeteria/Menu.jsx'));
 const CafBusqueda = lazy(() => import('../components/cafeteria/ui/CafBusqueda.jsx'));
 const CRUDCafeteria = lazy(() => import('../components/cafeteria/CRUDCafeteria.jsx'));
+const UserProfile = lazy(() => import('../components/ui/UserProfile.jsx'));
 import MainLayout from './MainLayout';
 import CafeteriaLayout from './CafeteriaLayout';
 import AdminRoute from './AdminRoute';
@@ -22,6 +23,7 @@ import DashboardRoutes from './DashboardRoutes.jsx';
 import ProductSkeleton from '../components/producto/ProductSkeleton.jsx';
 import TableSkeleton from '../components/ui/TableSkeleton.jsx';
 import LoadingSpinner from '../components/ui/LoadingSpinner.jsx';
+import { Spinner } from 'react-bootstrap';
 
 const AppRouter = () => {
 	return (
@@ -104,6 +106,18 @@ const AppRouter = () => {
 							</PrivateRoute>
 						}
 					/>
+
+					<Route
+						path='userprofile'
+						element={
+							<PrivateRoute>
+								<Suspense fallback={<Spinner />}>
+									<UserProfile />
+								</Suspense>
+							</PrivateRoute>
+						}
+					/>
+
 					{/* Ruta 404 */}
 					<Route
 						path='*'
@@ -165,6 +179,17 @@ const AppRouter = () => {
 							</PrivateRoute>
 						}
 					/>
+					<Route
+						path='userprofile'
+						element={
+							<PrivateRoute>
+								<Suspense fallback={<Spinner />}>
+									<UserProfile />
+								</Suspense>
+							</PrivateRoute>
+						}
+					/>
+
 					{/* Ruta 404 */}
 					<Route
 						path='*'

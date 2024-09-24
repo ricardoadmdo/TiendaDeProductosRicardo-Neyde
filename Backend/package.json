@@ -16,5 +16,8 @@
     "stripe": "^15.8.0",
     "twilio": "^5.2.2",
     "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

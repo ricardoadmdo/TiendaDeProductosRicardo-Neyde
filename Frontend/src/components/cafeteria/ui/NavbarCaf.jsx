@@ -5,7 +5,7 @@ import { AuthContext } from '../../../auth/authContext.jsx';
 import { types } from '../../../types/types.jsx';
 import logo from '../../../../public/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShoppingCart, faSignOutAlt, faStore, faCog, faShop, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faShoppingCart, faSignOutAlt, faStore, faCog, faShop, faChartBar, faUserAlt } from '@fortawesome/free-solid-svg-icons';
 
 const NavbarCaf = () => {
 	const { user, dispatch } = useContext(AuthContext);
@@ -147,10 +147,15 @@ const NavbarCaf = () => {
 
 							{user.logged ? (
 								<>
+									<NavLink to='/userprofile' className='nav-link'>
+										<FontAwesomeIcon icon={faUserAlt} />
+										<span>Perfil</span>
+									</NavLink>
+
 									<li className='nav-item'>
 										<button className='nav-link' onClick={handleLogout}>
 											<FontAwesomeIcon icon={faSignOutAlt} />
-											Cerrar Sesión
+											<span>Cerrar Sesión</span>
 										</button>
 									</li>
 								</>
