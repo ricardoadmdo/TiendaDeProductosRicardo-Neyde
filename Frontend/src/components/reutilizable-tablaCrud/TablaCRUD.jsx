@@ -113,7 +113,6 @@ const TablaCRUD = ({
 					</div>
 				</div>
 			</div>
-
 			{busqueda && (
 				<div className='position-relative d-inline-block'>
 					<form className='d-flex me-5' onSubmit={handleSearchSubmit}>
@@ -142,7 +141,6 @@ const TablaCRUD = ({
 					</form>
 				</div>
 			)}
-
 			{filtro && (
 				<div className='position-relative d-inline-block'>
 					{/* Filtro por estado Activo/Inactivo */}
@@ -223,7 +221,6 @@ const TablaCRUD = ({
 					</div>
 				</div>
 			</div>
-
 			<div className='modal fade animate__animated animate__fadeIn' id='modal' aria-hidden='true' aria-labelledby='exampleModalToggleLabel'>
 				<div className='modal-dialog modal-dialog-centered'>
 					<div className='modal-content'>

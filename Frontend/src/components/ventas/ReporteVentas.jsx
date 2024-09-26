@@ -4,8 +4,10 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import { useQuery } from '@tanstack/react-query';
 import useExchangeRates from '../../hooks/useExchangeRates';
 import ErrorComponent from '../ui/ErrorComponent';
-const Calendario = lazy(() => import('../reutilizable-tablaCrud/Calendario'));
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
+import './react-datepicker.css';
 
 const fetchVentas = async ({ queryKey }) => {
 	const [, page, limit, fechas] = queryKey;
@@ -19,10 +21,10 @@ const fetchVentas = async ({ queryKey }) => {
 
 const ReporteVentas = () => {
 	const { usdRate } = useExchangeRates();
-	const [diasSeleccionados, setDiasSeleccionados] = useState([new Date().toISOString().split('T')[0]]);
+	const [diasSeleccionados, setDiasSeleccionados] = useState([new Date()]);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	const fechasSeleccionadas = diasSeleccionados.join(',');
+	const fechasSeleccionadas = diasSeleccionados.map((date) => date.toISOString().split('T')[0]).join(',');
 
 	const {
 		data,
@@ -47,7 +49,6 @@ const ReporteVentas = () => {
 	const handlePreviousPage = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 	const handleNextPage = () => currentPage < (data?.totalPages || 0) && setCurrentPage((prev) => prev + 1);
 
-	// Para agregar las ventas por fechas y calcular la ganancia
 	const agruparVentasPorFecha = (ventas) => {
 		const groupedVentas = ventas.reduce((groupedVentas, venta) => {
 			const fecha = new Date(venta.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' });
@@ -70,11 +71,12 @@ const ReporteVentas = () => {
 	};
 
 	return (
-		<div className='container animate__animated animate__fadeIn p-3'>
+		<div className='container animate__animated animate__fadeIn p-3 vh-100'>
 			<h2 className='text-center mb-4'>Reporte de Ventas</h2>
-			<Suspense fallback={<LoadingSpinner />}>
-				<Calendario onSeleccionarDias={handleSeleccionarDias} />
-			</Suspense>
+
+			<div className='text-center'>
+				<DatePicker selected={diasSeleccionados[0]} onChange={(date) => handleSeleccionarDias([date])} inline />
+			</div>
 
 			{isLoading ? (
 				<LoadingSpinner />
@@ -168,7 +170,7 @@ const ReporteVentas = () => {
 					<Suspense fallback={<LoadingSpinner />}>
 						<Pagination
 							currentPage={currentPage}
-							totalPages={data.totalPages}
+							totalPages={data?.totalPages}
 							handlePreviousPage={handlePreviousPage}
 							handleNextPage={handleNextPage}
 							className='mt-4'

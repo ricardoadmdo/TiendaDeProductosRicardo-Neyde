@@ -2,7 +2,7 @@ const { response, request } = require('express');
 const Venta = require('../models/venta');
 const Producto = require('../models/producto');
 const Cafeteria = require('../models/cafeteria');
- 
+
 const obtenerVentas = async (req, res) => {
 	try {
 		const { limit = 8, page = 1, fechas } = req.query;
@@ -65,6 +65,7 @@ const crearVenta = async (req, res) => {
 
 		// Guardar la nueva venta en la base de datos
 		await nuevaVenta.save();
+
 		// Actualizar cantidades de productos
 		for (let producto of productos) {
 			if (producto.categoria) {
