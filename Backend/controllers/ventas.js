@@ -83,56 +83,25 @@ const crearVenta = async (req, res) => {
 		res.status(500).json({ message: 'Error al crear venta' });
 	}
 };
-
-const actualizarVenta = async (req = request, res = response) => {
-	const { id } = req.params;
-
-	try {
-		const productos = req.body.productos;
-		const totalProductos = productos.reduce((acc, prod) => acc + prod.cantidad, 0);
-		const precioTotal = productos.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
-
-		const ventaActualizada = await Venta.findByIdAndUpdate(
-			id,
-			{
-				productos: productos,
-				totalProductos: totalProductos,
-				precioTotal: precioTotal,
-			},
-			{ new: true }
-		);
-
-		if (!ventaActualizada) {
-			return res.status(404).json({ mensaje: 'Venta no encontrada' });
-		}
-
-		res.json({ mensaje: 'Venta actualizada exitosamente', venta: ventaActualizada });
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ mensaje: 'Error al actualizar la venta' });
-	}
-};
-
-const eliminarVenta = async (req = request, res = response) => {
+const deleteVenta = async (req = request, res = response) => {
 	const { id } = req.params;
 
 	try {
 		const ventaEliminada = await Venta.findByIdAndDelete(id);
 
 		if (!ventaEliminada) {
-			return res.status(404).json({ mensaje: 'Venta no encontrada' });
+			return res.status(404).json({ message: 'Venta no encontrada' });
 		}
 
-		res.json({ mensaje: 'Venta eliminada exitosamente' });
+		res.status(200).json({ message: 'Venta eliminada con éxito' });
 	} catch (error) {
-		console.error(error);
-		res.status(500).json({ mensaje: 'Error al eliminar la venta' });
+		console.error('Error al eliminar venta:', error);
+		res.status(500).json({ message: 'Error al eliminar venta' });
 	}
 };
 
 module.exports = {
 	obtenerVentas,
 	crearVenta,
-	actualizarVenta,
-	eliminarVenta,
+	deleteVenta,
 };

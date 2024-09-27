@@ -1,10 +1,9 @@
 const { Router } = require('express');
-const { obtenerVentas, crearVenta, actualizarVenta, eliminarVenta } = require('../controllers/ventas');
+const { obtenerVentas, crearVenta, deleteVenta } = require('../controllers/ventas');
 const router = Router();
 
 router.get('/', obtenerVentas);
 router.post('/', crearVenta);
-router.put('/:id', actualizarVenta);
-router.delete('/:id', eliminarVenta);
+router.delete('/:id', deleteVenta);
 
 module.exports = router;

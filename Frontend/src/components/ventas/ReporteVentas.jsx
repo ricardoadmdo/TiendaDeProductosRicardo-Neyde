@@ -8,11 +8,13 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 const Pagination = lazy(() => import('../reutilizable-tablaCrud/Pagination'));
 import './react-datepicker.css';
+import Swal from 'sweetalert2';
 
 const fetchVentas = async ({ queryKey }) => {
 	const [, page, limit, fechas] = queryKey;
 	try {
 		const response = await Axios.get(`http://localhost:3001/api/venta?page=${page}&limit=${limit}&fechas=${fechas}`);
+
 		return response.data;
 	} catch (error) {
 		throw new Error(error.response?.data?.msg || 'Error al obtener ventas');
@@ -70,8 +72,34 @@ const ReporteVentas = () => {
 		return groupedVentas;
 	};
 
+	const handleDeleteVenta = async (id) => {
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: 'No podrás revertir esto',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sí, eliminar',
+			cancelButtonText: 'Cancelar',
+		}).then(async (result) => {
+			if (result.isConfirmed) {
+				try {
+					// Petición al backend para eliminar la venta
+					await Axios.delete(`http://localhost:3001/api/venta/${id}`);
+					// Actualizar la lista de ventas llamando a refetchVentas
+					await refetchVentas();
+					Swal.fire('¡Eliminada!', 'La venta ha sido eliminada.', 'success');
+				} catch (error) {
+					console.error('Error al eliminar la venta:', error);
+					Swal.fire('Error', 'No se pudo eliminar la venta.', 'error');
+				}
+			}
+		});
+	};
+
 	return (
-		<div className='container animate__animated animate__fadeIn p-3 vh-100'>
+		<div className='container animate__animated animate__fadeIn p-3 '>
 			<h2 className='text-center mb-4'>Reporte de Ventas</h2>
 
 			<div className='text-center'>
@@ -107,6 +135,7 @@ const ReporteVentas = () => {
 												<th>Tipo de Pago</th>
 												<th>Productos</th>
 												<th>Cliente</th>
+												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -156,6 +185,11 @@ const ReporteVentas = () => {
 														) : (
 															'En la Tienda'
 														)}
+													</td>
+													<td>
+														<button className='btn btn-danger' onClick={() => handleDeleteVenta(venta.uid)}>
+															Eliminar
+														</button>
 													</td>
 												</tr>
 											))}
