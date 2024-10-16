@@ -3,6 +3,7 @@ import { lazy, Suspense, useState } from 'react';
 import { Carousel, Modal, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import './Bienvenida.css';
 
 const BusinessStatus = lazy(() => import('./BusinessStatus'));
@@ -21,10 +22,12 @@ const Bienvenida = () => {
 				prevIcon={<span className='carousel-control-prev-icon' aria-hidden='true'></span>}
 			>
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041412/i0agcr3wwtibxdhwgoo6.jpg'
-						alt='First slide'
+						className='d-block w-100'
+						alt='First Slide'
 					/>
 					<Carousel.Caption>
 						<h2>Explora nuestra selección exclusiva de productos y combos de comida en La Habana.</h2>
@@ -43,10 +46,12 @@ const Bienvenida = () => {
 					</Carousel.Caption>
 				</Carousel.Item>
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1720390484/ecwmvqfwy0f7ydpsndlh.jpg'
-						alt='Second slide'
+						className='d-block w-100'
+						alt='Second Slide'
 					/>
 					<Carousel.Caption>
 						<h2>Descubre nuestra amplia gama de productos seleccionados con la mayor calidad.</h2>
@@ -59,10 +64,12 @@ const Bienvenida = () => {
 					</Carousel.Caption>
 				</Carousel.Item>
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1720390483/dfmzmyph4ecjmnhb1nfd.jpg'
-						alt='Third slide'
+						className='d-block w-100'
+						alt='Third Slide'
 					/>
 					<Carousel.Caption>
 						<h2>Prueba nuestros irresistibles combos, perfectos para cualquier ocasión.</h2>
@@ -75,10 +82,12 @@ const Bienvenida = () => {
 					</Carousel.Caption>
 				</Carousel.Item>
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041269/ota6mfg9z7yz6uyh9adz.jpg'
-						alt='Fourth slide'
+						className='d-block w-100'
+						alt='Fourth Slide'
 					/>
 					<Carousel.Caption>
 						<h2>Disfruta de la mejor comida en Ricardo & Neyde Cafetería.</h2>

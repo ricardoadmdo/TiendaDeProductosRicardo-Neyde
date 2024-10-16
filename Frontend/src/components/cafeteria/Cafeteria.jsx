@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const Cafeteria = () => {
 	return (
 		<div className='cafeteria-container'>
@@ -11,10 +11,12 @@ const Cafeteria = () => {
 				prevIcon={<span className='carousel-control-prev-icon' aria-hidden='true'></span>}
 			>
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1718041412/i0agcr3wwtibxdhwgoo6.jpg'
-						alt='First slide'
+						className='d-block w-100'
+						alt='First Slide'
 					/>
 					<Carousel.Caption>
 						<h2>Descubre los mejores productos de nuestra cafetería.</h2>
@@ -34,10 +36,12 @@ const Cafeteria = () => {
 				</Carousel.Item>
 
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1720390484/ecwmvqfwy0f7ydpsndlh.jpg'
-						alt='Second slide'
+						className='d-block w-100'
+						alt='Second Slide'
 					/>
 					<Carousel.Caption>
 						<h2>Deléitate con nuestras bebidas especiales.</h2>
@@ -51,10 +55,12 @@ const Cafeteria = () => {
 				</Carousel.Item>
 
 				<Carousel.Item>
-					<img
-						className='d-block w-100'
+					<LazyLoadImage
+						threshold={10}
+						effect='blur'
 						src='https://res.cloudinary.com/dber1pxea/image/upload/v1720390483/dfmzmyph4ecjmnhb1nfd.jpg'
-						alt='Third slide'
+						className='d-block w-100'
+						alt='Third Slide'
 					/>
 					<Carousel.Caption>
 						<h2>No te pierdas nuestros deliciosos postres.</h2>

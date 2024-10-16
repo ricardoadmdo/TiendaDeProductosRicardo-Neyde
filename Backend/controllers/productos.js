@@ -15,10 +15,7 @@ const productosGet = async (req, res) => {
 		}
 
 		// Ejecutar las consultas en paralelo
-		const [productos, total] = await Promise.all([
-			Producto.find(query).populate('nombre').skip(Number(skip)).limit(Number(limit)),
-			Producto.countDocuments(query),
-		]);
+		const [productos, total] = await Promise.all([Producto.find(query).skip(Number(skip)).limit(Number(limit)), Producto.countDocuments(query)]);
 
 		// Enviar la respuesta
 		res.json({
@@ -29,11 +26,12 @@ const productosGet = async (req, res) => {
 			totalPages: Math.ceil(total / limit),
 		});
 	} catch (error) {
-		// Manejo de errores
-		console.error(error);
-		res.status(500).json({
-			msg: 'Error al obtener los productos',
-		});
+		if (error.name === 'MongoNetworkError') {
+			res.status(503).json({ msg: 'Base de datos no disponible. Inténtelo de nuevo más tarde.' });
+		} else {
+			console.error(error);
+			res.status(500).json({ msg: 'Error al obtener los productos' });
+		}
 	}
 };
 
